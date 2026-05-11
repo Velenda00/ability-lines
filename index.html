@@ -6,15 +6,20 @@
   <meta name="theme-color" content="#f5f0eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.json">
-  <title>能力线</title>
+  <title>再塑法典</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header id="topBar">
-    <h1 id="pageTitle">能力线</h1>
+    <h1 id="pageTitle">再塑法典</h1>
     <span id="menuBtn" onclick="toggleMenu()">⋯</span>
   </header>
   <div id="dropdownMenu" class="dropdown hidden">
+    <div onclick="showSyncSettingsModal()">⚙️ 同步设置</div>
+    <div onclick="Sync.pull()" style="color:#5a7d6b;font-weight:500">⬇️ 从云端拉取</div>
+    <div onclick="Sync.push()" style="color:#5a7d6b;font-weight:500">⬆️ 推送到云端</div>
+    <div onclick="showBackupListModal()">🔙 恢复备份</div>
+    <div style="border-top:1px solid #e0d8d0;margin:6px 0"></div>
     <div onclick="showNameConfigModal()">✏️ 修改命名</div>
     <div onclick="exportJSON()">📤 导出 JSON</div>
     <div onclick="exportMarkdown()">📝 导出 Markdown</div>
@@ -88,6 +93,7 @@
 
   <script src="js/store.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/sync.js"></script>
   <script>if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}</script>
 </body>
 </html>

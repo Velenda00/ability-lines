@@ -14,9 +14,9 @@
 ```
 能力（可自定义命名）
   └── 专项
-        ├── 行动（+ 备注 + 关联待办）
-        ├── 问题（+ 备注 + 关联待办）
-        ├── 学习（+ 备注）
+        ├── 行动（+ 备注 + 关联待办 + 关联思绪）
+        ├── 问题（+ 备注 + 关联待办 + 关联思绪）
+        ├── 学习（+ 备注 + 关联思绪）
         ├── 过程（已完成待办归档）
         └── 总结
 ```
@@ -24,9 +24,9 @@
 ## 数据模型（V2.1）
 - 条目：note, createdFromTodoId, relatedProcessId, relatedTodoId（双向关联待办）
 - 待办：note, generatedEntryIds, sourceThoughtId（来源思绪）
-- 思绪：importance（权重）, note（备注）, relatedCapId/ProjId/EntryType/EntryId/TodoId（支持关联到具体条目）
-- 解放脑/外交墙：importance（权重）
-- 命名配置：新增homeTitle（首页标题独立控制，默认跟随topLevel）
+- 思绪：importance（权重）, note（备注）, relatedCapId/ProjId/EntryType/EntryId/TodoId（支持关联到能力/专项/条目/待办）
+- 解放脑/外交墙：自由记录
+- 命名配置：topLevel/ capability/module1/module2/module3 全部可自定义
 
 ## Git管理
 - 开发目录：D:\VIBE\能力线
@@ -37,4 +37,6 @@
 ## 开发状态
 - 2026-05-06 V1：初始版本开发完成并部署
 - 2026-05-08 V2更新：重命名、思绪关联、备注、排序修复、待办关联显示
-- 2026-05-08 V2.1修复：恢复思绪权重、行为关联已完成待办、关联双向显示（含图标）、全排序统一、首页标题解耦
+- 2026-05-08 V2.1：恢复思绪权重、行为关联已完成待办、关联双向显示（含图标）、全排序统一、首页标题解耦、PWA配置修复
+- 2026-05-09 V2.2：修复思绪权重排序、能力/专项卡片显示关联思绪、待办权重编辑bug
+- 2026-05-11 V2.3：新增GitHub云同步模块（js/sync.js），完全手动模式（拉取/推送按钮），操作前自动备份（最多5份），支持备份恢复

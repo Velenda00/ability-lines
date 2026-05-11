@@ -1,8 +1,9 @@
 {
-  "name": "能力线",
-  "short_name": "能力线",
-  "description": "将零散想法收束为个人能力成长线",
-  "start_url": "/",
+  "name": "再塑法典",
+  "short_name": "再塑法典",
+  "description": "将零散想法收束为个人成长法典",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f0eb",
   "theme_color": "#f5f0eb",

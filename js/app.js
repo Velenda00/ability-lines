@@ -1,4 +1,4 @@
-/* ===== 应用主逻辑 v4（最终版） ===== */
+/* ===== 应用主逻辑 v5 ===== */
 let appData = null;
 let currentPage = 'home';
 let currentCapId = null, currentProjId = null, currentProjTab = 'action';
@@ -24,10 +24,10 @@ function switchPage(page) {
 
 function updateTitle() {
   const n=nc();
-  const t = { home:n.topLevel, ability:'💪 '+n.module2, goals:'🎯 目标',
+  const t = { home:n.topLevel, ability:'💪 '+n.capability, goals:'🎯 目标',
     thoughts:'💭 思绪', todos:'📋 待办', project:'📋 '+n.project+'详情' };
   document.getElementById('pageTitle').textContent = t[currentPage]||n.topLevel;
-  document.getElementById('pageTitleA').textContent = '💪 '+n.module2;
+  document.getElementById('pageTitleA').textContent = '💪 '+n.capability;
 }
 
 function updateNav() {
@@ -54,13 +54,55 @@ function fmtDate(iso) {
   return new Date(iso).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
 }
 
-/** 按重要性降序→时间倒序 */
 function sortByImpThenTime(arr) {
   return [...arr].sort((a,b)=>{
     const imp = (b.importance||0) - (a.importance||0);
     if(imp!==0) return imp;
     return new Date(b.createdAt||0) - new Date(a.createdAt||0);
   });
+}
+
+// ==================== 查找关联思绪 ====================
+
+function findLinkedThoughts(opts) {
+  return appData.thoughts.filter(t => {
+    if (opts.todoId && t.relatedTodoId === opts.todoId) return true;
+    if (opts.entryId && opts.entryType && t.relatedEntryId === opts.entryId && t.relatedEntryType === opts.entryType
+        && t.relatedCapId === opts.capId && t.relatedProjId === opts.projId) return true;
+    if (opts.capId && opts.projId && !opts.entryId && t.relatedCapId === opts.capId && t.relatedProjId === opts.projId) return true;
+    if (opts.capId && !opts.projId && !opts.entryId && t.relatedCapId === opts.capId) return true;
+    return false;
+  });
+}
+
+function resolveThoughtLink(t) {
+  if (!t) return null;
+  if (t.relatedTodoId) {
+    const todo = appData.todos.find(x => x.id === t.relatedTodoId);
+    if (todo) return { icon: '📋', label: '待办', text: todo.text, type: 'todo' };
+  }
+  if (t.relatedEntryId && t.relatedEntryType) {
+    const cap = appData.capabilities.find(c => c.id === t.relatedCapId);
+    const proj = cap?.projects.find(p => p.id === t.relatedProjId);
+    const entry = (proj?.entries[t.relatedEntryType]||[]).find(e => e.id === t.relatedEntryId);
+    if (entry) {
+      const typeLabels = { action:'行动', problem:'问题', learning:'学习', review:'总结' };
+      const typeIcons = { action:'🏃', problem:'⚠️', learning:'📖', review:'📋' };
+      return { icon: typeIcons[t.relatedEntryType]||'📝', label: typeLabels[t.relatedEntryType]||t.relatedEntryType,
+        text: (cap?cap.name+' > ':'') + (proj?proj.name+' > ':'') + entry.text, type: 'entry',
+        capId: t.relatedCapId, projId: t.relatedProjId, entryType: t.relatedEntryType, entryId: t.relatedEntryId };
+    }
+  }
+  if (t.relatedProjId) {
+    const cap = appData.capabilities.find(c => c.id === t.relatedCapId);
+    const proj = cap?.projects.find(p => p.id === t.relatedProjId);
+    if (proj) return { icon: '📂', label: '专项', text: (cap?cap.name+' > ':'') + proj.name, type: 'project' };
+  }
+  if (t.relatedCapId) {
+    const cap = appData.capabilities.find(c => c.id === t.relatedCapId);
+    if (cap) return { icon: '💪', label: '能力', text: cap.name, type: 'capability' };
+  }
+  return null;
 }
 
 // ==================== 确认弹窗 ====================
@@ -102,15 +144,11 @@ function renderHome() {
   const goalCnt = appData.goals.length;
   const thCnt = appData.thoughts.length;
   const {today:td} = Store.getTodos(appData);
-  // 最高权重能力
   const topCap = capCnt ? sortByImpThenTime(appData.capabilities)[0] : null;
-  // 最高权重目标
   const topGoal = goalCnt ? sortByImpThenTime(appData.goals)[0] : null;
-  // 出现最多的标签
   const tagFreq = {};
   appData.thoughts.forEach(t=>(t.tags||[]).forEach(tag=>{tagFreq[tag]=(tagFreq[tag]||0)+1;}));
   const topTag = Object.entries(tagFreq).sort((a,b)=>b[1]-a[1])[0];
-  // 权重最高的2个今日未完成待办
   const topTodos = sortByImpThenTime(td).slice(0,2);
 
   h.innerHTML = `
@@ -118,7 +156,7 @@ function renderHome() {
       <div class="home-card" onclick="switchPage('ability')">
         <div class="hc-icon">💪</div>
         <div class="hc-num">${capCnt}</div>
-        <div class="hc-label">${nc().module2}</div>
+        <div class="hc-label">${nc().capability}</div>
         <div class="hc-sub">${topCap ? '⭐'+topCap.name : ''}</div>
       </div>
       <div class="home-card" onclick="switchPage('goals')">
@@ -142,10 +180,9 @@ function renderHome() {
     </div>`;
 }
 
-// ==================== 能力页（解放脑/独立自主/外交墙 合一） ====================
+// ==================== 能力页 ====================
 
 function renderAbility() {
-  // 子Tab
   const n=nc();
   const tabs = [
     {key:'liberation',label:n.module1,emoji:'🧠'},
@@ -187,6 +224,7 @@ function renderCapabilitiesIn(con) {
   con.innerHTML += sorted.map(cap=>{
     const total = cap.projects.reduce((s,p)=>s+Object.values(p.entries).reduce((a,arr)=>a+arr.length,0),0);
     const sortedProjs = sortByImpThenTime(cap.projects);
+    const capThoughts = findLinkedThoughts({ capId: cap.id });
     return `<div class="capability-card">
       <div class="cap-header">
         <span class="cap-name">${esc(cap.name)}${impStars(cap.importance)}</span>
@@ -197,15 +235,18 @@ function renderCapabilitiesIn(con) {
         </span>
       </div>
       <div class="cap-count">${total}条记录</div>
+      ${capThoughts.length?`<div style="margin:6px 0 4px;padding:4px 8px;background:#f8f6f3;border-radius:6px;font-size:11px;color:#888">💭 关联思绪：${capThoughts.slice(0,2).map(lt=>esc(lt.text.slice(0,20))).join('、')}${capThoughts.length>2?' 等'+capThoughts.length+'条':''}</div>`:''}
       ${sortedProjs.length===0?'<div class="cap-empty">暂无'+n.project+'</div>'
         : sortedProjs.map(p=>{
           const pTotal = Object.values(p.entries).reduce((a,arr)=>a+arr.length,0);
+          const projThoughts = findLinkedThoughts({ capId: cap.id, projId: p.id });
           return `<div class="project-item" onclick="openProject('${cap.id}','${p.id}')">
             <span class="pj-name">${esc(p.name)}${impStars(p.importance)}</span>
             <span style="display:flex;align-items:center;gap:6px">
               <span class="pj-stats">${pTotal}条</span>
-              <button class="icon-btn" onclick="editProj('${cap.id}','${p.id}')">✏️</button>
-              <button class="icon-btn" onclick="deleteItem('project','${cap.id}','${p.id}')">🗑️</button>
+              ${projThoughts.length?`<span title="关联${projThoughts.length}条思绪" style="font-size:11px;color:#aaa">💭${projThoughts.length}</span>`:''}
+              <button class="icon-btn" onclick="event.stopPropagation();editProj('${cap.id}','${p.id}')">✏️</button>
+              <button class="icon-btn" onclick="event.stopPropagation();deleteItem('project','${cap.id}','${p.id}')">🗑️</button>
             </span>
           </div>`;
         }).join('')}
@@ -236,18 +277,18 @@ function renderGoals() {
 }
 
 function showAddGoalModal() {
-  showEditModal('🎯 新建目标', '', async txt=>{ await Store.addGoal(txt,0,''); await refresh(); });
+  showEditModal('🎯 新建目标', '', async txt=>{ await Store.addGoal(txt,0,''); await refresh(); }, 0);
 }
 function editGoal(id) {
   const g=appData.goals.find(x=>x.id===id);
-  showEditModal('编辑目标', g.name, async txt=>{ await Store.updateGoal(id,txt,g.importance,g.description); await refresh(); },
-    g.importance, async imp=>{ await Store.updateGoal(id,g.name,imp,g.description); await refresh(); });
+  showEditModal('编辑目标', g.name, async txt=>{ await Store.updateGoal(id,txt); await refresh(); },
+    g.importance, async imp=>{ await Store.updateGoal(id,undefined,imp); await refresh(); });
 }
 function completeGoal(id) {
   const g=appData.goals.find(x=>x.id===id);
   if(!g)return;
   const newStatus = g.status==='completed'?'active':'completed';
-  Store.updateGoal(id,g.name,g.importance,g.description,newStatus).then(refresh);
+  Store.updateGoal(id,undefined,undefined,undefined,newStatus).then(refresh);
   showToast(newStatus==='completed'?'🎉 目标已完成':'↩️ 已重新激活');
 }
 
@@ -278,7 +319,7 @@ function renderProject() {
     const proc=proj.process||[];
     if(!proc.length){con.innerHTML='<div class="empty-state">✅ 暂无已完成待办</div>';return;}
     con.innerHTML=[...proc].reverse().map(p=>`
-      <div class="process-item"><div class="proc-meta">${fmtDate(p.completedAt)} ${p.relatedEntryIds?.length?`· 关联${p.relatedEntryIds.length}条记录`:''}</div>
+      <div class="process-item"><div class="proc-meta">${fmtDate(p.completedAt)} ${p.relatedEntryIds?.length?'· 关联'+p.relatedEntryIds.length+'条记录':''}</div>
       <div style="font-size:14px">${esc(p.text)}</div>
       <div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">${(p.relatedEntryIds||[]).map(eid=>{
         for(const[t,arr]of Object.entries(proj.entries)){const e=arr.find(x=>x.id===eid);if(e)return`<span class="entry-tag">${n[t]||t}: ${esc(e.text.slice(0,20))}</span>`;}
@@ -297,12 +338,10 @@ function renderProject() {
   }
 
   con.innerHTML = entries.map(e=>{
-    // 查找关联的待办（entry→todo）
     const relatedTodo = e.relatedTodoId ? appData.todos.find(t=>t.id===e.relatedTodoId) : null;
-    // 查找创建来源的待办（todo→entry）
     const fromTodo = e.createdFromTodoId ? appData.todos.find(t=>t.id===e.createdFromTodoId) : null;
-    // 查找关联的过程条目
     const procEntry = (proj.process||[]).find(p=>p.id===e.relatedProcessId);
+    const linkedThoughts = findLinkedThoughts({ capId:currentCapId, projId:currentProjId, entryType:currentProjTab, entryId:e.id });
     return `<div class="entry-card">
       <div class="entry-meta"><span>${fmtDate(e.createdAt)}${impStars(e.importance)}</span>
         <span class="entry-actions">
@@ -313,12 +352,14 @@ function renderProject() {
         </span>
       </div>
       <div class="entry-text">${esc(e.text)}</div>
+      ${e.note?`<div style="font-size:12px;color:#888;margin-top:2px">💬 ${esc(e.note)}</div>`:''}
       ${procEntry?`<div style="font-size:11px;color:#5a7d6b;margin-top:4px">📎 关联过程：${esc(procEntry.text.slice(0,25))}</div>`:''}
       ${fromTodo?`<div style="font-size:11px;color:#888;margin-top:4px">🔗 来源于待办：${esc(fromTodo.text.slice(0,25))} ${fromTodo.status==='completed'?'✅':''}</div>`:''}
       ${relatedTodo?`<div class="linked-todo" onclick="switchPage('todos')">
         <span>📋 关联待办：${esc(relatedTodo.text.slice(0,25))}</span>
         <span style="font-size:11px;color:#888">${relatedTodo.status==='completed'?'✅ 已完成':relatedTodo.isToday?'📌 今日待办':'📦 待办库'}</span>
       </div>`:''}
+      ${linkedThoughts.length?`<div style="margin-top:4px">${linkedThoughts.slice(0,2).map(lt=>`<div style="font-size:11px;color:#888;padding:2px 0">💭 关联思绪：${esc(lt.text.slice(0,25))}</div>`).join('')}${linkedThoughts.length>2?`<div style="font-size:10px;color:#aaa">...等${linkedThoughts.length}条</div>`:''}</div>`:''}
     </div>`;
   }).join('') + `<div style="text-align:center;margin-top:12px"><button class="btn-primary" onclick="showAddEntryInProj('${currentProjTab}')">+ 添加${label}</button></div>`;
 }
@@ -328,9 +369,9 @@ function switchProjTab(tab){currentProjTab=tab;renderProject();}
 function showAddEntryInProj(type){
   const n=nc(); const labels={action:n.action,problem:n.problem,learning:n.learning,review:n.review};
   if(type==='action'||type==='problem'||type==='learning'){
-    showEntryWithProcessModal('添加'+(labels[type]||type),'',async(txt,imp,procId)=>{await Store.addEntry(currentCapId,currentProjId,type,txt,imp,null,procId);await refresh();});
+    showEntryWithProcessModal('添加'+(labels[type]||type),'',async(txt,imp,procId,note)=>{await Store.addEntry(currentCapId,currentProjId,type,txt,imp,null,procId,null,note);await refresh();});
   } else {
-    showEditModal('添加'+(labels[type]||type),'',async txt=>{await Store.addEntry(currentCapId,currentProjId,type,txt,0,null);await refresh();});
+    showEntryWithNoteModal('添加'+(labels[type]||type),'',async(txt,note)=>{await Store.addEntry(currentCapId,currentProjId,type,txt,0,null,null,null,note);await refresh();});
   }
 }
 
@@ -339,9 +380,9 @@ function editProjEntry(eid){
   const e=proj.entries[currentProjTab]?.find(x=>x.id===eid);if(!e)return;
   const n=nc(); const labels={action:n.action,problem:n.problem,learning:n.learning,review:n.review};
   if(currentProjTab==='action'||currentProjTab==='problem'||currentProjTab==='learning'){
-    showEntryWithProcessModal('修改'+(labels[currentProjTab]||currentProjTab),e.text,async(txt,imp,procId)=>{await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,txt,imp,procId);await refresh();},e.importance,e.relatedProcessId);
+    showEntryWithProcessModal('修改'+(labels[currentProjTab]||currentProjTab),e.text,async(txt,imp,procId,note)=>{await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,txt,imp,procId,note);await refresh();},e.importance,e.relatedProcessId,e.note);
   } else {
-    showEditModal('修改'+(labels[currentProjTab]||currentProjTab),e.text,async txt=>{await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,txt,e.importance);await refresh();},e.importance,async imp=>{await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,e.text,imp);await refresh();});
+    showEntryWithNoteModal('修改'+(labels[currentProjTab]||currentProjTab),e.text,async(txt,note)=>{await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,e.text,undefined,undefined,note);await refresh();},e.note);
   }
 }
 
@@ -349,7 +390,6 @@ function editProjEntry(eid){
 function showEntryFromTodoModal(eid){
   const proj=getProj();if(!proj)return;
   const e=proj.entries[currentProjTab]?.find(x=>x.id===eid);if(!e)return;
-  // 显示当前专项中已完成的过程待办
   const procItems = (proj.process||[]).filter(p=>!(e.relatedProcessId));
   if(!procItems.length){showToast('当前专项无可关联的已完成待办');return;}
   const overlay=document.createElement('div');overlay.className='modal-overlay';
@@ -366,21 +406,21 @@ function showEntryFromTodoModal(eid){
     const pId=window._selProcId;overlay.remove();
     delete window.selectProcForEntry;delete window.confirmProcForEntry;delete window._selProcId;
     if(!pId)return;
-    await Store.updateEntry(currentCapId,currentProjId,currentProjTab,entryId,e.text,e.importance,pId);
-    // 也加到过程条目的relatedEntryIds
+    await Store.updateEntry(currentCapId,currentProjId,currentProjTab,entryId,undefined,undefined,pId);
     const proc=(getProj()?.process||[]).find(x=>x.id===pId);
     if(proc&&!proc.relatedEntryIds.includes(entryId)){proc.relatedEntryIds.push(entryId);await Store.saveAll(appData);}
     await refresh();showToast('✅ 已关联');
   };
 }
 
-function showEntryWithProcessModal(title,defaultValue,onSave,existingImp,existingProcId){
+function showEntryWithProcessModal(title,defaultValue,onSave,existingImp,existingProcId,existingNote){
   const proj=getProj();const procItems=proj?.process||[];
   const overlay=document.createElement('div');overlay.className='modal-overlay';
   let _imp=existingImp||0,_procId=existingProcId||null;
-  overlay.innerHTML=`<div class="modal-box"><h3>${title}</h3>
+  overlay.innerHTML=`<div class="modal-box" style="max-height:80vh;overflow-y:auto"><h3>${title}</h3>
     <textarea id="mText" rows="3" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(defaultValue)}</textarea>
     ${renderImpPicker(_imp,l=>{_imp=l;})}
+    <input id="mNote" placeholder="💬 备注（选填）" value="${esc(existingNote||'')}" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;margin-bottom:10px">
     ${procItems.length>0?`<div style="font-size:12px;color:#666;margin-bottom:6px">关联过程已完成待办（可选）：</div>
       <div style="max-height:120px;overflow-y:auto;margin-bottom:10px">${procItems.map(p=>`
         <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;${_procId===p.id?'background:#f0f7f3':''}" onclick="selPE('${p.id}')">
@@ -394,21 +434,35 @@ function showEntryWithProcessModal(title,defaultValue,onSave,existingImp,existin
   document.body.appendChild(overlay);overlay.querySelector('#mText').focus();
   window.selPE=id=>{_procId=id;overlay.querySelectorAll('label').forEach(l=>l.style.background='');overlay.querySelector('label:has(input[value="'+(id||'')+'"])')?.style.setProperty('background','#f0f7f3');};
   window.confirmPE=()=>{const txt=overlay.querySelector('#mText').value.trim();if(!txt){showToast('内容不能为空');return;}
-    overlay.remove();delete window.selPE;delete window.confirmPE;delete window.closePE;onSave(txt,_imp,_procId);};
+    const note=overlay.querySelector('#mNote').value.trim();
+    overlay.remove();delete window.selPE;delete window.confirmPE;delete window.closePE;onSave(txt,_imp,_procId,note);};
   window.closePE=()=>{overlay.remove();delete window.selPE;delete window.confirmPE;delete window.closePE;};
   overlay.addEventListener('click',e=>{if(e.target===overlay)window.closePE();});
+}
+
+function showEntryWithNoteModal(title,defaultValue,onSave,existingNote){
+  const overlay=document.createElement('div');overlay.className='modal-overlay';
+  overlay.innerHTML=`<div class="modal-box"><h3>${title}</h3>
+    <textarea id="mText" rows="3" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(defaultValue)}</textarea>
+    <input id="mNote" placeholder="💬 备注（选填）" value="${esc(existingNote||'')}" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;margin-bottom:10px">
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeNoteM()">取消</button>
+    <button class="btn-primary" onclick="confirmNoteM()">保存</button></div></div>`;
+  document.body.appendChild(overlay);overlay.querySelector('#mText').focus();
+  window.confirmNoteM=()=>{const txt=overlay.querySelector('#mText').value.trim();if(!txt){showToast('内容不能为空');return;}
+    const note=overlay.querySelector('#mNote').value.trim();
+    overlay.remove();delete window.confirmNoteM;delete window.closeNoteM;onSave(txt,note);};
+  window.closeNoteM=()=>{overlay.remove();delete window.confirmNoteM;delete window.closeNoteM;};
+  overlay.addEventListener('click',e=>{if(e.target===overlay)window.closeNoteM();});
 }
 
 function showCreateTodoFromEntry(eid){
   const proj=getProj();if(!proj)return;
   const e=proj.entries[currentProjTab]?.find(x=>x.id===eid);if(!e)return;
-  showEditModal('📋 由此创建待办',e.text,async txt=>{
-    await Store.addTodo(txt,0,{capId:currentCapId,projId:currentProjId,entryType:currentProjTab,entryId:eid});
-    // 更新条目的 relatedTodoId
-    // (need to find the todo we just created - it's the last one)
+  showEditModalWithNote('📋 由此创建待办',e.text,e.note,async(txt,note)=>{
+    await Store.addTodo(txt,0,{capId:currentCapId,projId:currentProjId,entryType:currentProjTab,entryId:eid},note);
     await refresh();
     const newTodo = appData.todos[appData.todos.length-1];
-    if(newTodo){await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,e.text,e.importance,null);e.relatedTodoId=newTodo.id;await Store.saveAll(appData);}
+    if(newTodo){await Store.updateEntry(currentCapId,currentProjId,currentProjTab,eid,undefined,undefined);e.relatedTodoId=newTodo.id;await Store.saveAll(appData);}
     await refresh();showToast('✅ 待办已创建');
   });
 }
@@ -420,27 +474,40 @@ function renderThoughts(){
   const q=document.getElementById('thoughtSearch')?.value?.toLowerCase().trim()||'';
   let thoughts=appData.thoughts;
   if(q)thoughts=thoughts.filter(t=>t.text.toLowerCase().includes(q)||(t.tags||[]).some(tag=>tag.toLowerCase().includes(q)));
+  thoughts=sortByImpThenTime(thoughts);
   if(!thoughts.length){list.innerHTML='<div class="empty-state">'+(q?'没有找到匹配的思绪':'💭 暂无思绪')+'</div>';return;}
-  list.innerHTML=thoughts.map(t=>`
-    <div class="entry-card"><div class="entry-meta"><span>${fmtDate(t.createdAt)}</span>
+  list.innerHTML=thoughts.map(t=>{
+    const linkInfo = resolveThoughtLink(t);
+    return `<div class="entry-card"><div class="entry-meta"><span>${fmtDate(t.createdAt)}${impStars(t.importance)}</span>
       <span class="entry-actions"><button class="icon-btn" onclick="editThought('${t.id}')">✏️</button>
+      <button class="icon-btn" onclick="showThoughtLinkModal('${t.id}')" title="关联">🔗</button>
       <button class="icon-btn" onclick="deleteItem('thought','${t.id}')">🗑️</button></span></div>
-    <div class="entry-text">${esc(t.text)}</div>
-    ${(t.tags||[]).length?`<div style="margin-top:6px">${t.tags.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>`:''}
-    </div>`).join('');
+      <div class="entry-text">${esc(t.text)}</div>
+      ${t.note?`<div style="font-size:12px;color:#888;margin-top:2px">💬 ${esc(t.note)}</div>`:''}
+      ${(t.tags||[]).length?`<div style="margin-top:6px">${t.tags.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>`:''}
+      ${linkInfo?`<div class="linked-todo" onclick="${linkInfo.type==='todo'?"switchPage('todos')":linkInfo.type==='entry'?`openProject('${linkInfo.capId}','${linkInfo.projId}')`:`switchPage('ability')`}">
+        <span>${linkInfo.icon} 关联${linkInfo.label}：${esc(linkInfo.text.slice(0,30))}</span>
+        <span style="font-size:10px;color:#aaa">🔗</span>
+      </div>`:''}
+    </div>`;
+  }).join('');
 }
-function showAddThoughtModal(){showThoughtEditModal('💭 新增思绪','',async(txt,tags)=>{await Store.addThought(txt,tags);await refresh();});}
-function editThought(id){const t=appData.thoughts.find(x=>x.id===id);showThoughtEditModal('编辑思绪',t.text,async(txt,tags)=>{await Store.updateThought(id,txt,tags);await refresh();},t.tags||[]);}
 
-function showThoughtEditModal(title,defaultValue,onSave,existingTags){
+function showAddThoughtModal(){showThoughtEditModal('💭 新增思绪','',null,'',async(txt,tags,imp,note)=>{await Store.addThought(txt,tags,imp,note);await refresh();});}
+function editThought(id){const t=appData.thoughts.find(x=>x.id===id);showThoughtEditModal('编辑思绪',t.text,t.tags||[],t.note,async(txt,tags,imp,note)=>{await Store.updateThought(id,txt,tags,imp,note);await refresh();},t.importance);}
+
+function showThoughtEditModal(title,defaultValue,existingTags,existingNote,onSave,existingImp){
   const allTags=Store.getAllTags();const overlay=document.createElement('div');overlay.className='modal-overlay';
   window._editTags=existingTags?[...existingTags]:[];
-  overlay.innerHTML=`<div class="modal-box"><h3>${title}</h3>
+  let _imp=existingImp||0;
+  overlay.innerHTML=`<div class="modal-box" style="max-height:80vh;overflow-y:auto"><h3>${title}</h3>
+    ${renderImpPicker(_imp,l=>{_imp=l;})}
     <div class="tag-input-area"><input id="thoughtTagInput" placeholder="输入标签，回车或点+" style="margin-bottom:0" list="tagSug"><datalist id="tagSug">${allTags.map(t=>`<option value="${esc(t)}">`).join('')}</datalist>
     <button onclick="addThoughtTag()">+</button></div>
     ${allTags.length>0?`<div style="font-size:11px;color:#999;margin-bottom:6px">已用：${allTags.map(t=>`<span class="tag" style="cursor:pointer" onclick="addTagByName('${esc(t)}')">${esc(t)}</span>`).join('')}</div>`:''}
     <div id="thoughtTags" style="margin-bottom:8px"></div>
     <textarea id="mThoughtText" rows="3" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(defaultValue)}</textarea>
+    <input id="mThoughtNote" placeholder="💬 备注（选填）" value="${esc(existingNote||'')}" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;margin-bottom:10px">
     <div class="modal-actions"><button class="btn-cancel" onclick="closeThModal()">取消</button><button class="btn-primary" onclick="confirmThModal()">保存</button></div></div>`;
   document.body.appendChild(overlay);overlay.querySelector('#mThoughtText').focus();
   renderThTags();
@@ -448,11 +515,73 @@ function showThoughtEditModal(title,defaultValue,onSave,existingTags){
   window.addTagByName=tag=>{if(!window._editTags)window._editTags=[];if(window._editTags.includes(tag))return;window._editTags.push(tag);renderThTags();};
   window.removeThTag=tag=>{if(!window._editTags)return;window._editTags=window._editTags.filter(t=>t!==tag);renderThTags();};
   window.closeThModal=()=>{overlay.remove();cleanThModal();};
-  window.confirmThModal=()=>{const txt=overlay.querySelector('#mThoughtText').value.trim();if(!txt){showToast('内容不能为空');return;}const tags=window._editTags||[];overlay.remove();cleanThModal();onSave(txt,tags);};
+  window.confirmThModal=()=>{const txt=overlay.querySelector('#mThoughtText').value.trim();if(!txt){showToast('内容不能为空');return;}
+    const tags=window._editTags||[];const note=overlay.querySelector('#mThoughtNote').value.trim();
+    overlay.remove();cleanThModal();onSave(txt,tags,_imp,note);};
   overlay.addEventListener('click',e=>{if(e.target===overlay){overlay.remove();cleanThModal();}});
 }
 function renderThTags(){const el=document.getElementById('thoughtTags');if(!el)return;el.innerHTML=(window._editTags||[]).map(t=>`<span class="tag" style="cursor:pointer" onclick="removeThTag('${esc(t)}')">${esc(t)} ✕</span>`).join('');}
 function cleanThModal(){delete window.addThoughtTag;delete window.addTagByName;delete window.removeThTag;delete window.closeThModal;delete window.confirmThModal;delete window._editTags;}
+
+// ==================== 思绪关联弹窗 ====================
+
+function showThoughtLinkModal(thoughtId){
+  const t=appData.thoughts.find(x=>x.id===thoughtId);if(!t)return;
+  const n=nc();
+  let options=[];
+  // 能力级
+  appData.capabilities.forEach(c=>{
+    options.push({type:'capability',capId:c.id,label:'💪 '+c.name,value:c.id});
+    // 专项级
+    c.projects.forEach(p=>{
+      options.push({type:'project',capId:c.id,projId:p.id,label:'📂 '+c.name+' > '+p.name,value:'proj_'+p.id});
+      // 条目级
+      ['action','problem','learning'].forEach(et=>{
+        const typeLabels={action:n.action,problem:n.problem,learning:n.learning};
+        const typeIcons={action:'🏃',problem:'⚠️',learning:'📖'};
+        (p.entries[et]||[]).forEach(e=>{
+          options.push({type:'entry',capId:c.id,projId:p.id,entryType:et,entryId:e.id,
+            label:typeIcons[et]+' '+c.name+' > '+p.name+' > '+e.text.slice(0,20),value:et+'_'+e.id});
+        });
+      });
+    });
+  });
+  // 待办
+  appData.todos.filter(x=>x.status==='active').forEach(todo=>{
+    options.push({type:'todo',todoId:todo.id,label:'📋 '+todo.text.slice(0,30),value:'todo_'+todo.id});
+  });
+
+  const currentType=t.relatedTodoId?'todo':t.relatedEntryId?'entry':t.relatedProjId?'project':t.relatedCapId?'capability':'';
+  const currentVal=t.relatedTodoId?('todo_'+t.relatedTodoId):t.relatedEntryId?(t.relatedEntryType+'_'+t.relatedEntryId):t.relatedProjId?('proj_'+t.relatedProjId):t.relatedCapId||'';
+
+  const overlay=document.createElement('div');overlay.className='modal-overlay';
+  overlay.innerHTML=`<div class="modal-box" style="max-height:80vh;overflow-y:auto"><h3>🔗 关联到</h3>
+    <p style="font-size:12px;color:#999;margin-bottom:10px">选择要关联的能力/专项/条目/待办</p>
+    <div style="max-height:300px;overflow-y:auto">
+      <label style="display:flex;align-items:center;gap:6px;padding:8px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid #e0d8d0;margin-bottom:4px;${!currentVal?'background:#f0f7f3':''}" onclick="selLinkOpt(null)">
+        <input type="radio" name="linkR" value="" ${!currentVal?'checked':''} style="accent-color:#5a7d6b">
+        <span style="color:#999">无关联</span></label>
+      ${options.map(o=>`<label style="display:flex;align-items:center;gap:6px;padding:8px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid #e0d8d0;margin-bottom:4px;${currentVal===o.value?'background:#f0f7f3':''}" onclick="selLinkOpt('${o.value}','${o.type}','${o.capId||''}','${o.projId||''}','${o.entryType||''}','${o.entryId||''}','${o.todoId||''}')">
+        <input type="radio" name="linkR" value="${o.value}" ${currentVal===o.value?'checked':''} style="accent-color:#5a7d6b">
+        <span>${esc(o.label)}</span></label>`).join('')}
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="this.closest('.modal-overlay').remove()">取消</button>
+    <button class="btn-primary" onclick="confirmThoughtLink('${thoughtId}')">保存</button></div></div>`;
+  document.body.appendChild(overlay);
+  window._linkSel={type:currentType,capId:t.relatedCapId,projId:t.relatedProjId,entryType:t.relatedEntryType,entryId:t.relatedEntryId,todoId:t.relatedTodoId};
+  window.selLinkOpt=(val,type,capId,projId,entryType,entryId,todoId)=>{
+    if(!val){window._linkSel={type:null};}else{window._linkSel={type,capId:capId||null,projId:projId||null,entryType:entryType||null,entryId:entryId||null,todoId:todoId||null};}
+    overlay.querySelectorAll('label').forEach(l=>l.style.background='');
+    if(val)overlay.querySelector(`label:has(input[value="${val}"])`)?.style.setProperty('background','#f0f7f3');
+    else overlay.querySelector('label:first-child')?.style.setProperty('background','#f0f7f3');
+  };
+  window.confirmThoughtLink=async(id)=>{
+    const s=window._linkSel;overlay.remove();
+    delete window.selLinkOpt;delete window.confirmThoughtLink;delete window._linkSel;
+    await Store.linkThought(id,s.capId,s.projId,s.entryType,s.entryId,s.todoId);
+    await refresh();showToast('✅ 关联已更新');
+  };
+}
 
 // ==================== 待办 ====================
 
@@ -469,43 +598,38 @@ function renderTodos(){
       ${compS.length===0?'<div class="empty-state" style="padding:16px">- 无 -</div>':compS.map(t=>`
         <div class="todo-card" style="opacity:0.6">
           <div style="width:18px;height:18px;flex-shrink:0;margin-top:2px;color:#5a7d6b">✅</div>
-          <div class="todo-body"><div class="todo-text"><s>${esc(t.text)}</s></div><div class="todo-source">完成于 ${fmtDate(t.completedAt)}</div></div>
+          <div class="todo-body"><div class="todo-text"><s>${esc(t.text)}</s></div>${t.note?`<div style="font-size:11px;color:#aaa;margin-top:2px">💬 ${esc(t.note)}</div>`:''}<div class="todo-source">完成于 ${fmtDate(t.completedAt)}</div></div>
           <div class="todo-actions"><button class="icon-btn" onclick="deleteItem('todo','${t.id}')">🗑️</button></div>
         </div>`).join('')}
     </div>`;
 }
 
 function renderTodoCard(t,isToday){
-  // 查找来源条目
   const srcEntry = t.sourceEntryId && t.sourceCapId && t.sourceProjId ? (()=>{
     const cap=appData.capabilities.find(c=>c.id===t.sourceCapId);
     const proj=cap?.projects.find(p=>p.id===t.sourceProjId);
     if(!proj)return null;
-    const type = t.sourceEntryType;
-    return (proj.entries[type]||[]).find(e=>e.id===t.sourceEntryId);
+    return (proj.entries[t.sourceEntryType]||[]).find(e=>e.id===t.sourceEntryId);
   })() : null;
-  // 查找生成的条目（todo完成后产生的行动/问题/学习）
   const genEntries = (t.generatedEntryIds||[]).map(eid=>{
     for(const cap of appData.capabilities){
       for(const proj of cap.projects){
-        for(const[t,arr]of Object.entries(proj.entries)){
+        for(const[tp,arr]of Object.entries(proj.entries)){
           const e=arr.find(x=>x.id===eid);
-          if(e)return{cap,proj,type:t,entry:e};
+          if(e)return{cap,proj,type:tp,entry:e};
         }
       }
     }
     return null;
   }).filter(Boolean);
+  const linkedThoughts = findLinkedThoughts({ todoId:t.id });
 
-  // 来源条目文字
   let srcHtml = '';
   if(srcEntry){
     srcHtml = `<div class="linked-todo" style="font-size:11px;margin-top:4px">
       <span>📎 来源：${esc(srcEntry.text.slice(0,30))}</span>
     </div>`;
   }
-
-  // 生成条目（折叠）
   let genHtml = '';
   if(genEntries.length){
     genHtml = `<div style="margin-top:6px;border-top:1px solid #f0ece7;padding-top:6px">
@@ -513,12 +637,17 @@ function renderTodoCard(t,isToday){
       ${genEntries.map(ge=>`<div style="font-size:12px;color:#333;padding:3px 6px;background:#f8f6f3;border-radius:6px;margin-bottom:2px">${esc(ge.entry.text.slice(0,35))}</div>`).join('')}
     </div>`;
   }
+  let thHtml='';
+  if(linkedThoughts.length){
+    thHtml=`<div style="margin-top:4px">${linkedThoughts.slice(0,2).map(lt=>`<div style="font-size:11px;color:#888;padding:2px 0">💭 关联思绪：${esc(lt.text.slice(0,25))}</div>`).join('')}${linkedThoughts.length>2?`<div style="font-size:10px;color:#aaa">...等${linkedThoughts.length}条</div>`:''}</div>`;
+  }
 
   return `<div class="todo-card">
     <input type="checkbox" onchange="completeTodo('${t.id}')">
     <div class="todo-body">
       <div class="todo-text">${esc(t.text)}${impStars(t.importance)}</div>
-      ${srcHtml}${genHtml}
+      ${t.note?`<div style="font-size:12px;color:#888;margin-top:2px">💬 ${esc(t.note)}</div>`:''}
+      ${srcHtml}${genHtml}${thHtml}
     </div>
     <div class="todo-actions">
       ${isToday?`<button class="todo-move-btn" onclick="moveTodoToLib('${t.id}')">移回库</button>`
@@ -529,10 +658,9 @@ function renderTodoCard(t,isToday){
   </div>`;
 }
 
-function showAddTodoModal(){showEditModal('📋 新建待办','',async txt=>{await Store.addTodo(txt,0,{});await refresh();});}
+function showAddTodoModal(){showEditModalWithNote('📋 新建待办','',null,async(txt,note)=>{await Store.addTodo(txt,0,{},note);await refresh();},0);}
 function editTodo(id){const t=appData.todos.find(x=>x.id===id);
-  showEditModal('编辑待办',t.text,async txt=>{await Store.updateTodo(id,{text:txt,importance:t.importance});await refresh();},t.importance,async imp=>{await Store.updateTodo(id,{text:t.text,importance:imp});await refresh();});
-}
+  showEditModalWithNote('编辑待办',t.text,t.note,async(txt,note)=>{await Store.updateTodo(id,{text:txt,note:note});await refresh();},t.importance,async imp=>{await Store.updateTodo(id,{importance:imp});await refresh();});}
 
 async function completeTodo(id){
   const todo=appData.todos.find(t=>t.id===id);
@@ -544,7 +672,6 @@ async function completeTodo(id){
   if(targetCapId&&targetProjId){
     await Store.completeTodo(id,targetCapId,targetProjId);
     await refresh();
-    // 提示可以生成新条目
     showToast('✅ 已完成！可在过程中添加后续条目');
   } else {
     await Store.completeTodo(id,null,null);
@@ -555,9 +682,9 @@ async function completeTodo(id){
 async function moveTodoToToday(id){await Store.updateTodo(id,{isToday:true});await refresh();showToast('📌 已移至今日待办');}
 async function moveTodoToLib(id){await Store.updateTodo(id,{isToday:false});await refresh();showToast('📦 已移回待办库');}
 
-// ==================== 通用编辑/删除 ====================
+// ==================== 通用编辑弹窗 ====================
 
-function showEditModal(title,defaultValue,onSave,importance,onImportanceChange,showTags,existingTags){
+function showEditModal(title,defaultValue,onSave,importance,onImportanceChange){
   const overlay=document.createElement('div');overlay.className='modal-overlay';
   const hasImp=importance!==undefined&&importance!==null&&importance!==-1;
   const impHtml=hasImp?renderImpPicker(importance,imp=>{if(onImportanceChange)onImportanceChange(imp);}):'';
@@ -571,6 +698,26 @@ function showEditModal(title,defaultValue,onSave,importance,onImportanceChange,s
   window.closeEM=()=>{overlay.remove();delete window.confirmEM;delete window.closeEM;_impPickerCallback=null;};
   overlay.querySelector('#modalText').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.confirmEM();}});
   overlay.addEventListener('click',e=>{if(e.target===overlay)window.closeEM();});
+}
+
+/** 带备注的编辑弹窗（待办、从条目创建待办） */
+function showEditModalWithNote(title,defaultValue,existingNote,onSave,importance,onImportanceChange){
+  const overlay=document.createElement('div');overlay.className='modal-overlay';
+  const hasImp=importance!==undefined&&importance!==null&&importance!==-1;
+  const impHtml=hasImp?renderImpPicker(importance,imp=>{if(onImportanceChange)onImportanceChange(imp);}):'';
+  overlay.innerHTML=`<div class="modal-box"><h3>${title}</h3>
+    <textarea id="modalText" rows="3" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(defaultValue)}</textarea>
+    ${impHtml}
+    <input id="modalNote" placeholder="💬 备注（选填）" value="${esc(existingNote||'')}" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;margin-bottom:10px">
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeEMN()">取消</button>
+    <button class="btn-primary" onclick="confirmEMN()">保存</button></div></div>`;
+  document.body.appendChild(overlay);overlay.querySelector('#modalText').focus();
+  window.confirmEMN=()=>{const txt=overlay.querySelector('#modalText').value.trim();if(!txt){showToast('内容不能为空');return;}
+    const note=overlay.querySelector('#modalNote').value.trim();
+    overlay.remove();delete window.confirmEMN;delete window.closeEMN;_impPickerCallback=null;onSave(txt,note);};
+  window.closeEMN=()=>{overlay.remove();delete window.confirmEMN;delete window.closeEMN;_impPickerCallback=null;};
+  overlay.querySelector('#modalText').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.confirmEMN();}});
+  overlay.addEventListener('click',e=>{if(e.target===overlay)window.closeEMN();});
 }
 
 function deleteItem(type,a,b,c,d){
@@ -592,15 +739,17 @@ function deleteItem(type,a,b,c,d){
   });
 }
 
-// ==================== 编辑函数（简化） ====================
+// ==================== 编辑函数（修复权重覆盖bug） ====================
 
 function editLiberation(id){const e=appData.liberationEntries.find(x=>x.id===id);showEditModal('编辑',e.text,async txt=>{await Store.updateLiberationEntry(id,txt);await refresh();});}
 function editDiplomacy(id){const e=appData.diplomacyEntries.find(x=>x.id===id);showEditModal('编辑',e.text,async txt=>{await Store.updateDiplomacyEntry(id,txt);await refresh();});}
 function editCap(id){const c=appData.capabilities.find(x=>x.id===id);
-  showEditModal('修改'+nc().capability,c.name,async txt=>{await Store.updateCapability(id,txt,c.importance);await refresh();},c.importance,async imp=>{await Store.updateCapability(id,c.name,imp);await refresh();});}
+  showEditModal('修改'+nc().capability,c.name,async txt=>{await Store.updateCapability(id,txt);await refresh();},
+    c.importance,async imp=>{await Store.updateCapability(id,undefined,imp);await refresh();});}
 function showAddProjectModal(capId){showEditModal('新建'+nc().project,'',async txt=>{await Store.addProject(capId,txt,0);await refresh();});}
 function editProj(capId,projId){const cap=appData.capabilities.find(c=>c.id===capId);const p=cap?.projects.find(x=>x.id===projId);
-  showEditModal('修改'+nc().project,p?.name||'',async txt=>{await Store.updateProject(capId,projId,txt,p.importance);await refresh();},p?.importance||0,async imp=>{await Store.updateProject(capId,projId,p.name,imp);await refresh();});}
+  showEditModal('修改'+nc().project,p?.name||'',async txt=>{await Store.updateProject(capId,projId,txt);await refresh();},
+    p?.importance||0,async imp=>{await Store.updateProject(capId,projId,undefined,imp);await refresh();});}
 function showAddModal(module){const n=nc();const name=module==='liberation'?n.module1:n.module3;
   showEditModal('添加'+name+'记录','',async txt=>{if(module==='liberation')await Store.addLiberationEntry(txt);else await Store.addDiplomacyEntry(txt);await refresh();});}
 function showAddCapabilityModal(){const n=nc();showEditModal('新建'+n.capability,'',async txt=>{await Store.addCapability(txt,0);await refresh();});}
