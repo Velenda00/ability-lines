@@ -1,6 +1,6 @@
 {
   "nameConfig": {
-    "topLevel": "能力线",
+    "topLevel": "重塑法典",
     "capability": "能力",
     "project": "专项",
     "process": "过程",
@@ -8,40 +8,55 @@
     "problem": "问题",
     "learning": "学习",
     "review": "总结",
-    "module1": "解放脑",
-    "module2": "独立自主",
-    "module3": "外交墙"
+    "module1": "思维枷锁·破",
+    "module2": "核心能力·铸",
+    "module3": "风采展示·贴"
   },
   "capabilities": [
     {
-      "id": "cap_1778250885934_1rb3",
-      "name": "你好",
+      "id": "cap_1778063121284_l86i",
+      "name": "表达能力",
       "importance": 0,
-      "createdAt": "2026-05-08T14:34:45.934Z",
+      "createdAt": "2026-05-06T10:25:21.284Z",
       "projects": [
         {
-          "id": "proj_1778250890666_lqwx",
-          "name": "你好呀",
-          "importance": 3,
-          "createdAt": "2026-05-08T14:34:50.666Z",
-          "process": [],
+          "id": "proj_1778063853254_0448",
+          "name": "结构化表达",
+          "importance": 0,
+          "createdAt": "2026-05-06T10:37:33.255Z",
+          "process": [
+            {
+              "id": "proc_1778467421738_krep",
+              "text": "思绪关联待办、能力、行为等",
+              "importance": 0,
+              "todoId": "todo_1778229339617_0lb3",
+              "completedAt": "2026-05-11T02:43:41.732Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778467765198_rt45",
+              "text": "命名没有全局，能力框架不对",
+              "importance": 0,
+              "todoId": "todo_1778062769365_xo39",
+              "completedAt": "2026-05-11T02:49:25.198Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778467768513_esu9",
+              "text": "数据导出内容查看",
+              "importance": 0,
+              "todoId": "todo_1778062732845_52dm",
+              "completedAt": "2026-05-11T02:49:28.513Z",
+              "relatedEntryIds": []
+            }
+          ],
           "entries": {
             "action": [
               {
-                "id": "entry_1778250907772_w4lx",
-                "text": "你好吗",
-                "createdAt": "2026-05-08T14:35:07.772Z",
+                "id": "entry_1778078870040_wmf1",
+                "text": "观看辩论赛总结观点（准备充足的结辩）",
+                "createdAt": "2026-05-06T14:47:50.040Z",
                 "importance": 2,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": ""
-              },
-              {
-                "id": "entry_1778251759250_2xej",
-                "text": "你好有",
-                "createdAt": "2026-05-08T14:49:19.250Z",
-                "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null
@@ -53,172 +68,211 @@
           }
         },
         {
-          "id": "proj_1778465248544_f364",
-          "name": "还好",
+          "id": "proj_1778063866807_3anq",
+          "name": "即兴表达",
           "importance": 0,
-          "createdAt": "2026-05-11T02:07:28.545Z",
+          "createdAt": "2026-05-06T10:37:46.807Z",
           "process": [],
           "entries": {
             "action": [
               {
-                "id": "entry_1778465344839_ahul",
-                "text": "速度饭",
-                "createdAt": "2026-05-11T02:09:04.839Z",
+                "id": "entry_1778063908445_r21g",
+                "text": "介绍自制产品",
+                "createdAt": "2026-05-06T10:38:28.445Z",
                 "importance": 2,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": ""
+                "createdFromTodoId": null
               },
               {
-                "id": "entry_1778465349139_wv3e",
-                "text": "阿斯弗",
-                "createdAt": "2026-05-11T02:09:09.139Z",
-                "importance": 3,
+                "id": "entry_1778063931149_z796",
+                "text": "介绍景点",
+                "createdAt": "2026-05-06T10:38:51.149Z",
+                "importance": 1,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": ""
-              },
-              {
-                "id": "entry_1778465353221_iq44",
-                "text": "围绕",
-                "createdAt": "2026-05-11T02:09:13.221Z",
-                "importance": 2,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": ""
+                "createdFromTodoId": null
               }
             ],
             "problem": [],
             "learning": [
               {
-                "id": "entry_1778465259626_8e8p",
-                "text": "12444",
-                "createdAt": "2026-05-11T02:07:39.626Z",
+                "id": "entry_1778064027868_6f3e",
+                "text": "詹青云视频，练习感染力",
+                "createdAt": "2026-05-06T10:40:27.868Z",
                 "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "嘎嘎嘎"
+                "createdFromTodoId": null
               }
             ],
             "review": []
           }
         }
       ]
-    }
-  ],
-  "goals": [],
-  "thoughts": [
-    {
-      "id": "th_1778465435023_j5kt",
-      "text": "第三个",
-      "createdAt": "2026-05-11T02:10:35.023Z",
-      "tags": [],
-      "importance": 1,
-      "note": "",
-      "relatedCapId": null,
-      "relatedProjId": null,
-      "relatedEntryType": null,
-      "relatedEntryId": null,
-      "relatedTodoId": null
     },
     {
-      "id": "th_1778465413824_zfqc",
-      "text": "官方代表",
-      "createdAt": "2026-05-11T02:10:13.824Z",
+      "id": "cap_1778063127715_kxgz",
+      "name": "审美能力",
+      "importance": 0,
+      "createdAt": "2026-05-06T10:25:27.715Z",
+      "projects": [
+        {
+          "id": "proj_1778063537717_jbmt",
+          "name": "P图",
+          "importance": 0,
+          "createdAt": "2026-05-06T10:32:17.717Z",
+          "process": [],
+          "entries": {
+            "action": [
+              {
+                "id": "entry_1778079696389_6d72",
+                "text": "青岛照片p完发朋友圈",
+                "createdAt": "2026-05-06T15:01:36.389Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null
+              }
+            ],
+            "problem": [],
+            "learning": [
+              {
+                "id": "entry_1778079775416_yjju",
+                "text": "人物p图要素，我的面部身材特点",
+                "createdAt": "2026-05-06T15:02:55.416Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null
+              }
+            ],
+            "review": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "cap_1778063134679_jxa3",
+      "name": "工具运用能力",
+      "importance": 0,
+      "createdAt": "2026-05-06T10:25:34.679Z",
+      "projects": [
+        {
+          "id": "proj_1778063428260_qe39",
+          "name": "成长管家（网页）",
+          "importance": 0,
+          "createdAt": "2026-05-06T10:30:28.260Z",
+          "process": [],
+          "entries": {
+            "action": [],
+            "problem": [],
+            "learning": [],
+            "review": []
+          }
+        },
+        {
+          "id": "proj_1778063506488_y2vn",
+          "name": "旅游地图",
+          "importance": 0,
+          "createdAt": "2026-05-06T10:31:46.488Z",
+          "process": [],
+          "entries": {
+            "action": [],
+            "problem": [],
+            "learning": [],
+            "review": []
+          }
+        },
+        {
+          "id": "proj_1778141113232_18ys",
+          "name": "简历网站",
+          "importance": 0,
+          "createdAt": "2026-05-07T08:05:13.233Z",
+          "process": [],
+          "entries": {
+            "action": [],
+            "problem": [],
+            "learning": [],
+            "review": []
+          }
+        }
+      ]
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal_1778063283758_uiaf",
+      "name": "减肥",
+      "description": "",
+      "importance": 0,
+      "createdAt": "2026-05-06T10:28:03.758Z",
+      "status": "active"
+    }
+  ],
+  "thoughts": [
+    {
+      "id": "th_1778229292825_0xq7",
+      "text": "通过这次运动会，我也发现自己是一个注重结果的人，但不知道为什么总是差一点纳入奖励范围（上升玄学了）。\n我的竞争意识终究还是太弱了。对于变换的思路与战术总是不能即时执行，习惯按照准备完好再照本宣科的保守应对。对于劣势状态下，不能很好的找到自己的定位与局部优势。\n说到底，还是要主动参与竞争，享受竞争，争取结果但不在意丢脸。在竞争中成长，而不是通过磨洋工自娱自乐。",
+      "createdAt": "2026-05-08T08:34:52.825Z",
       "tags": [
-        "都是"
-      ],
-      "importance": 2,
-      "note": "",
-      "relatedCapId": null,
-      "relatedProjId": null,
-      "relatedEntryType": null,
-      "relatedEntryId": null,
-      "relatedTodoId": null
+        "竞争"
+      ]
+    },
+    {
+      "id": "th_1778064117729_ublf",
+      "text": "我终于知道化为最小执行单元的魅力了",
+      "createdAt": "2026-05-06T10:41:57.729Z",
+      "tags": [
+        "程序"
+      ]
     }
   ],
   "todos": [
     {
-      "id": "todo_1778465265959_3sxk",
-      "text": "阿斯弗",
+      "id": "todo_1778062732845_52dm",
+      "text": "数据导出内容查看",
       "importance": 0,
-      "createdAt": "2026-05-11T02:07:45.959Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
+      "createdAt": "2026-05-06T10:18:52.845Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-11T02:49:28.513Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778467768513_esu9"
+      ]
     },
     {
-      "id": "todo_1778465270659_5ewp",
-      "text": "曝光沙发",
-      "importance": 2,
-      "createdAt": "2026-05-11T02:07:50.659Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
-      "id": "todo_1778465276659_hj5d",
-      "text": "双方的",
+      "id": "todo_1778062769365_xo39",
+      "text": "命名没有全局，能力框架不对",
       "importance": 0,
-      "createdAt": "2026-05-11T02:07:56.659Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
+      "createdAt": "2026-05-06T10:19:29.365Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-11T02:49:25.198Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778467765198_rt45"
+      ]
     },
     {
-      "id": "todo_1778465289374_lop1",
-      "text": "阿凡达",
-      "importance": 3,
-      "createdAt": "2026-05-11T02:08:09.374Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
-      "id": "todo_1778465298958_wezq",
-      "text": "阿道夫",
+      "id": "todo_1778062788836_6q0l",
+      "text": "手机无法部署",
       "importance": 0,
-      "createdAt": "2026-05-11T02:08:18.958Z",
-      "isToday": false,
+      "createdAt": "2026-05-06T10:19:48.836Z",
+      "isToday": true,
       "status": "active",
       "completedAt": null,
-      "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
@@ -228,23 +282,219 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1778465366252_duft",
-      "text": "而反对撒阿斯弗",
+      "id": "todo_1778063267970_7sz9",
+      "text": "专项无法设置权重及排序，待办新创建是权重设置无效",
       "importance": 0,
-      "createdAt": "2026-05-11T02:09:26.252Z",
+      "createdAt": "2026-05-06T10:27:47.970Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": [],
+      "note": ""
+    },
+    {
+      "id": "todo_1778063960710_tbqz",
+      "text": "介绍成长管家",
+      "importance": 0,
+      "createdAt": "2026-05-06T10:39:20.710Z",
       "isToday": false,
       "status": "active",
       "completedAt": null,
-      "note": "",
-      "sourceCapId": "cap_1778250885934_1rb3",
-      "sourceProjId": "proj_1778465248544_f364",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778063866807_3anq",
       "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778465349139_wv3e",
+      "sourceEntryId": "entry_1778063908445_r21g",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778063992642_afzg",
+      "text": "行为当中看不到创办的待办",
+      "importance": 0,
+      "createdAt": "2026-05-06T10:39:52.642Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778079070992_posw",
+      "text": "观看辩论赛“要不要使用让别人爱你的超能力”并为双方结辩，然后由ai评价观点是否突出明确、条理清晰、有说服力",
+      "importance": 0,
+      "createdAt": "2026-05-06T14:51:10.992Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778063853254_0448",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778078870040_wmf1",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778079740341_v0m0",
+      "text": "青岛照片人物p图（先选两张最喜欢的练习）",
+      "importance": 0,
+      "createdAt": "2026-05-06T15:02:20.341Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": "cap_1778063127715_kxgz",
+      "sourceProjId": "proj_1778063537717_jbmt",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778079696389_6d72",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778079878130_2afy",
+      "text": "学习、行为、问题及能力等，添加完成归档状态",
+      "importance": 0,
+      "createdAt": "2026-05-06T15:04:38.130Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": [],
+      "note": ""
+    },
+    {
+      "id": "todo_1778229339617_0lb3",
+      "text": "思绪关联待办、能力、行为等",
+      "importance": 0,
+      "createdAt": "2026-05-08T08:35:39.617Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-11T02:43:41.732Z",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778467421738_krep"
+      ]
+    },
+    {
+      "id": "todo_1778229613023_3ccn",
+      "text": "思想枷锁需要像便签意义比较醒目的展示",
+      "importance": 0,
+      "createdAt": "2026-05-08T08:40:13.023Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778317976303_qqod",
+      "text": "背诵抖音主持人的视频内容并模仿语音语调",
+      "importance": 0,
+      "createdAt": "2026-05-09T09:12:56.303Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778336155417_ivyr",
+      "text": "记住领导讲的话（挑一些比较有道理的）",
+      "importance": 0,
+      "createdAt": "2026-05-09T14:15:55.417Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778459755534_pmnv",
+      "text": "不清楚要求就多问，一定要多问",
+      "importance": 0,
+      "createdAt": "2026-05-11T00:35:55.534Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778467507914_8krx",
+      "text": "介绍万岁山",
+      "importance": 0,
+      "createdAt": "2026-05-11T02:45:07.914Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "有趣、吸引力、参考别人的引流视频",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778063866807_3anq",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778063931149_z796",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
     }
   ],
-  "liberationEntries": [],
+  "liberationEntries": [
+    {
+      "id": "lib_1778231200099_tlmg",
+      "text": "主动展示，不要等着别人发现",
+      "createdAt": "2026-05-08T09:06:40.099Z"
+    },
+    {
+      "id": "lib_1778229487969_ekg4",
+      "text": "乐在竞争，学在竞争，赢在竞争",
+      "createdAt": "2026-05-08T08:38:07.969Z"
+    },
+    {
+      "id": "lib_1778063109786_y8pb",
+      "text": "卸下完美主义，锁定最小执行单元",
+      "createdAt": "2026-05-06T10:25:09.786Z"
+    }
+  ],
   "diplomacyEntries": []
 }
