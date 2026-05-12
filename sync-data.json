@@ -64,6 +64,14 @@
               "todoId": "todo_1778480849554_fhih",
               "completedAt": "2026-05-11T08:07:09.033Z",
               "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778503288540_x9ys",
+              "text": "记住领导讲的话（挑一些比较有道理的）",
+              "importance": 0,
+              "todoId": "todo_1778336155417_ivyr",
+              "completedAt": "2026-05-11T12:41:28.539Z",
+              "relatedEntryIds": []
             }
           ],
           "entries": {
@@ -178,13 +186,13 @@
             "action": [
               {
                 "id": "entry_1778483162950_hi0e",
-                "text": "练习语音语调",
+                "text": "模仿朗读",
                 "createdAt": "2026-05-11T07:06:02.950Z",
                 "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "背诵全文，模仿语音语调"
               }
             ],
             "problem": [],
@@ -454,6 +462,27 @@
           }
         }
       ]
+    },
+    {
+      "id": "cap_1778503223681_32kq",
+      "name": "职场能力",
+      "importance": 0,
+      "createdAt": "2026-05-11T12:40:23.681Z",
+      "projects": [
+        {
+          "id": "proj_1778503246727_mtlr",
+          "name": "领导金句",
+          "importance": 3,
+          "createdAt": "2026-05-11T12:40:46.727Z",
+          "process": [],
+          "entries": {
+            "action": [],
+            "problem": [],
+            "learning": [],
+            "review": []
+          }
+        }
+      ]
     }
   ],
   "goals": [
@@ -695,36 +724,22 @@
       "note": ""
     },
     {
-      "id": "todo_1778317976303_qqod",
-      "text": "背诵抖音主持人的视频内容并模仿语音语调",
-      "importance": 0,
-      "createdAt": "2026-05-09T09:12:56.303Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1778336155417_ivyr",
       "text": "记住领导讲的话（挑一些比较有道理的）",
       "importance": 0,
       "createdAt": "2026-05-09T14:15:55.417Z",
       "isToday": false,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-11T12:41:28.539Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778503288540_x9ys"
+      ]
     },
     {
       "id": "todo_1778459755534_pmnv",
@@ -919,6 +934,40 @@
       "text": "每日习惯设定",
       "importance": 0,
       "createdAt": "2026-05-11T07:12:52.107Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778503664165_1yr1",
+      "text": "李思思母亲不必伟大模仿视频",
+      "importance": 0,
+      "createdAt": "2026-05-11T12:47:44.170Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778483090549_505t",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778483162950_hi0e",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778546999614_mg35",
+      "text": "注意事项以入口弹窗的形式提醒",
+      "importance": 0,
+      "createdAt": "2026-05-12T00:49:59.615Z",
       "isToday": false,
       "status": "active",
       "completedAt": null,
