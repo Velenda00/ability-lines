@@ -14,19 +14,28 @@
 ```
 能力（可自定义命名）
   └── 专项
-        ├── 行动（+ 备注 + 关联待办 + 关联思绪）
-        ├── 问题（+ 备注 + 关联待办 + 关联思绪）
-        ├── 学习（+ 备注 + 关联思绪）
+        ├── 行动/学习（UI合并为"行为区"，数据层保持分离）
+        ├── 问题
         ├── 过程（已完成待办归档）
-        └── 总结
+        ├── 收获（原名"总结"）
+        └── 关联关系（relations: 手动录入，discover/derive/harvest）
 ```
+
+## 项目详情页（V3 三区布局）
+- 行为区 = entries.action + entries.learning 合并展示
+- 问题区 = entries.problem
+- 收获区 = entries.review（displayLabel改为"收获"）
+- 关联关系：项目级 `relations` 数组，手动录入（非自动推导）
+- 关系图：SVG 贝塞尔曲线 + 固定色块节点（绿/橙/金/紫空心）+ 权重影响大小
+- 界面特点：有机列表（无卡片边框）、左侧彩色竖线、三区彩色图标标题、浮动按钮
 
 ## 数据模型（V2.1）
 - 条目：note, createdFromTodoId, relatedProcessId, relatedTodoId（双向关联待办）
 - 待办：note, generatedEntryIds, sourceThoughtId（来源思绪）
 - 思绪：importance（权重）, note（备注）, relatedCapId/ProjId/EntryType/EntryId/TodoId（支持关联到能力/专项/条目/待办）
+- 关联关系（新增）：{id, fromId, toId, type} — type: discover/derive/harvest
 - 解放脑/外交墙：自由记录
-- 命名配置：topLevel/ capability/module1/module2/module3 全部可自定义
+- 命名配置：topLevel/ capability/ insight/ module1/module2/module3 全部可自定义
 
 ## Git管理
 - 开发目录：D:\VIBE\能力线
@@ -40,3 +49,5 @@
 - 2026-05-08 V2.1：恢复思绪权重、行为关联已完成待办、关联双向显示（含图标）、全排序统一、首页标题解耦、PWA配置修复
 - 2026-05-09 V2.2：修复思绪权重排序、能力/专项卡片显示关联思绪、待办权重编辑bug
 - 2026-05-11 V2.3：新增GitHub云同步模块（js/sync.js），完全手动模式（拉取/推送按钮），操作前自动备份（最多5份），支持备份恢复
+- 2026-05-13 V3.0：项目详情页重构为行为/问题/收获三区有机列表布局，新增relations关联系统，SVG关系图（可拖动）
+- 2026-05-14 V3.1：列表显示权重+备注预览、备注支持换行、行动卡片新增创建待办/录入问题、待办tab关联行动树形选择器、关系图缩线+pill文字+鼠标拖动+节点点击+track改蓝色、关联弹窗类型筛选联动、收获-思绪双向同步（归入思绪开关+自动创建收获）、待办进度条放关系图前

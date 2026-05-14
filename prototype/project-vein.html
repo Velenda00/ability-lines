@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>项目脉络图 - 交互原型 V3</title>
+  <style>
+    :root {
+      --bg:#f7f3ee; --text:#2c2c2c; --muted:#999; --subtle:#c0b8ae;
+      --accent:#5a7d6b; --accent-l:rgba(90,125,107,.08);
+      --issue:#D85A30; --issue-l:rgba(216,90,48,.08);
+      --insight:#D4A017; --insight-l:rgba(212,160,23,.08);
+      --derived:#7F77DD; --derived-l:rgba(127,119,221,.08);
+      --ctx:#aaa; --border:#ece6df;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;
+      background:var(--bg);color:var(--text);
+      max-width:480px;margin:0 auto;
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:80px;
+      -webkit-tap-highlight-color:transparent;
+      overflow-y:auto; min-height:100vh;
+    }
+
+    /* Decorative background blobs */
+    body::before, body::after {
+      content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:-1;
+    }
+    body::before {
+      width:220px;height:220px;top:-80px;right:-90px;
+      background:radial-gradient(circle,rgba(90,125,107,.05) 0%,transparent 70%);
+    }
+    body::after {
+      width:180px;height:180px;bottom:60px;left:-60px;
+      background:radial-gradient(circle,rgba(212,160,23,.04) 0%,transparent 70%);
+    }
+
+    /* ── Header ── */
+    .hdr{padding:18px 20px 12px;position:relative}
+    .hdr-back{
+      font-size:13px;color:var(--accent);cursor:pointer;
+      display:inline-flex;align-items:center;gap:4px;margin-bottom:4px;
+    }
+    .hdr-back svg{width:14px;height:14px}
+    .hdr-title{font-size:17px;font-weight:600;letter-spacing:.3px}
+
+    /* ── Stats strip ── */
+    .stats{
+      display:flex;padding:6px 20px 12px;gap:6px;
+      font-size:11px;color:var(--muted);
+      border-bottom:.5px solid var(--border);
+      align-items:center;
+    }
+    .stat{display:flex;align-items:center;gap:3px;padding:3px 0}
+    .stat b{color:var(--text);font-weight:600;font-size:12px}
+    .stat-sep{width:3px;height:3px;border-radius:50%;background:var(--subtle);margin:0 3px}
+
+    /* ── Section header with prominent icon ── */
+    .sec{
+      padding:14px 20px 6px;
+      display:flex;align-items:center;gap:10px;
+      position:relative;
+    }
+    .sec-icon{
+      width:28px;height:28px;border-radius:8px;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .sec-icon svg{width:16px;height:16px}
+    .sec-icon.track{background:var(--accent-l)}
+    .sec-icon.issue{background:var(--issue-l)}
+    .sec-icon.insight{background:var(--insight-l)}
+    .sec-title{font-size:13px;font-weight:600;color:var(--text);letter-spacing:.5px}
+    .sec-line{flex:1;height:.5px;background:var(--border);margin-left:6px}
+
+    /* ── Left vertical line for hierarchy ── */
+    .sec-content{position:relative}
+    .sec-content::before{
+      content:'';position:absolute;left:29px;top:0;bottom:0;
+      width:2px;border-radius:1px;opacity:.25;
+    }
+    .sec-content.tracks::before{background:var(--accent)}
+    .sec-content.issues::before{background:var(--issue)}
+    .sec-content.insights::before{background:var(--insight)}
+
+    /* ── Separator between sections ── */
+    .sep{
+      display:flex;align-items:center;padding:6px 20px;gap:8px;
+    }
+    .sep-dot{width:3px;height:3px;border-radius:50%;background:var(--subtle)}
+    .sep-line{flex:1;height:.5px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+    /* ── List item - organic ── */
+    .li{
+      display:flex;align-items:center;
+      padding:12px 20px 12px 48px;cursor:pointer;
+      transition:background .12s;
+      position:relative;
+    }
+    .li:active{background:rgba(0,0,0,.02)}
+    .li.sel{background:var(--accent-l)}
+    .li+.li{border-top:.5px solid rgba(0,0,0,.03)}
+
+    /* Horizontal connector from vertical line to dot */
+    .li::before{
+      content:'';position:absolute;left:31px;top:50%;
+      width:10px;height:.5px;background:var(--border);
+    }
+    .ii::before{
+      content:'';position:absolute;left:31px;top:50%;
+      width:10px;height:.5px;background:var(--border);
+    }
+
+    /* Dot indicator */
+    .dot{border-radius:50%;margin-right:12px;flex-shrink:0;position:relative;z-index:1}
+    .dot.track{
+      width:10px;height:10px;
+      background:var(--accent);
+      box-shadow:0 0 0 3px rgba(90,125,107,.1);
+    }
+    .dot.derived{
+      width:10px;height:10px;
+      background:transparent;
+      border:2px solid var(--derived);
+      box-shadow:0 0 0 3px rgba(127,119,221,.08);
+    }
+
+    .li-body{flex:1;min-width:0}
+    .li-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .li-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+    /* Meta badges */
+    .meta{
+      display:inline-flex;align-items:center;gap:3px;
+      font-size:10px;color:var(--muted);
+      background:rgba(0,0,0,.03);padding:2px 7px;border-radius:8px;
+      margin-left:6px;flex-shrink:0;white-space:nowrap;
+    }
+    .meta svg{width:10px;height:10px;flex-shrink:0}
+
+    /* ── Thought association line ── */
+    .thought-line{
+      font-size:11px;color:#888;padding:2px 0 0 22px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+
+    /* ── Issue / Insight items (same size as behaviors) ── */
+    .ii{
+      display:flex;align-items:flex-start;padding:12px 20px 8px 48px;cursor:pointer;
+      position:relative;
+    }
+    .ii:active{background:rgba(0,0,0,.02)}
+    .ii+.ii{border-top:.5px solid rgba(0,0,0,.03)}
+    .idot{width:8px;height:8px;border-radius:50%;margin-right:12px;flex-shrink:0;margin-top:5px;position:relative;z-index:1}
+    .idot.issue{background:var(--issue);box-shadow:0 0 0 3px var(--issue-l)}
+    .idot.issue-ok{background:var(--issue);box-shadow:0 0 0 3px var(--issue-l);opacity:.5}
+    .idot.insight{background:var(--insight);box-shadow:0 0 0 3px var(--insight-l)}
+    .iname{font-size:14px;font-weight:500;flex:1;line-height:1.4}
+    .ist{font-size:10px;color:var(--muted);margin-left:8px;white-space:nowrap;margin-top:3px}
+
+    /* ── Graph panel (expandable) ── */
+    .gp{
+      overflow:hidden;max-height:0;opacity:0;
+      transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease;
+    }
+    .gp.open{max-height:650px;opacity:1}
+    .gp-inner{
+      margin:4px 16px 10px;padding:18px 12px 14px;
+      background:rgba(255,255,255,.55);
+      border-radius:16px;
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      box-shadow:0 1px 6px rgba(0,0,0,.03);
+      position:relative;overflow:hidden;
+    }
+    .gp-inner::before{
+      content:'';position:absolute;top:-20px;right:-20px;
+      width:80px;height:80px;border-radius:50%;
+      background:radial-gradient(circle,rgba(90,125,107,.04) 0%,transparent 70%);
+    }
+
+    /* Graph container for drag */
+    .graph-wrap{
+      overflow:hidden;border-radius:12px;
+      background:rgba(255,255,255,.3);
+      cursor:grab;touch-action:none;
+      position:relative;
+      user-select:none;-webkit-user-select:none;
+    }
+    .graph-wrap:active{cursor:grabbing}
+    .graph-wrap svg{display:block;width:100%;height:auto;pointer-events:none}
+    .graph-wrap .node-hit{pointer-events:all;cursor:pointer}
+
+    /* Drag hint */
+    .drag-hint{
+      text-align:center;font-size:10px;color:var(--subtle);
+      padding:4px 0 2px;display:flex;align-items:center;justify-content:center;gap:3px;
+    }
+    .drag-hint svg{width:10px;height:10px}
+
+    /* ── Todo fold ── */
+    .tf{margin-top:12px;padding-top:10px;border-top:.5px dashed var(--border)}
+    .tf-label{
+      font-size:11px;color:var(--muted);cursor:pointer;
+      display:flex;align-items:center;gap:5px;
+    }
+    .tf-label svg{width:10px;height:10px;flex-shrink:0;transition:transform .2s}
+    .tf-label svg.open{transform:rotate(90deg)}
+    .tf-list{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .tf-list.open{max-height:400px}
+    .tr{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:12px;color:var(--muted)}
+    .tc{
+      width:15px;height:15px;border-radius:50%;border:1.5px solid #ccc;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;font-size:8px;cursor:pointer;transition:all .2s;
+    }
+    .tc.done{border-color:var(--accent);background:var(--accent);color:white}
+    .tt.done{text-decoration:line-through;color:var(--subtle)}
+
+    /* ── FABs ── */
+    .fab-wrap{
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+      display:flex;gap:8px;z-index:50;
+      max-width:460px;width:calc(100% - 40px);
+    }
+    .fab{
+      flex:1;padding:12px 6px;border-radius:14px;
+      font-size:12px;font-weight:500;text-align:center;
+      cursor:pointer;border:none;
+      box-shadow:0 2px 12px rgba(0,0,0,.08);
+      transition:transform .12s,box-shadow .12s;
+      display:flex;align-items:center;justify-content:center;gap:4px;
+    }
+    .fab:active{transform:scale(.97);box-shadow:0 1px 6px rgba(0,0,0,.06)}
+    .fab svg{width:13px;height:13px}
+    .fab.pri{background:var(--accent);color:white}
+    .fab.gho{background:white;color:var(--muted);border:.5px solid var(--border)}
+    .fab.thi{background:white;color:var(--insight);border:.5px solid var(--border)}
+
+    /* ── Toast ── */
+    .toast{
+      position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+      background:rgba(44,44,44,.88);color:white;
+      padding:8px 20px;border-radius:20px;
+      font-size:12px;opacity:0;transition:opacity .3s;
+      pointer-events:none;z-index:100;white-space:nowrap;
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    }
+    .toast.show{opacity:1}
+
+    /* ── Issue resolved checkmark overlay ── */
+    .issue-check{
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hdr">
+    <div class="hdr-back" onclick="toast('返回能力页')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      返回
+    </div>
+    <div class="hdr-title">英语口语 · 日常跟读训练</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>3</b> 行为</div>
+    <div class="stat-sep"></div>
+    <div class="stat"><b>2</b> 问题</div>
+    <div class="stat-sep"></div>
+    <div class="stat"><b>1</b> 收获</div>
+    <div class="stat-sep"></div>
+    <div class="stat"><b>7</b> 待办进行中</div>
+  </div>
+
+  <!-- ═══ 行为区 ═══ -->
+  <div class="sec">
+    <span class="sec-icon track">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5a7d6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+      </svg>
+    </span>
+    <span class="sec-title">行为</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="sec-content tracks" id="T"></div>
+
+  <div class="sep"><span class="sep-dot"></span><div class="sep-line"></div><span class="sep-dot"></span></div>
+
+  <!-- ═══ 问题区 ═══ -->
+  <div class="sec">
+    <span class="sec-icon issue">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#D85A30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </span>
+    <span class="sec-title">问题</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="sec-content issues" id="I"></div>
+
+  <div class="sep"><span class="sep-dot"></span><div class="sep-line"></div><span class="sep-dot"></span></div>
+
+  <!-- ═══ 收获区 ═══ -->
+  <div class="sec">
+    <span class="sec-icon insight">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+      </svg>
+    </span>
+    <span class="sec-title">收获</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="sec-content insights" id="N"></div>
+
+  <div class="fab-wrap">
+    <button class="fab pri" onclick="toast('新建行为')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      行为
+    </button>
+    <button class="fab gho" onclick="toast('记录问题')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      问题
+    </button>
+    <button class="fab thi" onclick="toast('记录收获')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      收获
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+/* ============ Icons ============ */
+const ICO = {
+  todo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+  thought: `💭`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>`
+};
+
+/* ============ Prototype Data ============ */
+const tracks = [
+  { id:'t1', name:'跟读训练', todos:[
+    {t:'课前预习本课内容',d:true},{t:'跟读视频1 - 元音发音',d:true},
+    {t:'跟读视频2 - 辅音发音',d:true},{t:'跟读视频3 - 语调练习',d:true},
+    {t:'跟读视频4 - 连读技巧',d:true},{t:'跟读视频5 - 实战对话',d:false},
+    {t:'跟读视频6 - 速度挑战',d:false}
+  ], orig:true,
+    thoughts:[
+      {text:'元音发音位置需要特别记忆'},
+      {text:'连读和语调结合练习效果更好'}
+    ] },
+  { id:'t2', name:'语音学系统学习', todos:[
+    {t:'阅读教材第1章',d:true},{t:'阅读教材第2章',d:false},
+    {t:'阅读教材第3章',d:false},{t:'做课后练习题',d:false}
+  ], orig:true, thoughts:[] },
+  { id:'t3', name:'影子跟读练习', todos:[
+    {t:'影子跟读 TED Talk 1',d:true},{t:'影子跟读 TED Talk 2',d:false},
+    {t:'影子跟读 TED Talk 3',d:false}
+  ], orig:false, srcIssue:'i2', srcIssueName:'语调不自然',
+    thoughts:[
+      {text:'语调模仿比发音纠正更优先'}
+    ] }
+];
+
+const issues = [
+  { id:'i1', name:'发音不到位', ok:true,
+    thoughts:[{text:'对比美式和英式发音差异'}] },
+  { id:'i2', name:'语调不自然', ok:false,
+    thoughts:[
+      {text:'中文声调和英语语调的干扰'},
+      {text:'需要识别升调和降调的使用场景'},
+      {text:'可以从句子重音开始训练'}
+    ] }
+];
+
+const insights = [
+  { id:'n1', name:'阶段收获总结', thoughts:[] }
+];
+
+/* ============ Graph Data ============ */
+const graphs = {
+  t1: {
+    nodes: [
+      {x:130,y:108,label:'跟读训练',type:'center',w:1},
+      {x:75,y:30,label:'发音不到位',type:'issue',ok:true,w:0.8},
+      {x:240,y:30,label:'语调不自然',type:'issue',ok:false,w:0.9},
+      {x:325,y:95,label:'影子跟读',type:'derived',w:0.7},
+      {x:195,y:198,label:'阶段收获',type:'insight',w:0.6}
+    ],
+    edges: [
+      {a:0,b:1,l:'发现问题',type:'discover'},
+      {a:0,b:2,l:'发现问题',type:'discover'},
+      {a:2,b:3,l:'衍生行为',type:'derive'},
+      {a:0,b:4,l:'总结收获',type:'harvest'}
+    ]
+  },
+  t2: {
+    nodes: [
+      {x:160,y:108,label:'语音学系统学习',type:'center',w:0.8},
+      {x:160,y:30,label:'发音不到位',type:'issue',ok:true,w:0.8},
+      {x:160,y:198,label:'阶段收获',type:'insight',w:0.6}
+    ],
+    edges: [
+      {a:0,b:1,l:'发现问题',type:'discover'},
+      {a:0,b:2,l:'总结收获',type:'harvest'}
+    ]
+  },
+  t3: {
+    nodes: [
+      {x:230,y:108,label:'影子跟读练习',type:'center',w:0.7},
+      {x:50,y:65,label:'跟读训练',type:'ctx',w:0.5},
+      {x:145,y:28,label:'语调不自然',type:'issue',ok:false,w:0.9},
+      {x:230,y:198,label:'阶段收获',type:'insight',w:0.6}
+    ],
+    edges: [
+      {a:1,b:2,l:'发现问题',type:'discover'},
+      {a:2,b:0,l:'衍生行为',type:'derive'},
+      {a:0,b:3,l:'总结收获',type:'harvest'}
+    ]
+  }
+};
+
+/* ============ Render ============ */
+let sel = null;
+
+function esc(s){ return s.replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+function renderThoughtLine(thoughts) {
+  if (!thoughts || !thoughts.length) return '';
+  const show = thoughts.slice(0,2);
+  let h = '<div class="thought-line">';
+  h += show.map(t => `💭 ${esc(t.text.slice(0,20))}`).join('、');
+  if (thoughts.length > 2) h += ` 等${thoughts.length}条`;
+  h += '</div>';
+  return h;
+}
+
+function render() {
+  // ── Tracks ──
+  let h = '';
+  tracks.forEach(t => {
+    const done = t.todos.filter(x => x.d).length;
+    const total = t.todos.length;
+    const dc = t.orig ? 'track' : 'derived';
+    const sc = sel === t.id ? ' sel' : '';
+    const pt = done === total ? '已完成' : (total - done) + ' 进行中';
+    const subText = t.orig ? pt : `衍生于：${t.srcIssueName} · ${pt}`;
+
+    let badges = `<span class="meta">${ICO.todo} ${done}/${total}</span>`;
+    if (t.thoughts.length > 0) {
+      badges += `<span class="meta">${ICO.thought} ${t.thoughts.length}</span>`;
+    }
+
+    h += `<div class="li${sc}" onclick="toggle('${t.id}')">
+      <div class="dot ${dc}"></div>
+      <div class="li-body">
+        <div class="li-name">${t.name}</div>
+        <div class="li-sub">${subText}</div>
+      </div>
+      ${badges}
+    </div>`;
+
+    // Thought detail line (shown when not selected, or always as preview)
+    h += renderThoughtLine(t.thoughts);
+
+    const go = sel === t.id ? ' open' : '';
+    h += `<div class="gp${go}">${graphPanel(t)}</div>`;
+  });
+  document.getElementById('T').innerHTML = h;
+
+  // ── Issues ──
+  document.getElementById('I').innerHTML = issues.map(i => {
+    let badges = '';
+    if (i.thoughts.length > 0) {
+      badges += `<span class="meta">${ICO.thought} ${i.thoughts.length}</span>`;
+    }
+    // Use orange for all issues; solved ones get a checkmark overlay
+    const dotClass = i.ok ? 'issue-ok' : 'issue';
+    let checkSvg = '';
+    if (i.ok) {
+      checkSvg = `<svg class="issue-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+    }
+    let thoughtHtml = renderThoughtLine(i.thoughts);
+    return `<div class="ii" style="padding-left:48px">
+      <div class="idot ${dotClass}" style="position:relative">${checkSvg}</div>
+      <div style="flex:1">
+        <div class="iname">${i.name}</div>
+        ${thoughtHtml}
+      </div>
+      <span class="ist">${i.ok?'已解决':'未解决'}</span>
+      ${badges}
+    </div>`;
+  }).join('');
+
+  // ── Insights ──
+  document.getElementById('N').innerHTML = insights.map(n => {
+    let badges = '';
+    if (n.thoughts.length > 0) {
+      badges += `<span class="meta">${ICO.thought} ${n.thoughts.length}</span>`;
+    }
+    let thoughtHtml = renderThoughtLine(n.thoughts);
+    return `<div class="ii" style="padding-left:48px">
+      <div class="idot insight"></div>
+      <div style="flex:1">
+        <div class="iname">${n.name}</div>
+        ${thoughtHtml}
+      </div>
+      ${badges}
+    </div>`;
+  }).join('');
+}
+
+/* ============ Graph Panel ============ */
+let graphInstances = {};
+
+function graphPanel(track) {
+  const g = graphs[track.id];
+  let h = '<div class="gp-inner">';
+
+  if (!g) {
+    h += '<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px 0">暂无关联</div>';
+  } else {
+    const gid = 'graph_' + track.id;
+    h += `<div class="graph-wrap" id="${gid}" ontouchstart="gTouchStart(event,'${gid}')" ontouchmove="gTouchMove(event,'${gid}')" ontouchend="gTouchEnd(event,'${gid}')">`;
+    h += renderSVG(g, gid);
+    h += '</div>';
+    h += `<div class="drag-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l4-4 4 4"/><path d="M9 5v14"/><path d="M19 9l-4-4-4 4"/><path d="M15 5v14"/></svg>
+      拖动平移 · 双指缩放 · 点击节点查看详情
+    </div>`;
+
+    // Todo fold
+    const done = track.todos.filter(x => x.d).length;
+    const total = track.todos.length;
+    h += `<div class="tf">
+      <div class="tf-label" onclick="event.stopPropagation();tfToggle(this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        待办 ${done}/${total}
+      </div>
+      <div class="tf-list">
+        ${track.todos.map(t => `<div class="tr" onclick="event.stopPropagation();tcToggle(this)">
+          <div class="tc${t.d?' done':''}">${t.d?ICO.check:''}</div>
+          <span class="tt${t.d?' done':''}">${t.t}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  h += '</div>';
+  return h;
+}
+
+function renderSVG(g, gid) {
+  const W = 400, H = 240;
+  let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Subtle decorative rings
+  s += `<circle cx="${W/2}" cy="${H/2}" r="100" fill="none" stroke="rgba(0,0,0,.018)" stroke-width="1" stroke-dasharray="4 4"/>`;
+  s += `<circle cx="${W/2}" cy="${H/2}" r="65" fill="none" stroke="rgba(0,0,0,.012)" stroke-width="1" stroke-dasharray="3 3"/>`;
+
+  const edgeColor = { discover:'#D85A30', derive:'#7F77DD', harvest:'#D4A017' };
+
+  // Edges (curved)
+  g.edges.forEach(e => {
+    const f = g.nodes[e.a], t = g.nodes[e.b];
+    const col = edgeColor[e.type] || '#aaa';
+    const dash = e.type === 'derive' ? ' stroke-dasharray="6 3"' : '';
+
+    const mx = (f.x + t.x) / 2;
+    const my = (f.y + t.y) / 2;
+    const dx = t.x - f.x, dy = t.y - f.y;
+    const cx = mx - dy * 0.12, cy = my + dx * 0.12;
+
+    s += `<path d="M${f.x},${f.y} Q${cx},${cy} ${t.x},${t.y}"
+      stroke="${col}" stroke-width="1.5"${dash} opacity="0.35" fill="none"/>`;
+
+    if (e.l) {
+      const lw = e.l.length * 9 + 12;
+      s += `<rect x="${cx-lw/2}" y="${cy-8}" width="${lw}" height="16" rx="8"
+        fill="white" opacity="0.92"/>`;
+      s += `<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="central"
+        fill="${col}" font-size="8" font-weight="500">${e.l}</text>`;
+    }
+  });
+
+  // Nodes
+  g.nodes.forEach((n, idx) => {
+    const isC = n.type === 'center';
+    const wMul = 0.7 + (n.w || 0.5) * 0.6;
+    const nodeOpacity = 0.55 + (n.w || 0.5) * 0.45;
+
+    let fill, glowColor;
+    switch(n.type) {
+      case 'center': fill='#5a7d6b'; glowColor='rgba(90,125,107,.14)'; break;
+      case 'issue': fill='#D85A30'; glowColor='rgba(216,90,48,.12)'; break;
+      case 'derived': fill='#7F77DD'; glowColor='rgba(127,119,221,.12)'; break;
+      case 'insight': fill='#D4A017'; glowColor='rgba(212,160,23,.12)'; break;
+      case 'ctx': fill='#aaa'; glowColor='rgba(170,170,170,.06)'; break;
+    }
+
+    if (isC) {
+      const baseR = n.label.length > 5 ? 30 : 26;
+      const r = Math.round(baseR * wMul);
+      const fs = n.label.length > 5 ? 9 : 11;
+      s += `<circle cx="${n.x}" cy="${n.y}" r="${r+8}" fill="${glowColor}"/>`;
+      s += `<circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${fill}" opacity="${nodeOpacity}"/>`;
+      // Resolved indicator for center issues (not applicable)
+      s += `<text x="${n.x}" y="${n.y}" text-anchor="middle" dominant-baseline="central"
+        fill="white" font-size="${fs}" font-weight="600">${n.label}</text>`;
+    } else {
+      const baseR = 9;
+      const r = Math.round(baseR * wMul);
+
+      s += `<circle cx="${n.x}" cy="${n.y}" r="${r+5}" fill="${glowColor}"/>`;
+
+      if (n.type === 'derived') {
+        // Hollow ring for derived
+        s += `<circle cx="${n.x}" cy="${n.y}" r="${r}" fill="none" stroke="${fill}" stroke-width="2" opacity="${nodeOpacity}"/>`;
+        // Small inner dot
+        s += `<circle cx="${n.x}" cy="${n.y}" r="3" fill="${fill}" opacity="${nodeOpacity*0.5}"/>`;
+      } else {
+        s += `<circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${fill}" opacity="${nodeOpacity}"/>`;
+      }
+
+      // Issue resolved checkmark
+      if (n.type === 'issue' && n.ok) {
+        s += `<path d="M${n.x-3},${n.y} L${n.x-1},${n.y+2.5} L${n.x+3.5},${n.y-2.5}"
+          fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>`;
+      }
+
+      // Label
+      let ly = n.y;
+      if (n.type === 'issue' || n.type === 'ctx') ly = n.y - 16;
+      else if (n.type === 'insight' || n.type === 'derived') ly = n.y + 20;
+      s += `<text x="${n.x}" y="${ly}" text-anchor="middle" dominant-baseline="central"
+        fill="#2c2c2c" font-size="10" font-weight="500">${n.label}</text>`;
+    }
+  });
+
+  s += '</svg>';
+  return s;
+}
+
+/* ============ Graph Touch Drag ============ */
+let dragState = {};
+
+function gTouchStart(e, gid) {
+  if (e.touches.length === 1) {
+    dragState[gid] = {
+      startX: e.touches[0].clientX,
+      startY: e.touches[0].clientY,
+      scrollX: 0, scrollY: 0,
+      dragging: false
+    };
+  }
+}
+
+function gTouchMove(e, gid) {
+  const ds = dragState[gid];
+  if (!ds || e.touches.length !== 1) return;
+  e.preventDefault();
+
+  const dx = e.touches[0].clientX - ds.startX;
+  const dy = e.touches[0].clientY - ds.startY;
+
+  if (!ds.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+    ds.dragging = true;
+  }
+  if (ds.dragging) {
+    ds.scrollX += dx;
+    ds.scrollY += dy;
+    ds.startX = e.touches[0].clientX;
+    ds.startY = e.touches[0].clientY;
+
+    const wrap = document.getElementById(gid);
+    if (wrap) {
+      const svg = wrap.querySelector('svg');
+      if (svg) {
+        svg.style.transform = `translate(${ds.scrollX}px, ${ds.scrollY}px)`;
+        svg.style.transition = 'none';
+      }
+    }
+  }
+}
+
+function gTouchEnd(e, gid) {
+  const ds = dragState[gid];
+  if (ds && !ds.dragging) {
+    // It was a tap, not a drag - reset position with smooth animation
+    const wrap = document.getElementById(gid);
+    if (wrap) {
+      const svg = wrap.querySelector('svg');
+      if (svg) {
+        svg.style.transition = 'transform .3s ease';
+        svg.style.transform = 'translate(0,0)';
+      }
+    }
+    dragState[gid] = { startX:0, startY:0, scrollX:0, scrollY:0, dragging:false };
+  }
+}
+
+/* ============ Interactions ============ */
+function toggle(id) {
+  // Reset any dragged graphs when closing
+  if (sel === id) {
+    const oldGid = 'graph_' + id;
+    const wrap = document.getElementById(oldGid);
+    if (wrap) {
+      const svg = wrap.querySelector('svg');
+      if (svg) { svg.style.transform = ''; svg.style.transition = ''; }
+    }
+    dragState[oldGid] = null;
+  }
+  sel = sel === id ? null : id;
+  render();
+}
+
+function tfToggle(labelEl) {
+  const arrow = labelEl.querySelector('svg');
+  const list = labelEl.parentElement.querySelector('.tf-list');
+  arrow.classList.toggle('open');
+  list.classList.toggle('open');
+}
+
+function tcToggle(rowEl) {
+  const c = rowEl.querySelector('.tc');
+  const t = rowEl.querySelector('.tt');
+  const isDone = c.classList.toggle('done');
+  c.innerHTML = isDone ? ICO.check : '';
+  t.classList.toggle('done');
+  toast(isDone ? '已完成' : '已恢复');
+}
+
+let tt;
+function toast(m) {
+  const e = document.getElementById('toast');
+  e.textContent = m; e.classList.add('show');
+  clearTimeout(tt); tt = setTimeout(() => e.classList.remove('show'), 1200);
+}
+
+/* Init */
+render();
+</script>
+</body>
+</html>

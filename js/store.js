@@ -6,16 +6,17 @@ const STORE_NAME = 'dataStore';
 // 数据结构（2026-05-08 v2.1 完整版）
 //
 // nameConfig: { topLevel, capability, project, process,
-//               action, problem, learning, review,
+//               action, problem, learning, review, insight,
 //               module1, module2, module3 }
 // capabilities: [{ id, name, importance, createdAt, projects: [{
 //   id, name, importance, createdAt,
 //   process: [{ id, text, importance, todoId, completedAt, relatedEntryIds }],
 //   entries: { action:[{id,text,createdAt,importance,relatedTodoId,relatedProcessId,createdFromTodoId,note}],
-//              problem:[...], learning:[...], review:[...] }
+//              problem:[...], learning:[...], review:[...] },
+//   relations: [{ id, fromId, toId, type }]  // type: discover|derive|harvest
 // }]}]
 // thoughts: [{ id, text, createdAt, tags:[], importance, note,
-//              relatedCapId, relatedProjId, relatedEntryType, relatedEntryId, relatedTodoId }]
+//              relatedCapId, relatedProjId, relatedEntryType, relatedEntryId, relatedLiberationId }]
 // todos: [{ id, text, importance, createdAt, isToday, status, completedAt, note,
 //           sourceCapId, sourceProjId, sourceEntryType, sourceEntryId,
 //           processCapId, processProjId, processEntryIds }]
@@ -65,7 +66,7 @@ const Store = {
     return {
       topLevel: '再塑法典',
       capability: '能力', project: '专项', process: '过程',
-      action: '行动', problem: '问题', learning: '学习', review: '总结',
+      action: '行动', problem: '问题', learning: '学习', review: '总结', insight: '收获',
       module1: '思维枷锁-破', module2: '核心能力-铸', module3: '风采展示-显'
     };
   },
@@ -90,21 +91,25 @@ const Store = {
     if (!data.nameConfig) data.nameConfig = this.getDefaultNameConfig();
     if (!data.nameConfig.topLevel) data.nameConfig.topLevel = '再塑法典';
     if (!data.nameConfig.process) data.nameConfig.process = '过程';
+    if (!data.nameConfig.insight) data.nameConfig.insight = '收获';
     if (!data.goals) data.goals = [];
     if (!data.thoughts) data.thoughts = [];
     if (!data.todos) data.todos = [];
     // 为旧数据补字段
-    data.capabilities.forEach(c => { if (c.importance === undefined) c.importance = 0; });
+    data.capabilities.forEach(c => { if (c.importance === undefined) c.importance = 0; if (c.status === undefined) c.status = 'active'; });
     data.capabilities.forEach(c => {
       c.projects.forEach(p => {
         if (p.importance === undefined) p.importance = 0;
+        if (p.status === undefined) p.status = 'active';
         if (!p.process) p.process = [];
+        if (!p.relations) p.relations = [];
         Object.keys(p.entries).forEach(k => {
           p.entries[k].forEach(e => {
             if (e.importance === undefined) e.importance = 0;
             if (e.relatedProcessId === undefined) e.relatedProcessId = null;
             if (e.createdFromTodoId === undefined) e.createdFromTodoId = null;
             if (e.note === undefined) e.note = '';
+            if (e.status === undefined) e.status = 'active';
           });
         });
       });
@@ -117,11 +122,15 @@ const Store = {
       if (t.relatedProjId === undefined) t.relatedProjId = null;
       if (t.relatedEntryType === undefined) t.relatedEntryType = null;
       if (t.relatedEntryId === undefined) t.relatedEntryId = null;
-      if (t.relatedTodoId === undefined) t.relatedTodoId = null;
+      if (t.relatedLiberationId === undefined) t.relatedLiberationId = null;
     });
-    // 待办补备注
+    // 待办补备注和关联字段
     data.todos.forEach(t => {
       if (t.note === undefined) t.note = '';
+      if (t.sourceCapId === undefined) t.sourceCapId = null;
+      if (t.sourceProjId === undefined) t.sourceProjId = null;
+      if (t.sourceEntryType === undefined) t.sourceEntryType = null;
+      if (t.sourceEntryId === undefined) t.sourceEntryId = null;
     });
     return data;
   },
@@ -152,11 +161,12 @@ const Store = {
     await this.saveAll(data);
     return cap;
   },
-  async updateCapability(id, name, importance) {
+  async updateCapability(id, name, importance, status) {
     const data = await this.getAll(); const c = data.capabilities.find(x => x.id === id);
     if (!c) return null;
     if (name !== undefined) c.name = name;
     if (importance !== undefined) c.importance = importance;
+    if (status !== undefined) c.status = status;
     await this.saveAll(data); return c;
   },
   async deleteCapability(id) {
@@ -170,17 +180,18 @@ const Store = {
     const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
     if (!cap) return null;
     const p = { id: uid('proj'), name, importance: importance || 0,
-      createdAt: new Date().toISOString(), process: [],
+      createdAt: new Date().toISOString(), process: [], relations: [],
       entries: { action: [], problem: [], learning: [], review: [] } };
     cap.projects.push(p);
     await this.saveAll(data); return p;
   },
-  async updateProject(capId, projId, name, importance) {
+  async updateProject(capId, projId, name, importance, status) {
     const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
     if (!cap) return null; const p = cap.projects.find(x => x.id === projId);
     if (!p) return null;
     if (name !== undefined) p.name = name;
     if (importance !== undefined) p.importance = importance;
+    if (status !== undefined) p.status = status;
     await this.saveAll(data); return p;
   },
   async deleteProject(capId, projId) {
@@ -198,7 +209,7 @@ const Store = {
     const entry = { id: uid('entry'), text, createdAt: new Date().toISOString(),
       importance: importance || 0, relatedTodoId: relatedTodoId || null,
       relatedProcessId: relatedProcessId || null, createdFromTodoId: createdFromTodoId || null,
-      note: note || '' };
+      note: note || '', syncThoughtId: null };
     if (!proj.entries[type]) proj.entries[type] = [];
     proj.entries[type].push(entry);
     if (relatedProcessId) {
@@ -211,7 +222,7 @@ const Store = {
     }
     await this.saveAll(data); return entry;
   },
-  async updateEntry(capId, projId, type, entryId, text, importance, relatedProcessId, note) {
+  async updateEntry(capId, projId, type, entryId, text, importance, relatedProcessId, note, status) {
     const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
     if (!cap) return null; const proj = cap.projects.find(p => p.id === projId);
     if (!proj) return null; const entry = (proj.entries[type]||[]).find(e => e.id === entryId);
@@ -219,6 +230,7 @@ const Store = {
     if (text !== undefined) entry.text = text;
     if (importance !== undefined) entry.importance = importance;
     if (note !== undefined) entry.note = note;
+    if (status !== undefined) entry.status = status;
     if (relatedProcessId !== undefined) {
       if (entry.relatedProcessId) {
         const oldPe = (proj.process||[]).find(x => x.id === entry.relatedProcessId);
@@ -237,6 +249,28 @@ const Store = {
     if (!cap) return; const proj = cap.projects.find(p => p.id === projId);
     if (!proj) return;
     proj.entries[type] = (proj.entries[type]||[]).filter(e => e.id !== entryId);
+    // 同时删除相关关联
+    if (proj.relations) proj.relations = proj.relations.filter(r => r.fromId !== entryId && r.toId !== entryId);
+    await this.saveAll(data);
+  },
+
+  // ==================== 关联关系 ====================
+  async addRelation(capId, projId, fromId, toId, type) {
+    const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
+    if (!cap) return null; const proj = cap.projects.find(p => p.id === projId);
+    if (!proj) return null;
+    if (!proj.relations) proj.relations = [];
+    // 检查是否已存在相同关联（双向检查）
+    if (proj.relations.some(r => (r.fromId===fromId&&r.toId===toId&&r.type===type)||(r.fromId===toId&&r.toId===fromId&&r.type===type))) return null;
+    const rel = { id: uid('rel'), fromId, toId, type: type || 'discover' };
+    proj.relations.push(rel);
+    await this.saveAll(data); return rel;
+  },
+  async deleteRelation(capId, projId, relationId) {
+    const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
+    if (!cap) return; const proj = cap.projects.find(p => p.id === projId);
+    if (!proj || !proj.relations) return;
+    proj.relations = proj.relations.filter(r => r.id !== relationId);
     await this.saveAll(data);
   },
 
@@ -265,7 +299,7 @@ const Store = {
     const data = await this.getAll();
     const t = { id: uid('th'), text, createdAt: new Date().toISOString(), tags: tags || [],
       importance: importance || 0, note: note || '',
-      relatedCapId: null, relatedProjId: null, relatedEntryType: null, relatedEntryId: null, relatedTodoId: null };
+      relatedCapId: null, relatedProjId: null, relatedEntryType: null, relatedEntryId: null, relatedLiberationId: null };
     data.thoughts.unshift(t);
     await this.saveAll(data); return t;
   },
@@ -278,14 +312,33 @@ const Store = {
     if (note !== undefined) t.note = note;
     await this.saveAll(data); return t;
   },
-  async linkThought(id, relatedCapId, relatedProjId, relatedEntryType, relatedEntryId, relatedTodoId) {
+  async linkThought(id, relatedCapId, relatedProjId, relatedEntryType, relatedEntryId, relatedLiberationId) {
     const data = await this.getAll(); const t = data.thoughts.find(x => x.id === id);
     if (!t) return null;
     t.relatedCapId = relatedCapId || null;
     t.relatedProjId = relatedProjId || null;
     t.relatedEntryType = relatedEntryType || null;
     t.relatedEntryId = relatedEntryId || null;
-    t.relatedTodoId = relatedTodoId || null;
+    t.relatedLiberationId = relatedLiberationId || null;
+    // 如果关联到行为/专项，自动创建收获条目（双向同步）
+    if (relatedCapId && relatedProjId) {
+      const cap = data.capabilities.find(c => c.id === relatedCapId);
+      const proj = cap?.projects.find(p => p.id === relatedProjId);
+      if (proj) {
+        // 检查是否已有同步的收获
+        const exists = (proj.entries.review||[]).some(r => r.syncThoughtId === id);
+        if (!exists) {
+          const review = { id: uid('entry'), text: t.text, createdAt: t.createdAt,
+            importance: t.importance || 0, relatedTodoId: null, relatedProcessId: null,
+            createdFromTodoId: null, note: t.note || '', syncThoughtId: id };
+          if (!proj.entries.review) proj.entries.review = [];
+          proj.entries.review.push(review);
+          t.sourceReviewId = review.id;
+          t.sourceReviewCapId = relatedCapId;
+          t.sourceReviewProjId = relatedProjId;
+        }
+      }
+    }
     await this.saveAll(data); return t;
   },
   async deleteThought(id) {
@@ -334,19 +387,6 @@ const Store = {
     if (!todo) return null;
     todo.status = 'completed';
     todo.completedAt = new Date().toISOString();
-    todo.processCapId = processCapId || todo.sourceCapId;
-    todo.processProjId = processProjId || todo.sourceProjId;
-    const proj = data.capabilities
-      .find(c => c.id === todo.processCapId)?.projects
-      .find(p => p.id === todo.processProjId);
-    if (proj) {
-      if (!proj.process) proj.process = [];
-      const pe = { id: uid('proc'), text: todo.text,
-        importance: todo.importance, todoId: todo.id,
-        completedAt: todo.completedAt, relatedEntryIds: [] };
-      proj.process.push(pe);
-      todo.processEntryIds = [pe.id];
-    }
     await this.saveAll(data); return todo;
   },
   async deleteTodo(id) {
@@ -484,6 +524,7 @@ const Store = {
             if (!data.todos) data.todos = [];
             data.todos.forEach(t => { if (!t.generatedEntryIds) t.generatedEntryIds = []; if (t.note === undefined) t.note = ''; });
             data.capabilities.forEach(c => c.projects.forEach(p => {
+              if (!p.relations) p.relations = [];
               Object.keys(p.entries).forEach(k => p.entries[k].forEach(e => {
                 if (!e.createdFromTodoId) e.createdFromTodoId = null;
                 if (e.note === undefined) e.note = '';
@@ -496,7 +537,7 @@ const Store = {
               if (t.relatedProjId === undefined) t.relatedProjId = null;
               if (t.relatedEntryType === undefined) t.relatedEntryType = null;
               if (t.relatedEntryId === undefined) t.relatedEntryId = null;
-              if (t.relatedTodoId === undefined) t.relatedTodoId = null;
+              if (t.relatedLiberationId === undefined) t.relatedLiberationId = null;
             });
             await this.set('allData', data);
             resolve(data);
