@@ -80,6 +80,62 @@
               "todoId": "todo_1778468547935_76jg",
               "completedAt": "2026-05-12T09:45:57.386Z",
               "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778665145489_9t3y",
+              "text": "学习、行为、问题及能力等，添加完成归档状态",
+              "importance": 2,
+              "todoId": "todo_1778079878130_2afy",
+              "completedAt": "2026-05-13T09:39:05.488Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778665156430_t5dj",
+              "text": "行为当中看不到创办的待办",
+              "importance": 2,
+              "todoId": "todo_1778063992642_afzg",
+              "completedAt": "2026-05-13T09:39:16.430Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778665205134_ddgk",
+              "text": "专项无法设置权重及排序，待办新创建是权重设置无效",
+              "importance": 1,
+              "todoId": "todo_1778063267970_7sz9",
+              "completedAt": "2026-05-13T09:40:05.134Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778666451464_wolc",
+              "text": "思绪的链接还是有点问题",
+              "importance": 0,
+              "todoId": "todo_1778483021061_ilq3",
+              "completedAt": "2026-05-13T10:00:51.464Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778666454646_a4e8",
+              "text": "卡片其实是标题与内容的形式，内容允许排版？",
+              "importance": 0,
+              "todoId": "todo_1778479743141_ni52",
+              "completedAt": "2026-05-13T10:00:54.646Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778666458897_pzop",
+              "text": "无关联待办完成了之后不用归档到某一个过程",
+              "importance": 0,
+              "todoId": "todo_1778481400167_oc8r",
+              "completedAt": "2026-05-13T10:00:58.897Z",
+              "relatedEntryIds": []
+            },
+            {
+              "id": "proc_1778672523155_e9hs",
+              "text": "线条为又行为牵头的一系列东西",
+              "importance": 0,
+              "todoId": "todo_1778598994825_a0te",
+              "completedAt": "2026-05-13T11:42:03.147Z",
+              "relatedEntryIds": []
             }
           ],
           "entries": {
@@ -371,6 +427,19 @@
                 "note": ""
               }
             ],
+            "review": []
+          }
+        },
+        {
+          "id": "proj_1778678332046_9nyy",
+          "name": "素材库",
+          "importance": 0,
+          "createdAt": "2026-05-13T13:18:52.046Z",
+          "process": [],
+          "entries": {
+            "action": [],
+            "problem": [],
+            "learning": [],
             "review": []
           }
         }
@@ -711,15 +780,17 @@
       "importance": 1,
       "createdAt": "2026-05-06T10:27:47.970Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T09:40:05.134Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": [],
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778665205134_ddgk"
+      ],
       "note": ""
     },
     {
@@ -745,15 +816,17 @@
       "importance": 2,
       "createdAt": "2026-05-06T10:39:52.642Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T09:39:16.430Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": [],
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778665156430_t5dj"
+      ],
       "note": ""
     },
     {
@@ -761,7 +834,7 @@
       "text": "观看辩论赛“要不要使用让别人爱你的超能力”并为双方结辩，然后由ai评价观点是否突出明确、条理清晰、有说服力",
       "importance": 0,
       "createdAt": "2026-05-06T14:51:10.992Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "sourceCapId": "cap_1778063121284_l86i",
@@ -794,15 +867,17 @@
       "importance": 2,
       "createdAt": "2026-05-06T15:04:38.130Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T09:39:05.488Z",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": [],
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778665145489_9t3y"
+      ],
       "note": ""
     },
     {
@@ -897,7 +972,7 @@
       "text": "prompt管理，可能涉及创建知识库？",
       "importance": 2,
       "createdAt": "2026-05-11T03:13:55.102Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -915,16 +990,18 @@
       "importance": 0,
       "createdAt": "2026-05-11T06:09:03.141Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T10:00:54.646Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778666454646_a4e8"
+      ]
     },
     {
       "id": "todo_1778480849554_fhih",
@@ -951,23 +1028,25 @@
       "importance": 0,
       "createdAt": "2026-05-11T06:36:40.167Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T10:00:58.897Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778666458897_pzop"
+      ]
     },
     {
       "id": "todo_1778481653444_0z4k",
       "text": "学习主持人大赛中的优秀案例",
       "importance": 0,
       "createdAt": "2026-05-11T06:40:53.444Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -985,21 +1064,23 @@
       "importance": 0,
       "createdAt": "2026-05-11T07:03:41.061Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T10:00:51.464Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778666451464_wolc"
+      ]
     },
     {
       "id": "todo_1778483572107_1csm",
-      "text": "每日习惯设定",
-      "importance": 0,
+      "text": "每日习惯设定，其他页面风格更改，信息链条同步，首页重做",
+      "importance": 3,
       "createdAt": "2026-05-11T07:12:52.107Z",
       "isToday": true,
       "status": "active",
@@ -1054,7 +1135,7 @@
       "text": "按照女帝成长游戏设定布局，跟Gemini讨论后定方案和代码",
       "importance": 0,
       "createdAt": "2026-05-12T09:49:45.294Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1074,7 +1155,7 @@
       "isToday": true,
       "status": "active",
       "completedAt": null,
-      "note": "",
+      "note": "今日推进，卡点，收获，下一步，近期关注点变化",
       "sourceCapId": "cap_1778063134679_jxa3",
       "sourceProjId": "proj_1778063428260_qe39",
       "sourceEntryType": "learning",
@@ -1106,16 +1187,18 @@
       "importance": 0,
       "createdAt": "2026-05-12T15:16:34.825Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-13T11:42:03.147Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
+      "processCapId": "cap_1778063121284_l86i",
+      "processProjId": "proj_1778063853254_0448",
+      "processEntryIds": [
+        "proc_1778672523155_e9hs"
+      ]
     },
     {
       "id": "todo_1778600358038_v1z3",
@@ -1139,7 +1222,7 @@
       "text": "stitch",
       "importance": 0,
       "createdAt": "2026-05-13T04:06:32.584Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1156,6 +1239,57 @@
       "text": "寻找自己喜欢的风格ip",
       "importance": 0,
       "createdAt": "2026-05-13T04:11:57.690Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778680406151_p1mh",
+      "text": "思考各种总结思考应该写在哪里，如每日总结、这一步的感悟、探索的感悟或尝试比较的思考，每天应该有这些东西，但是还不知道怎么放",
+      "importance": 0,
+      "createdAt": "2026-05-13T13:53:26.151Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778684143746_r7bq",
+      "text": "从待办中也能关联行为",
+      "importance": 3,
+      "createdAt": "2026-05-13T14:55:43.746Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778685398295_gtto",
+      "text": "收获可以存到思绪库并显示关联",
+      "importance": 3,
+      "createdAt": "2026-05-13T15:16:38.295Z",
       "isToday": false,
       "status": "active",
       "completedAt": null,
