@@ -432,12 +432,33 @@
         },
         {
           "id": "proj_1778678332046_9nyy",
-          "name": "素材库",
-          "importance": 0,
+          "name": "审美结构搭建",
+          "importance": 3,
           "createdAt": "2026-05-13T13:18:52.046Z",
           "process": [],
           "entries": {
-            "action": [],
+            "action": [
+              {
+                "id": "entry_1778732858498_99dt",
+                "text": "素材收集",
+                "createdAt": "2026-05-14T04:27:38.498Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": ""
+              },
+              {
+                "id": "entry_1778732895607_klco",
+                "text": "经典模版背后逻辑思考",
+                "createdAt": "2026-05-14T04:28:15.608Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": ""
+              }
+            ],
             "problem": [],
             "learning": [],
             "review": []
