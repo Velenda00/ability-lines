@@ -10,7 +10,8 @@
     "review": "总结",
     "module1": "思维枷锁·破",
     "module2": "核心能力·铸",
-    "module3": "风采展示·贴"
+    "module3": "风采展示·贴",
+    "insight": "收获"
   },
   "capabilities": [
     {
@@ -164,7 +165,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "软件发布、小米汽车发布等"
+                "note": "软件发布、小米汽车发布等",
+                "status": "active"
               },
               {
                 "id": "entry_1778482915078_kcs3",
@@ -174,7 +176,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "课题：公司信息战略的收集与研究，十五五，行业风口、如何打好辩论、APEC会议与作用；对象：领导、团队、对外等"
+                "note": "课题：公司信息战略的收集与研究，十五五，行业风口、如何打好辩论、APEC会议与作用；对象：领导、团队、对外等",
+                "status": "active"
               }
             ],
             "problem": [],
@@ -187,11 +190,14 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "不同场合、不同对象等"
+                "note": "不同场合、不同对象等",
+                "status": "active"
               }
             ],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778063866807_3anq",
@@ -208,7 +214,9 @@
                 "importance": 2,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null
+                "createdFromTodoId": null,
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778063931149_z796",
@@ -217,7 +225,9 @@
                 "importance": 1,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null
+                "createdFromTodoId": null,
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778485661648_88qi",
@@ -227,7 +237,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "悬疑？"
+                "note": "悬疑？",
+                "status": "active"
               }
             ],
             "problem": [],
@@ -240,7 +251,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778481580740_twyl",
@@ -250,11 +262,14 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "主持人大赛、奇葩说"
+                "note": "主持人大赛、奇葩说",
+                "status": "active"
               }
             ],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778483090549_505t",
@@ -283,7 +298,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "背诵全文，模仿语音语调"
+                "note": "背诵全文，模仿语音语调",
+                "status": "active"
               }
             ],
             "problem": [
@@ -295,7 +311,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778598658003_7bjj",
@@ -305,7 +322,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778598777592_alyh",
@@ -315,7 +333,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "尝试保持微笑唇，不要用表情用力成为思考的习惯动作"
+                "note": "尝试保持微笑唇，不要用表情用力成为思考的习惯动作",
+                "status": "active"
               },
               {
                 "id": "entry_1778598842679_52mn",
@@ -325,7 +344,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               }
             ],
             "learning": [
@@ -337,7 +357,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "更正统、舒服的发声位置"
+                "note": "更正统、舒服的发声位置",
+                "status": "active"
               }
             ],
             "review": []
@@ -367,9 +388,11 @@
               "toId": "entry_1778598842679_52mn",
               "type": "discover"
             }
-          ]
+          ],
+          "status": "active"
         }
-      ]
+      ],
+      "status": "active"
     },
     {
       "id": "cap_1778063127715_kxgz",
@@ -395,7 +418,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "研究我的面部身材特点，以及各风景强化方法"
+                "note": "研究我的面部身材特点，以及各风景强化方法",
+                "status": "active"
               },
               {
                 "id": "entry_1778483530906_2glr",
@@ -405,11 +429,14 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "面向多对象？设置小巧思"
+                "note": "面向多对象？设置小巧思",
+                "status": "active"
               }
             ],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778482723086_w6om",
@@ -428,13 +455,16 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "感受素材拆分与组合，观察模板逻辑",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778678332046_9nyy",
@@ -452,7 +482,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "建立或收集自己喜欢的ip或风格"
+                "note": "建立或收集自己喜欢的ip或风格",
+                "status": "active"
               },
               {
                 "id": "entry_1778732895607_klco",
@@ -462,15 +493,19 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         }
-      ]
+      ],
+      "status": "active"
     },
     {
       "id": "cap_1778063134679_jxa3",
@@ -516,7 +551,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "该如何总结、总结频率、AI使用prompt。有时其实也是手写总结，是否涉及连接？"
+                "note": "该如何总结、总结频率、AI使用prompt。有时其实也是手写总结，是否涉及连接？",
+                "status": "active"
               },
               {
                 "id": "entry_1778480502198_3qak",
@@ -526,7 +562,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "串联图谱，有热点、可点亮、明主次，主线感强"
+                "note": "串联图谱，有热点、可点亮、明主次，主线感强",
+                "status": "active"
               }
             ],
             "problem": [
@@ -539,7 +576,8 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "learning": [
@@ -551,7 +589,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               },
               {
                 "id": "entry_1778480359726_y8yj",
@@ -561,7 +600,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "学习的成果输出可能内容会比较多，全放在这里不现实，那么该如何整理链接？可以先以总结的学习为例"
+                "note": "学习的成果输出可能内容会比较多，全放在这里不现实，那么该如何整理链接？可以先以总结的学习为例",
+                "status": "active"
               }
             ],
             "review": []
@@ -573,7 +613,8 @@
               "toId": "entry_1778807194596_s237",
               "type": "discover"
             }
-          ]
+          ],
+          "status": "active"
         },
         {
           "id": "proj_1778063506488_y2vn",
@@ -591,13 +632,16 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "以地图为基础，去到哪里点亮哪里，点击还能看到旅行总结（吃喝玩乐感想及推荐），还能导出小红书推文。能够进行旅游规划，优先没去过的地方，能够查余票、介绍当地特色文化典籍历史人物等"
+                "note": "以地图为基础，去到哪里点亮哪里，点击还能看到旅行总结（吃喝玩乐感想及推荐），还能导出小红书推文。能够进行旅游规划，优先没去过的地方，能够查余票、介绍当地特色文化典籍历史人物等",
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778141113232_18ys",
@@ -610,9 +654,12 @@
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         }
-      ]
+      ],
+      "status": "active"
     },
     {
       "id": "cap_1778481970749_kd38",
@@ -636,13 +683,16 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "抓住令我动摇的那一刻，如詹qy如何感染人到让人忽略逻辑，而对方辩手又是如何突破的"
+                "note": "抓住令我动摇的那一刻，如詹qy如何感染人到让人忽略逻辑，而对方辩手又是如何突破的",
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         },
         {
           "id": "proj_1778482040781_r20t",
@@ -660,15 +710,19 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "",
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active",
+          "relations": []
         }
-      ]
+      ],
+      "status": "active"
     },
     {
       "id": "cap_1778503223681_32kq",
@@ -694,15 +748,18 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active"
         }
-      ]
+      ],
+      "status": "active"
     }
   ],
   "goals": [
@@ -761,7 +818,8 @@
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedTodoId": null
+      "relatedTodoId": null,
+      "relatedLiberationId": null
     },
     {
       "id": "th_1778483813881_dbaz",
@@ -776,7 +834,8 @@
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedTodoId": null
+      "relatedTodoId": null,
+      "relatedLiberationId": null
     },
     {
       "id": "th_1778483463204_1c9u",
@@ -791,7 +850,8 @@
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedTodoId": null
+      "relatedTodoId": null,
+      "relatedLiberationId": null
     },
     {
       "id": "th_1778483362902_esbl",
@@ -806,7 +866,8 @@
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedTodoId": null
+      "relatedTodoId": null,
+      "relatedLiberationId": null
     },
     {
       "id": "th_1778229292825_0xq7",
@@ -814,7 +875,14 @@
       "createdAt": "2026-05-08T08:34:52.825Z",
       "tags": [
         "竞争"
-      ]
+      ],
+      "importance": 0,
+      "note": "",
+      "relatedCapId": null,
+      "relatedProjId": null,
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null
     },
     {
       "id": "th_1778064117729_ublf",
@@ -822,7 +890,14 @@
       "createdAt": "2026-05-06T10:41:57.729Z",
       "tags": [
         "程序"
-      ]
+      ],
+      "importance": 0,
+      "note": "",
+      "relatedCapId": null,
+      "relatedProjId": null,
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null
     }
   ],
   "todos": [
@@ -895,7 +970,8 @@
       "sourceEntryId": "entry_1778078870040_wmf1",
       "processCapId": null,
       "processProjId": null,
-      "processEntryIds": []
+      "processEntryIds": [],
+      "note": ""
     },
     {
       "id": "todo_1778079740341_v0m0",
@@ -966,7 +1042,8 @@
       "processProjId": "proj_1778063853254_0448",
       "processEntryIds": [
         "proc_1778503288540_x9ys"
-      ]
+      ],
+      "note": ""
     },
     {
       "id": "todo_1778459755534_pmnv",
@@ -982,7 +1059,8 @@
       "sourceEntryId": null,
       "processCapId": null,
       "processProjId": null,
-      "processEntryIds": []
+      "processEntryIds": [],
+      "note": ""
     },
     {
       "id": "todo_1778467507914_8krx",
@@ -1484,5 +1562,43 @@
       "createdAt": "2026-05-06T10:25:09.786Z"
     }
   ],
-  "diplomacyEntries": []
+  "diplomacyEntries": [],
+  "habits": [
+    {
+      "id": "hab_1778814162759_wuor",
+      "text": "留心领导发言内容",
+      "importance": 1,
+      "status": "pool",
+      "sourceType": "behavior",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1778805708004_5q09",
+      "sourceEntryId": "entry_1778805780706_meh4",
+      "sourceEntryType": "action",
+      "sourceLiberationId": null,
+      "note": "",
+      "createdAt": "2026-05-15T03:02:42.759Z",
+      "archivedAt": null,
+      "completedDates": [],
+      "currentStreak": 0,
+      "bestStreak": 0
+    },
+    {
+      "id": "hab_1778814308227_nvjl",
+      "text": "保持竞争思维",
+      "importance": 2,
+      "status": "pool",
+      "sourceType": "liberation",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryId": null,
+      "sourceEntryType": null,
+      "sourceLiberationId": "lib_1778229487969_ekg4",
+      "note": "",
+      "createdAt": "2026-05-15T03:05:08.227Z",
+      "archivedAt": null,
+      "completedDates": [],
+      "currentStreak": 0,
+      "bestStreak": 0
+    }
+  ]
 }
