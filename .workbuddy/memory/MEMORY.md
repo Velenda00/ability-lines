@@ -34,6 +34,7 @@
 - 待办：note, generatedEntryIds, sourceThoughtId（来源思绪）
 - 思绪：importance（权重）, note（备注）, relatedCapId/ProjId/EntryType/EntryId/TodoId（支持关联到能力/专项/条目/待办）
 - 关联关系（新增）：{id, fromId, toId, type} — type: discover/derive/harvest
+- 习惯（V4.0）：text, importance, status(pool/active/archived), sourceType(behavior/liberation/direct), sourceCapId/ProjId/EntryId/EntryType/LiberationId, completedDates[], currentStreak, bestStreak
 - 解放脑/外交墙：自由记录
 - 命名配置：topLevel/ capability/ insight/ module1/module2/module3 全部可自定义
 
@@ -51,3 +52,4 @@
 - 2026-05-11 V2.3：新增GitHub云同步模块（js/sync.js），完全手动模式（拉取/推送按钮），操作前自动备份（最多5份），支持备份恢复
 - 2026-05-13 V3.0：项目详情页重构为行为/问题/收获三区有机列表布局，新增relations关联系统，SVG关系图（可拖动）
 - 2026-05-14 V3.1：列表显示权重+备注预览、备注支持换行、行动卡片新增创建待办/录入问题、待办tab关联行动树形选择器、关系图缩线+pill文字+鼠标拖动+节点点击+track改蓝色、关联弹窗类型筛选联动、收获-思绪双向同步（归入思绪开关+自动创建收获）、待办进度条放关系图前
+- 2026-05-15 V4.0：目标模块替换为每日习惯模块，三tab（进行中/习惯池/归档库），支持每日打卡、连续天数统计、从行为条目/解放脑创建习惯、习惯池激活/归档流转，底部导航第3项改火焰图标

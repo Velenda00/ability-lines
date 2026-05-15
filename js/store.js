@@ -79,6 +79,7 @@ const Store = {
         nameConfig: this.getDefaultNameConfig(),
         capabilities: [],
         goals: [],
+        habits: [],
         thoughts: [],
         todos: [],
         liberationEntries: [],
@@ -93,6 +94,7 @@ const Store = {
     if (!data.nameConfig.process) data.nameConfig.process = '过程';
     if (!data.nameConfig.insight) data.nameConfig.insight = '收获';
     if (!data.goals) data.goals = [];
+    if (!data.habits) data.habits = [];
     if (!data.thoughts) data.thoughts = [];
     if (!data.todos) data.todos = [];
     // 为旧数据补字段
@@ -132,6 +134,24 @@ const Store = {
       if (t.sourceEntryType === undefined) t.sourceEntryType = null;
       if (t.sourceEntryId === undefined) t.sourceEntryId = null;
     });
+    // 习惯补新字段
+    data.habits.forEach(h => {
+      if (h.importance === undefined) h.importance = 0;
+      if (h.status === undefined) h.status = 'pool';
+      if (h.sourceType === undefined) h.sourceType = 'direct';
+      if (!h.completedDates) h.completedDates = [];
+      if (h.currentStreak === undefined) h.currentStreak = 0;
+      if (h.bestStreak === undefined) h.bestStreak = 0;
+      if (h.note === undefined) h.note = '';
+      if (h.sourceCapId === undefined) h.sourceCapId = null;
+      if (h.sourceProjId === undefined) h.sourceProjId = null;
+      if (h.sourceEntryId === undefined) h.sourceEntryId = null;
+      if (h.sourceEntryType === undefined) h.sourceEntryType = null;
+      if (h.sourceLiberationId === undefined) h.sourceLiberationId = null;
+      if (h.archivedAt === undefined) h.archivedAt = null;
+    });
+    // 保存补字段后的数据回 IDB
+    await this.set('allData', data);
     return data;
   },
 
@@ -457,6 +477,75 @@ const Store = {
     await this.saveAll(data);
   },
 
+  // ==================== 习惯 ====================
+  async addHabit(text, importance, source) {
+    const data = await this.getAll();
+    const habit = {
+      id: uid('hab'), text, importance: importance || 0,
+      status: 'pool',
+      sourceType: source?.type || 'direct',
+      sourceCapId: source?.capId || null,
+      sourceProjId: source?.projId || null,
+      sourceEntryId: source?.entryId || null,
+      sourceEntryType: source?.entryType || null,
+      sourceLiberationId: source?.liberationId || null,
+      note: source?.note || '',
+      createdAt: new Date().toISOString(),
+      archivedAt: null,
+      completedDates: [],
+      currentStreak: 0, bestStreak: 0
+    };
+    data.habits.push(habit);
+    await this.saveAll(data); return habit;
+  },
+  async updateHabit(id, updates) {
+    const data = await this.getAll(); const h = data.habits.find(x => x.id === id);
+    if (!h) return null;
+    Object.assign(h, updates);
+    if (updates.completedDates !== undefined) {
+      const s = calcStreaks(h.completedDates);
+      h.currentStreak = s.current; h.bestStreak = s.best;
+    }
+    await this.saveAll(data); return h;
+  },
+  async toggleHabitDate(id, dateStr) {
+    const data = await this.getAll(); const h = data.habits.find(x => x.id === id);
+    if (!h) return null;
+    const idx = h.completedDates.indexOf(dateStr);
+    if (idx >= 0) h.completedDates.splice(idx, 1);
+    else { h.completedDates.push(dateStr); h.completedDates.sort(); }
+    const s = calcStreaks(h.completedDates);
+    h.currentStreak = s.current; h.bestStreak = s.best;
+    await this.saveAll(data); return h;
+  },
+  async activateHabit(id) {
+    const data = await this.getAll(); const h = data.habits.find(x => x.id === id);
+    if (!h) return null; h.status = 'active';
+    await this.saveAll(data); return h;
+  },
+  async archiveHabit(id) {
+    const data = await this.getAll(); const h = data.habits.find(x => x.id === id);
+    if (!h) return null; h.status = 'archived'; h.archivedAt = new Date().toISOString();
+    await this.saveAll(data); return h;
+  },
+  async unarchiveHabit(id) {
+    const data = await this.getAll(); const h = data.habits.find(x => x.id === id);
+    if (!h) return null; h.status = 'pool'; h.archivedAt = null;
+    await this.saveAll(data); return h;
+  },
+  async deleteHabit(id) {
+    const data = await this.getAll();
+    data.habits = data.habits.filter(x => x.id !== id);
+    await this.saveAll(data);
+  },
+  getHabits(data) {
+    return {
+      active: data.habits.filter(h => h.status === 'active'),
+      pool: data.habits.filter(h => h.status === 'pool'),
+      archived: data.habits.filter(h => h.status === 'archived')
+    };
+  },
+
   // ==================== 导出 ====================
   async exportJSON() {
     const data = await this.getAll();
@@ -520,6 +609,7 @@ const Store = {
           if (data.capabilities !== undefined) {
             if (!data.nameConfig) data.nameConfig = this.getDefaultNameConfig();
             if (!data.goals) data.goals = [];
+            if (!data.habits) data.habits = [];
             if (!data.thoughts) data.thoughts = [];
             if (!data.todos) data.todos = [];
             data.todos.forEach(t => { if (!t.generatedEntryIds) t.generatedEntryIds = []; if (t.note === undefined) t.note = ''; });
@@ -553,6 +643,33 @@ const Store = {
 function uid(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,6); }
 function today() { return new Date().toISOString().slice(0,10); }
 function fmtDateShort(iso) { return new Date(iso).toLocaleDateString('zh-CN'); }
+
+function calcStreaks(dates) {
+  if (!dates || !dates.length) return { current: 0, best: 0 };
+  const sorted = [...dates].sort();
+  const t = today();
+  // current streak: 从今天/昨天往前数
+  let current = 0;
+  let d = new Date(t);
+  const datesSet = new Set(sorted);
+  // 如果今天完成了，从今天开始数
+  if (datesSet.has(t)) {
+    while (datesSet.has(d.toISOString().slice(0, 10))) { current++; d.setDate(d.getDate() - 1); }
+  } else {
+    // 从昨天开始数
+    d.setDate(d.getDate() - 1);
+    while (datesSet.has(d.toISOString().slice(0, 10))) { current++; d.setDate(d.getDate() - 1); }
+  }
+  // best streak
+  let best = 0, temp = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const diff = (new Date(sorted[i]) - new Date(sorted[i - 1])) / 86400000;
+    if (Math.abs(diff - 1) < 0.5) temp++;
+    else { best = Math.max(best, temp); temp = 1; }
+  }
+  best = Math.max(best, temp);
+  return { current, best };
+}
 
 function download(content, filename, mime) {
   const blob = new Blob([content], { type: mime });

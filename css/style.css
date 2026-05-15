@@ -466,14 +466,6 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
 .tag-input-area button:active { background: #e0d8d0; }
 
 /* ===== Todo Section ===== */
-.todo-section { margin-bottom: var(--sp-4); }
-.todo-section .todo-header {
-  font-size: 14px; font-weight: 600; color: var(--text-primary);
-  margin-bottom: var(--sp-2); display: flex; align-items: center; gap: 6px;
-}
-.todo-section .todo-header .todo-count {
-  font-size: 11px; font-weight: 400; color: var(--text-tertiary);
-}
 .todo-card {
   display: flex; align-items: flex-start; gap: 10px;
   padding: var(--sp-3) 0;
@@ -790,4 +782,111 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   max-height: 0; overflow: hidden;
   opacity: 0;
   transition: max-height .3s ease, opacity .2s ease;
+}
+
+/* ===== 习惯卡片 ===== */
+.habit-card {
+  padding: var(--sp-3) 0;
+  border-bottom: 0.5px solid rgba(0,0,0,0.04);
+}
+.habit-card:last-child { border-bottom: none; }
+.habit-card-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.habit-body { flex: 1; min-width: 0; }
+.habit-text {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.habit-done .habit-text { opacity: 0.45; }
+.habit-done .habit-streak { opacity: 0.6; }
+.habit-actions {
+  display: flex; gap: 2px; flex-shrink: 0; align-items: center;
+}
+.habit-source {
+  display: flex; align-items: center; gap: 4px;
+  margin-top: 4px; padding: 3px 8px;
+  background: var(--bg-inset); border-radius: 6px;
+  font-size: 11px; color: var(--text-tertiary);
+  cursor: pointer; transition: background 0.15s;
+}
+.habit-source:active { background: #e8e2db; }
+.habit-streak {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 4px; font-size: 12px;
+}
+.streak-count { color: #D85A30; font-weight: 600; }
+.streak-msg { color: var(--text-tertiary); font-size: 11px; }
+.habit-stats {
+  display: flex; gap: 8px;
+  margin-top: 6px; padding-left: 30px;
+  font-size: 11px; color: var(--text-hint);
+}
+.habit-pool-card {
+  border-left: 3px solid var(--color-primary);
+  padding-left: calc(var(--sp-3) - 3px);
+}
+.habit-archived-card { opacity: 0.6; }
+
+/* 习惯列表 — 有机轨道设计 */
+.habit-list {
+  position: relative;
+  padding-left: 20px;
+}
+.habit-list::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 16px;
+  bottom: 16px;
+  width: 2px;
+  border-radius: 1px;
+  background: rgba(0,0,0,0.08);
+}
+.habit-list .habit-card,
+.habit-list .habit-pool-card,
+.habit-list .habit-archived-card {
+  position: relative;
+  border-left: none;
+  padding-left: 0;
+}
+.habit-list .habit-card::before,
+.habit-list .habit-pool-card::before,
+.habit-list .habit-archived-card::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: rgba(0,0,0,0.12);
+}
+.habit-list .habit-card::after,
+.habit-list .habit-pool-card::after,
+.habit-list .habit-archived-card::after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(90,125,107,0.15);
+}
+.habit-list .habit-done::after {
+  background: var(--color-primary);
+  opacity: 0.4;
+}
+.habit-list .habit-pool-card::after {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(90,125,107,0.15);
+}
+.habit-list .habit-archived-card::after {
+  background: var(--text-hint);
+  box-shadow: none;
 }
