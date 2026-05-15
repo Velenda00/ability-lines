@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>再塑法典 — UI Redesign v3.1 Prototype</title>
+  <style>
+    /* ===== Design Token System ===== */
+    :root {
+      --color-primary: #5a7d6b;
+      --color-primary-dark: #3a5247;
+      --color-primary-light: rgba(90,125,107,0.08);
+      --color-primary-50: #E1F5EE;
+
+      --bg-page: #f7f4f0;
+      --bg-surface: #ffffff;
+      --bg-inset: #f1ede8;
+
+      --text-primary: #1a1a1a;
+      --text-secondary: #555555;
+      --text-tertiary: #999999;
+      --text-hint: #b8b4ae;
+
+      --color-success: #0F6E56;
+      --color-warning: #854F0B;
+      --color-warning-bg: #FAEEDA;
+      --color-danger: #A32D2D;
+      --color-danger-bg: #FCEBEB;
+      --color-info: #185FA5;
+      --color-info-bg: #E6F1FB;
+      --color-derived: #534AB7;
+      --color-derived-bg: #EEEDFE;
+      --color-issue: #D85A30;
+      --color-issue-bg: #FAECE7;
+      --color-insight: #D4A017;
+      --color-insight-bg: #FAEEDA;
+
+      --border-light: rgba(0,0,0,0.06);
+      --border-default: rgba(0,0,0,0.10);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+
+      --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+      --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+
+      --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --duration-fast: 150ms;
+      --duration-normal: 250ms;
+      --duration-slow: 400ms;
+
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    /* ===== Reset ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: #eae5df;
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ===== Phone Frame ===== */
+    .phone-frame {
+      width: 390px;
+      max-height: 844px;
+      background: var(--bg-page);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 430px) {
+      body { background: var(--bg-page); }
+      .phone-frame { width: 100%; max-height: none; min-height: 100vh; }
+    }
+
+    /* ===== Status Bar ===== */
+    .status-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 24px 0; font-size: 12px; font-weight: 600;
+      color: var(--text-primary); flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+    .status-icons svg { width: 16px; height: 16px; }
+
+    /* ===== Top Bar ===== */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px 8px;
+      background: var(--bg-page);
+      flex-shrink: 0;
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 10px; }
+    .top-bar-title {
+      font-size: 20px; font-weight: 700;
+      color: var(--color-primary-dark);
+      letter-spacing: 0.5px;
+    }
+    .top-bar-subtitle {
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: -2px; letter-spacing: 0.2px;
+    }
+    .top-bar-actions { display: flex; gap: 4px; }
+    .top-bar-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      background: transparent;
+      border: none;
+    }
+    .top-bar-btn:active { background: rgba(0,0,0,0.05); transform: scale(0.92); }
+    .top-bar-btn svg { width: 20px; height: 20px; color: var(--color-primary); }
+    .hamburger { font-size: 20px; cursor: pointer; line-height: 1; }
+
+    /* ===== Main Content ===== */
+    .main-scroll {
+      flex: 1; overflow-y: auto; padding: 0 20px 100px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .main-scroll::-webkit-scrollbar { display: none; }
+
+    /* ===== 解放脑 Alert Banner ===== */
+    .liberation-banner {
+      position: relative;
+      margin: 8px 0 16px;
+      padding: 14px 16px 14px 48px;
+      border-radius: var(--r-md);
+      background: linear-gradient(135deg, rgba(90,125,107,0.06) 0%, rgba(90,125,107,0.02) 100%);
+      border-left: 3px solid var(--color-primary);
+      cursor: pointer;
+      transition: all var(--duration-normal) var(--ease-out);
+      overflow: hidden;
+    }
+    .liberation-banner::before {
+      content: ''; position: absolute;
+      top: -10px; right: -10px; width: 60px; height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(90,125,107,0.06) 0%, transparent 70%);
+    }
+    .liberation-banner:active { transform: scale(0.98); }
+    .liberation-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .liberation-icon svg { width: 22px; height: 22px; color: var(--color-primary); opacity: 0.7; }
+    .liberation-text {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+      transition: opacity 0.3s ease;
+    }
+    .liberation-source {
+      font-size: 10px; color: var(--text-hint);
+      margin-top: 4px;
+    }
+    .liberation-dots {
+      display: flex; gap: 4px; margin-top: 8px; justify-content: flex-end;
+    }
+    .liberation-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--text-hint); opacity: 0.3;
+      transition: all var(--duration-fast);
+    }
+    .liberation-dot.active { opacity: 1; background: var(--color-primary); }
+
+    /* ===== Home Grid —轻量线条风格 ===== */
+    .home-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border-light);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .home-cell {
+      background: var(--bg-surface);
+      padding: 16px;
+      cursor: pointer;
+      transition: background var(--duration-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .home-cell:active { background: var(--bg-inset); }
+    .home-cell-icon {
+      font-size: 20px; margin-bottom: 6px;
+    }
+    .home-cell-num {
+      font-size: 26px; font-weight: 700;
+      color: var(--text-primary); line-height: 1.1;
+    }
+    .home-cell-label {
+      font-size: 12px; color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .home-cell-sub {
+      font-size: 11px; color: var(--text-hint);
+      margin-top: 4px; line-height: 1.4;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* ===== Section Divider with Icon ===== */
+    .section-divider {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 0 10px;
+    }
+    .section-divider-icon {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-divider-icon svg { width: 18px; height: 18px; }
+    .section-divider-text {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+    }
+    .section-divider-line {
+      flex: 1; height: 0.5px;
+      background: linear-gradient(90deg, var(--border-light), transparent);
+    }
+    .section-divider-action {
+      font-size: 12px; color: var(--color-primary);
+      cursor: pointer; font-weight: 500;
+    }
+
+    /* ===== 思绪条目 — 左侧竖线+图标 ===== */
+    .thought-item {
+      display: flex; gap: 0; padding: 14px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.04);
+      cursor: pointer; position: relative;
+    }
+    .thought-item:last-child { border-bottom: none; }
+    .thought-item:active { background: rgba(0,0,0,0.015); }
+    .thought-rail {
+      width: 36px; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .thought-rail-icon {
+      width: 28px; height: 28px; border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 14px;
+    }
+    .thought-rail-line {
+      flex: 1; width: 1.5px; margin-top: 6px;
+      background: var(--border-light);
+    }
+    .thought-body { flex: 1; min-width: 0; }
+    .thought-title {
+      font-size: 15px; font-weight: 500; color: var(--text-primary);
+      line-height: 1.5; display: flex; align-items: flex-start; gap: 6px;
+    }
+    .thought-title .stars { flex-shrink: 0; margin-top: 3px; }
+    .thought-text {
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.7; margin-top: 4px;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .thought-meta {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: 8px; flex-wrap: wrap;
+    }
+    .thought-link {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; color: var(--color-primary);
+      padding: 2px 0; margin-top: 4px;
+    }
+    .thought-link svg { width: 12px; height: 12px; }
+    .thought-actions {
+      display: flex; gap: 2px; flex-shrink: 0;
+      margin-left: 8px; align-items: flex-start; padding-top: 2px;
+    }
+
+    /* ===== 能力卡片 — 无预制图标 ===== */
+    .cap-section {
+      border-bottom: 0.5px solid rgba(0,0,0,0.04);
+      padding-bottom: 4px; margin-bottom: 4px;
+    }
+    .cap-section:last-child { border-bottom: none; margin-bottom: 0; }
+    .cap-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 0 8px; cursor: pointer;
+    }
+    .cap-header:active { background: rgba(0,0,0,0.015); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+    .cap-name {
+      font-size: 16px; font-weight: 600; color: var(--text-primary);
+      min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cap-stats {
+      font-size: 11px; color: var(--text-tertiary); margin-top: 2px;
+    }
+    .cap-actions {
+      display: flex; gap: 2px; flex-shrink: 0; align-items: center;
+      white-space: nowrap;
+    }
+
+    /* 能力展开箭头 */
+    .cap-chevron {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--text-hint);
+      transition: transform var(--duration-normal) var(--ease-out);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cap-chevron svg { width: 14px; height: 14px; }
+    .cap-chevron.expanded { transform: rotate(90deg); }
+
+    /* 专项列表折叠 */
+    .proj-list {
+      padding-left: 12px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.35s var(--ease-out), opacity 0.25s ease, padding 0.3s ease;
+      padding-top: 0; padding-bottom: 0;
+    }
+    .proj-list.expanded {
+      max-height: 1000px;
+      opacity: 1;
+      padding-top: 2px;
+      padding-bottom: 4px;
+    }
+    .proj-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.03);
+      cursor: pointer;
+    }
+    .proj-item:last-child { border-bottom: none; }
+    .proj-item:active { background: rgba(0,0,0,0.015); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 6px; }
+    .proj-indicator {
+      width: 3px; height: 14px; border-radius: 1.5px;
+      flex-shrink: 0;
+    }
+    .proj-item-name { font-size: 14px; color: var(--text-primary); flex: 1; }
+    .proj-item-meta { font-size: 11px; color: var(--text-tertiary); }
+    .proj-item-actions {
+      display: flex; gap: 2px; flex-shrink: 0; align-items: center;
+    }
+    .proj-item-arrow { color: var(--text-hint); display: flex; align-items: center; }
+    .proj-item-arrow svg { width: 14px; height: 14px; }
+
+    /* ===== List Item (home & ability overview) ===== */
+    .list-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: background var(--duration-fast);
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:active { background: rgba(0,0,0,0.02); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: var(--r-sm); }
+    .list-item-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .list-item-body { flex: 1; min-width: 0; }
+    .list-item-name {
+      font-size: 15px; font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .list-item-meta {
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .list-item-end {
+      display: flex; align-items: center; gap: 6px;
+      flex-shrink: 0;
+    }
+    .list-item-badge {
+      min-width: 22px; height: 22px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600;
+      padding: 0 6px;
+    }
+    .list-item-arrow {
+      color: var(--text-hint); font-size: 12px;
+    }
+    .list-item-arrow svg { width: 14px; height: 14px; }
+
+    /* ===== Progress Line ===== */
+    .progress-line {
+      height: 2px; background: var(--bg-inset);
+      border-radius: 1px; margin-top: 6px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 1px;
+      transition: width var(--duration-slow) var(--ease-out);
+    }
+
+    /* ===== Tabs — 线条风格 ===== */
+    .tabs {
+      display: flex; gap: 0;
+      border-bottom: 1.5px solid var(--border-light);
+      margin-bottom: 16px;
+    }
+    .tab {
+      flex: 1; text-align: center;
+      padding: 10px 0;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      user-select: none;
+      position: relative;
+      border: none; background: none;
+      font-family: var(--font-sans);
+    }
+    .tab::after {
+      content: '';
+      position: absolute; bottom: -1.5px; left: 20%; right: 20%;
+      height: 2px; border-radius: 1px;
+      background: var(--color-primary);
+      transform: scaleX(0);
+      transition: transform var(--duration-normal) var(--ease-out);
+    }
+    .tab.active { color: var(--color-primary); font-weight: 600; }
+    .tab.active::after { transform: scaleX(1); }
+
+    /* ===== Entry Card — 轻量列表 ===== */
+    .entry-row {
+      padding: 14px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+    .entry-row:last-child { border-bottom: none; }
+    .entry-row:active { background: rgba(0,0,0,0.015); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: var(--r-sm); }
+    .entry-row-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .entry-row-title {
+      font-size: 14px; font-weight: 500;
+      color: var(--text-primary);
+      flex: 1; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .entry-row-text {
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6; white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .entry-row-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: 6px; flex-wrap: wrap;
+    }
+    .entry-row-actions {
+      display: flex; gap: 2px; flex-shrink: 0; margin-left: 6px;
+    }
+    .entry-action-btn {
+      background: none; border: none; font-size: 13px;
+      cursor: pointer; width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; transition: background var(--duration-fast);
+    }
+    .entry-action-btn:active { background: rgba(0,0,0,0.06); }
+
+    /* ===== Tags — 轻量胶囊 ===== */
+    .tag {
+      display: inline-flex; align-items: center;
+      color: var(--text-secondary);
+      font-size: 11px;
+      padding: 1px 8px;
+      border-radius: var(--r-sm);
+      background: var(--bg-inset);
+    }
+    .tag.primary { background: var(--color-primary-light); color: var(--color-primary); }
+    .tag.warning { background: var(--color-warning-bg); color: var(--color-warning); }
+
+    /* ===== Importance Stars ===== */
+    .stars { display: inline-flex; gap: 1px; }
+    .stars .on { color: #f0a030; }
+    .stars .off { color: #ddd; }
+
+    /* ===== Todo Row — 列表行 ===== */
+    .todo-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+    .todo-row:last-child { border-bottom: none; }
+    .todo-check {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border-default);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      background: none;
+    }
+    .todo-check.done {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .todo-check.done svg { opacity: 1; }
+    .todo-check svg { width: 12px; height: 12px; color: #fff; opacity: 0; }
+    .todo-body { flex: 1; min-width: 0; }
+    .todo-text { font-size: 14px; color: var(--text-primary); line-height: 1.5; }
+    .todo-text.done { text-decoration: line-through; color: var(--text-tertiary); }
+    .todo-source { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
+    .todo-end { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+
+    /* ===== Bottom Navigation ===== */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      display: flex;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid var(--border-light);
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+      flex-shrink: 0; z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center;
+      padding: 6px 0 4px;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      user-select: none;
+    }
+    .nav-item.active .nav-icon-wrap { background: var(--color-primary-light); }
+    .nav-item.active .nav-icon-svg { color: var(--color-primary); }
+    .nav-item.active .nav-label { color: var(--color-primary); font-weight: 600; }
+    .nav-icon-wrap {
+      width: 30px; height: 30px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2px;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .nav-icon-svg { width: 20px; height: 20px; color: var(--text-hint); transition: color var(--duration-fast); }
+    .nav-label { font-size: 10px; color: var(--text-hint); transition: all var(--duration-fast) var(--ease-out); }
+
+    /* ===== Page transitions ===== */
+    .page-view { display: none; animation: pageIn 0.25s var(--ease-out); }
+    .page-view.active { display: block; }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+      background: rgba(26,26,26,0.88); color: white; padding: 10px 20px;
+      border-radius: 9999px; font-size: 13px; z-index: 500;
+      animation: toastIn 0.3s var(--ease-out);
+      backdrop-filter: blur(10px); white-space: nowrap;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* ===== Search Bar ===== */
+    .search-bar { position: relative; margin-bottom: 12px; }
+    .search-bar input {
+      width: 100%; padding: 10px 14px 10px 38px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--r-md);
+      font-size: 14px; font-family: var(--font-sans);
+      background: var(--bg-surface); color: var(--text-primary);
+      outline: none; transition: all var(--duration-fast);
+    }
+    .search-bar input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-light); }
+    .search-bar input::placeholder { color: var(--text-hint); }
+    .search-bar-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--text-hint);
+    }
+
+    /* ===== Floating Action Button (FAB) ===== */
+    .page-fab {
+      position: fixed;
+      right: 20px; bottom: 88px;
+      width: 44px; height: 44px;
+      border: none; border-radius: 50%;
+      background: var(--color-primary); color: #fff;
+      font-size: 22px; cursor: pointer;
+      display: none; /* hidden by default, shown per-page */
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(90,125,107,0.35);
+      z-index: 200;
+      transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+    }
+    .page-fab:active { transform: scale(0.9); }
+    .page-fab.visible { display: flex; }
+
+    /* ===== Inline Illustration — 装饰性小插画 ===== */
+    .deco-leaf {
+      position: absolute; opacity: 0.04; pointer-events: none;
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-hint); font-size: 14px;
+    }
+
+    /* ===== Project Detail — 保留原有设计，仅统一 token ===== */
+    .project-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 0 12px;
+    }
+    .project-back {
+      font-size: 13px; color: var(--color-primary);
+      cursor: pointer; padding: 6px 10px;
+      border-radius: var(--r-sm); white-space: nowrap;
+      font-weight: 500; border: none; background: none;
+      display: flex; align-items: center; gap: 4px;
+      transition: background var(--duration-fast);
+      font-family: var(--font-sans);
+    }
+    .project-back:active { background: var(--color-primary-light); }
+    .project-back svg { width: 14px; height: 14px; }
+    .project-title-text {
+      font-size: 16px; font-weight: 600; flex: 1; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .stats-strip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 0 12px;
+      border-bottom: 0.5px solid var(--border-light);
+      font-size: 11px; color: var(--text-tertiary);
+    }
+    .stats-strip b { color: var(--text-primary); font-weight: 600; }
+    .stats-strip .dot-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-hint); }
+
+    /* Section headers */
+    .proj-section {
+      padding: 14px 0 4px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .proj-section-icon {
+      width: 28px; height: 28px; border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .proj-section-icon svg { width: 16px; height: 16px; }
+    .proj-section-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-primary); letter-spacing: 0.3px;
+    }
+    .proj-section-line { flex: 1; height: 0.5px; background: var(--border-light); margin-left: 6px; }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 13px; top: 8px; bottom: 8px;
+      width: 2px; border-radius: 1px; opacity: 0.2;
+    }
+    .timeline.track::before { background: var(--color-primary); }
+    .timeline.issue::before { background: var(--color-issue); }
+    .timeline.insight::before { background: var(--color-insight); }
+
+    .timeline-item {
+      position: relative; padding: 10px 0 10px 20px;
+      cursor: pointer; transition: background var(--duration-fast);
+    }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -20px; top: 50%;
+      width: 8px; height: 0.5px; background: var(--border-default);
+    }
+    .timeline-item:active { background: rgba(0,0,0,0.015); border-radius: var(--r-sm); }
+
+    .timeline-dot {
+      position: absolute; left: -25px; top: 50%; transform: translateY(-50%);
+      width: 10px; height: 10px; border-radius: 50%; z-index: 1;
+    }
+    .timeline-dot.primary {
+      background: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+    .timeline-dot.derived {
+      background: transparent; border: 2px solid var(--color-derived);
+      box-shadow: 0 0 0 3px var(--color-derived-bg);
+    }
+    .timeline-dot.issue {
+      width: 8px; height: 8px; background: var(--color-issue);
+      box-shadow: 0 0 0 3px var(--color-issue-bg);
+    }
+    .timeline-dot.insight {
+      width: 8px; height: 8px; background: var(--color-insight);
+      box-shadow: 0 0 0 3px var(--color-insight-bg);
+    }
+    .timeline-dot.issue.resolved { opacity: 0.45; }
+
+    .timeline-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .timeline-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+    .timeline-badges { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .timeline-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; color: var(--text-tertiary);
+      background: rgba(0,0,0,0.03); padding: 2px 8px; border-radius: 9999px;
+    }
+    .timeline-badge svg { width: 10px; height: 10px; }
+    .timeline-entry-actions {
+      display: flex; gap: 2px; flex-shrink: 0; margin-left: 8px;
+    }
+    .timeline-entry-actions button {
+      background: none; border: none; font-size: 12px;
+      cursor: pointer; width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .timeline-entry-actions button:active { background: rgba(0,0,0,0.06); }
+
+    /* Issue / Insight items in timeline */
+    .timeline-ii {
+      display: flex; align-items: flex-start; padding: 12px 0 8px 20px;
+      cursor: pointer; position: relative;
+    }
+    .timeline-ii::before {
+      content: ''; position: absolute; left: -20px; top: 50%;
+      width: 8px; height: 0.5px; background: var(--border-default);
+    }
+    .timeline-ii:active { background: rgba(0,0,0,0.015); border-radius: var(--r-sm); }
+    .timeline-ii-name { font-size: 14px; font-weight: 500; flex: 1; line-height: 1.4; }
+    .timeline-ii-actions {
+      display: flex; gap: 2px; flex-shrink: 0; margin-left: 8px;
+    }
+    .timeline-ii-actions button {
+      background: none; border: none; font-size: 12px;
+      cursor: pointer; width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .timeline-ii-actions button:active { background: rgba(0,0,0,0.06); }
+
+    .proj-issue-check {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%); pointer-events: none;
+    }
+    .proj-thought-line {
+      font-size: 11px; color: #888; padding: 2px 0 0 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Separator */
+    .sep {
+      display: flex; align-items: center; padding: 6px 0; gap: 8px;
+    }
+    .sep-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-hint); }
+    .sep-line { flex: 1; height: 0.5px; background: linear-gradient(90deg, transparent, var(--border-light), transparent); }
+
+    /* Section collapse arrow */
+    .proj-sec-arrow {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--text-hint); transition: transform 0.2s; cursor: pointer;
+    }
+    .proj-sec-arrow.rotated { transform: rotate(-90deg); }
+
+    /* Graph Panel */
+    .graph-panel {
+      overflow: hidden; max-height: 0; opacity: 0;
+      transition: max-height 0.45s var(--ease-out), opacity 0.3s ease;
+    }
+    .graph-panel.open { max-height: 600px; opacity: 1; }
+    .graph-panel-inner {
+      margin: 4px 0 10px; padding: 16px 12px;
+      background: rgba(255,255,255,0.6);
+      border-radius: var(--r-md);
+      border: 0.5px solid var(--border-light);
+    }
+    .graph-panel-inner svg { display: block; width: 100%; height: auto; }
+
+    /* Todo fold */
+    .proj-tf { margin-top: 10px; padding-top: 8px; border-top: 0.5px dashed var(--border-light); }
+    .proj-tf-label {
+      font-size: 11px; color: var(--text-tertiary); cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .proj-tf-label svg { width: 10px; height: 10px; flex-shrink: 0; transition: transform 0.2s; }
+    .proj-tf-label svg.open { transform: rotate(90deg); }
+    .proj-tf-bar { height: 3px; background: var(--bg-inset); border-radius: 2px; margin: 6px 0; overflow: hidden; }
+    .proj-tf-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+    .proj-tr { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12px; color: var(--text-tertiary); }
+    .proj-tc {
+      width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 8px; cursor: pointer; transition: all 0.15s;
+    }
+    .proj-tc.done { border-color: var(--color-primary); background: var(--color-primary); color: white; }
+
+    /* FAB buttons */
+    .fab-group {
+      position: absolute; bottom: 76px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; width: calc(100% - 40px); z-index: 50;
+    }
+    .fab {
+      flex: 1; padding: 11px 8px; border-radius: var(--r-lg);
+      font-size: 13px; font-weight: 500; text-align: center;
+      cursor: pointer; border: none;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--duration-fast) var(--ease-out);
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      font-family: var(--font-sans);
+    }
+    .fab:active { transform: scale(0.96); }
+    .fab svg { width: 14px; height: 14px; }
+    .fab.pri { background: var(--color-primary); color: white; }
+    .fab.gho { background: var(--bg-surface); color: var(--text-secondary); border: 0.5px solid var(--border-light); }
+    .fab.thi { background: var(--bg-surface); color: var(--color-insight); border: 0.5px solid var(--border-light); }
+
+    /* Empty state in project */
+    .proj-empty {
+      text-align: center; padding: 20px 0 8px;
+      font-size: 13px; color: var(--text-hint);
+    }
+    .proj-empty-btn {
+      display: inline-block; margin-top: 8px;
+      padding: 6px 16px; border-radius: var(--r-sm);
+      background: var(--color-primary-light); color: var(--color-primary);
+      font-size: 12px; cursor: pointer; border: none;
+      transition: transform var(--duration-fast);
+    }
+    .proj-empty-btn:active { transform: scale(0.95); }
+
+    /* Note hint */
+    .proj-note-hint {
+      font-size: 10px; color: var(--text-tertiary); margin-left: 4px;
+    }
+
+    /* Graph wrap */
+    .proj-graph-wrap {
+      overflow: hidden; border-radius: var(--r-sm);
+      background: rgba(255,255,255,0.3);
+      cursor: grab; touch-action: none;
+      user-select: none; -webkit-user-select: none;
+    }
+    .proj-graph-wrap svg { display: block; width: 100%; height: auto; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame" id="app">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="hamburger" onclick="showToast('设置菜单')">&#9776;</span>
+      <div>
+        <div class="top-bar-title" id="topTitle">再塑法典</div>
+        <div class="top-bar-subtitle" id="topSubtitle">个人成长记录</div>
+      </div>
+    </div>
+    <div class="top-bar-actions">
+      <!-- No notification button — keep original hamburger only -->
+    </div>
+  </div>
+
+  <!-- Main Scrollable Content -->
+  <div class="main-scroll" id="mainScroll">
+
+    <!-- === PAGE: Home === -->
+    <div class="page-view active" id="page-home">
+
+      <!-- 轻量四宫格 -->
+      <div class="home-grid">
+        <div class="home-cell" onclick="switchPage('ability')">
+          <span class="home-cell-icon">🧠</span>
+          <span class="home-cell-num">5</span>
+          <span class="home-cell-label">能力模块</span>
+          <span class="home-cell-sub">⭐ 英语口语</span>
+        </div>
+        <div class="home-cell" onclick="switchPage('goals')">
+          <span class="home-cell-icon">🎯</span>
+          <span class="home-cell-num">3</span>
+          <span class="home-cell-label">目标</span>
+          <span class="home-cell-sub">⭐ 雅思 7.0</span>
+        </div>
+        <div class="home-cell" onclick="switchPage('thoughts')">
+          <span class="home-cell-icon">💭</span>
+          <span class="home-cell-num">42</span>
+          <span class="home-cell-label">思绪</span>
+          <span class="home-cell-sub">🏷️ 语调模仿</span>
+        </div>
+        <div class="home-cell" onclick="switchPage('todos')">
+          <span class="home-cell-icon">📋</span>
+          <span class="home-cell-num">7</span>
+          <span class="home-cell-label">今日待办</span>
+          <span class="home-cell-sub">3 已完成</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === PAGE: Ability === -->
+    <div class="page-view" id="page-ability">
+      <div class="tabs">
+        <button class="tab" onclick="selectTab(this)">🧠 解放脑</button>
+        <button class="tab active" onclick="selectTab(this)">💪 独立自主</button>
+        <button class="tab" onclick="selectTab(this)">🎨 外交墙</button>
+      </div>
+
+      <!-- 能力 1：英语口语 -->
+      <div class="cap-section">
+        <div class="cap-header" onclick="toggleCapSection(this)">
+          <span class="cap-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          <div style="flex:1;min-width:0;">
+            <div class="cap-name">英语口语 <span class="stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span></span></div>
+            <div class="cap-stats">3 个专项 · 12 条行为记录</div>
+          </div>
+          <div class="cap-actions">
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            <button class="entry-action-btn" style="font-size:11px;color:var(--color-primary);font-weight:600;" onclick="event.stopPropagation(); showToast('新增专项')">+专项</button>
+          </div>
+        </div>
+        <div class="proj-list">
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--color-primary);"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name">日常跟读训练 <span class="stars" style="margin-left:2px"><span class="on">★</span><span class="on">★</span><span class="off">★</span></span></div>
+              <div class="proj-item-meta">3 行为 · 2 问题 · 1 收获 · 💭2</div>
+            </div>
+            <div class="proj-item-actions">
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--color-primary); opacity:0.6;"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name">语音学系统学习</div>
+              <div class="proj-item-meta">4 行为 · 0 问题 · 0 收获</div>
+            </div>
+            <div class="proj-item-actions">
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--color-derived);"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name">影子跟读练习</div>
+              <div class="proj-item-meta">3 行为 · 💭1 · 衍生于问题</div>
+            </div>
+            <div class="proj-item-actions">
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 能力 2：前端开发 -->
+      <div class="cap-section">
+        <div class="cap-header" onclick="toggleCapSection(this)">
+          <span class="cap-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          <div style="flex:1;min-width:0;">
+            <div class="cap-name">前端开发 <span class="stars"><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span></span></div>
+            <div class="cap-stats">2 个专项 · 5 条行为记录</div>
+          </div>
+          <div class="cap-actions">
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            <button class="entry-action-btn" style="font-size:11px;color:var(--color-primary);font-weight:600;" onclick="event.stopPropagation(); showToast('新增专项')">+专项</button>
+          </div>
+        </div>
+        <div class="proj-list">
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--color-warning);"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name">React 框架实战</div>
+              <div class="proj-item-meta">3 行为 · 1 问题 · 1 收获</div>
+            </div>
+            <div class="proj-item-actions">
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--color-warning); opacity:0.6;"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name">CSS 动画深入</div>
+              <div class="proj-item-meta">2 行为 · 0 问题 · 0 收获</div>
+            </div>
+            <div class="proj-item-actions">
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('完成')">✅</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" style="font-size:11px" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 能力 3：写作练习（已完成状态） -->
+      <div class="cap-section" style="opacity:0.5;">
+        <div class="cap-header" onclick="toggleCapSection(this)">
+          <span class="cap-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          <div style="flex:1;min-width:0;">
+            <div class="cap-name" style="text-decoration:line-through;">✅ 写作练习</div>
+            <div class="cap-stats">1 个专项 · 3 条行为记录</div>
+          </div>
+          <div class="cap-actions">
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('恢复')">🔄</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button class="entry-action-btn" onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+        <div class="proj-list">
+          <div class="proj-item" onclick="switchPage('project')">
+            <div class="proj-indicator" style="background: var(--text-tertiary);"></div>
+            <div style="flex:1;">
+              <div class="proj-item-name" style="text-decoration:line-through;">英文日记</div>
+              <div class="proj-item-meta">3 行为</div>
+            </div>
+            <span class="proj-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === PAGE: Goals === -->
+    <div class="page-view" id="page-goals">
+
+      <div class="entry-row">
+        <div class="entry-row-header">
+          <span class="entry-row-title">雅思口语达到 7.0 分</span>
+          <span class="stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span></span>
+        </div>
+        <div class="entry-row-text">每日跟读训练 30 分钟，每周模拟考试 1 次</div>
+        <div class="entry-row-meta">
+          <span>2026-05-14</span>
+          <span class="tag primary">英语口语</span>
+          <div class="entry-row-actions">
+            <button class="entry-action-btn" onclick="showToast('编辑')">✏️</button>
+            <button class="entry-action-btn" onclick="showToast('删除')">🗑️</button>
+            <button class="entry-action-btn" onclick="showToast('完成')">✅</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry-row">
+        <div class="entry-row-header">
+          <span class="entry-row-title">体脂率降至 15%</span>
+          <span class="stars"><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span></span>
+        </div>
+        <div class="entry-row-text">每周运动 4 次，控制饮食摄入</div>
+        <div class="entry-row-meta">
+          <span>2026-05-10</span>
+          <span class="tag warning">健身计划</span>
+          <div class="entry-row-actions">
+            <button class="entry-action-btn" onclick="showToast('编辑')">✏️</button>
+            <button class="entry-action-btn" onclick="showToast('删除')">🗑️</button>
+            <button class="entry-action-btn" onclick="showToast('完成')">✅</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry-row" style="opacity: 0.5;">
+        <div class="entry-row-header">
+          <span class="entry-row-title" style="text-decoration: line-through; color: var(--text-tertiary);">完成前端框架学习</span>
+          <span style="font-size:12px; color: var(--color-success);">✅ 已完成</span>
+        </div>
+        <div class="entry-row-meta">
+          <span>2026-04-20</span>
+          <span class="tag primary">前端开发</span>
+          <div class="entry-row-actions">
+            <button class="entry-action-btn" onclick="showToast('恢复')">🔄</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === PAGE: Thoughts === -->
+    <div class="page-view" id="page-thoughts">
+      <div class="search-bar">
+        <svg class="search-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="搜索思绪或标签...">
+      </div>
+
+      <!-- 思绪 1：有关联能力 -->
+      <div class="thought-item">
+        <div class="thought-rail">
+          <div class="thought-rail-icon" style="background: var(--color-primary-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+              <path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V18h-6v-2.5l-.7-.5A7 7 0 0112 2z"/>
+              <path d="M9 21h6"/>
+              <path d="M10 18v1.5a2 2 0 004 0V18"/>
+            </svg>
+          </div>
+          <div class="thought-rail-line"></div>
+        </div>
+        <div class="thought-body">
+          <div class="thought-title">语调模仿比发音纠正更优先</div>
+          <div class="thought-text">在实际口语练习中发现，语调的自然度比单个音素的准确度更容易被注意到，也更影响交流效果。</div>
+          <div class="thought-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            英语口语 · 日常跟读训练 · 行为
+          </div>
+          <div class="thought-meta">
+            <span>2 小时前</span>
+            <span class="tag primary">英语口语</span>
+            <span class="tag">语调</span>
+            <span class="tag">跟读</span>
+            <div class="thought-actions">
+              <button class="entry-action-btn" onclick="showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" onclick="showToast('删除')">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 思绪 2：有关联能力 -->
+      <div class="thought-item">
+        <div class="thought-rail">
+          <div class="thought-rail-icon" style="background: var(--color-primary-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+              <path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V18h-6v-2.5l-.7-.5A7 7 0 0112 2z"/>
+              <path d="M9 21h6"/>
+              <path d="M10 18v1.5a2 2 0 004 0V18"/>
+            </svg>
+          </div>
+          <div class="thought-rail-line"></div>
+        </div>
+        <div class="thought-body">
+          <div class="thought-title">对比美式和英式发音差异</div>
+          <div class="thought-text">元音的发音位置是两种口音最大的差异来源，尤其是 /æ/ 和 /ɒ/ 音。</div>
+          <div class="thought-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            英语口语 · 语音学系统学习 · 行为
+          </div>
+          <div class="thought-meta">
+            <span>昨天</span>
+            <span class="tag primary">英语口语</span>
+            <span class="tag">发音</span>
+            <div class="thought-actions">
+              <button class="entry-action-btn" onclick="showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" onclick="showToast('删除')">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 思绪 3：独立思绪（无关联） -->
+      <div class="thought-item">
+        <div class="thought-rail">
+          <div class="thought-rail-icon" style="background: var(--bg-inset);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+              <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>
+            </svg>
+          </div>
+          <div class="thought-rail-line"></div>
+        </div>
+        <div class="thought-body">
+          <div class="thought-title">中文声调对英语语调的干扰</div>
+          <div class="thought-text">中文的四声调系统容易让学习者在说英语时过度使用声调变化，导致语调不自然。</div>
+          <div class="thought-meta">
+            <span>3 天前</span>
+            <span class="tag">语言学</span>
+            <span class="tag">声调</span>
+            <div class="thought-actions">
+              <button class="entry-action-btn" onclick="showToast('编辑')">✏️</button>
+              <button class="entry-action-btn" onclick="showToast('删除')">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === PAGE: Todos === -->
+    <div class="page-view" id="page-todos">
+      <div class="section-divider" style="padding-top:0;">
+        <span class="section-divider-text">今日待办 · 4 项</span>
+        <span class="section-divider-line"></span>
+      </div>
+
+      <div class="todo-row" onclick="toggleTodo(this)">
+        <button class="todo-check done">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+        <div class="todo-body">
+          <div class="todo-text done">跟读视频5 - 实战对话</div>
+          <div class="todo-source">英语口语 > 跟读训练</div>
+        </div>
+        <div class="todo-end">
+          <span class="tag primary">进行中</span>
+        </div>
+      </div>
+
+      <div class="todo-row" onclick="toggleTodo(this)">
+        <button class="todo-check"></button>
+        <div class="todo-body">
+          <div class="todo-text">跟读视频6 - 速度挑战</div>
+          <div class="todo-source">英语口语 > 跟读训练</div>
+        </div>
+        <div class="todo-end">
+          <span class="tag warning">★ 重要</span>
+        </div>
+      </div>
+
+      <div class="todo-row" onclick="toggleTodo(this)">
+        <button class="todo-check"></button>
+        <div class="todo-body">
+          <div class="todo-text">阅读教材第2章</div>
+          <div class="todo-source">英语口语 > 语音学系统学习</div>
+        </div>
+        <div class="todo-end"></div>
+      </div>
+
+      <div class="todo-row" onclick="toggleTodo(this)">
+        <button class="todo-check"></button>
+        <div class="todo-body">
+          <div class="todo-text">Shadowing TED Talk 2</div>
+          <div class="todo-source">英语口语 > 影子跟读</div>
+        </div>
+        <div class="todo-end"></div>
+      </div>
+
+      <div class="section-divider">
+        <span class="section-divider-text">已完成 · 3</span>
+        <span class="section-divider-line"></span>
+      </div>
+
+      <div class="todo-row" onclick="toggleTodo(this)" style="opacity: 0.5;">
+        <button class="todo-check done">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+        <div class="todo-body">
+          <div class="todo-text done">课前预习本课内容</div>
+          <div class="todo-source">英语口语 > 跟读训练</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === PAGE: Project Detail — 保持原有设计 === -->
+    <div class="page-view" id="page-project">
+      <div class="project-header">
+        <button class="project-back" onclick="switchPage('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+        <span class="project-title-text">英语口语 · 日常跟读训练</span>
+      </div>
+
+      <div class="stats-strip">
+        <span><b>3</b> 行为</span>
+        <span class="dot-sep"></span>
+        <span><b>2</b> 问题</span>
+        <span class="dot-sep"></span>
+        <span><b>1</b> 收获</span>
+        <span class="dot-sep"></span>
+        <span><b>7</b> 进行中</span>
+      </div>
+
+      <!-- 行为区 -->
+      <div class="proj-section">
+        <span class="proj-section-icon" style="background: var(--color-primary-light);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          </svg>
+        </span>
+        <span class="proj-section-title">行为</span>
+        <span class="proj-section-line"></span>
+      </div>
+
+      <div class="timeline track">
+        <div class="timeline-item" onclick="toggleGraph('gp1')">
+          <div class="timeline-dot primary"></div>
+          <div class="timeline-name">跟读训练</div>
+          <div class="timeline-sub">5/7 已完成 · 💬 语调很重要</div>
+          <div class="timeline-badges">
+            <span class="timeline-badge" style="background:#e8f5ec;color:#5a7d6b;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              5/7
+            </span>
+            <span class="timeline-badge">💭 2</span>
+          </div>
+          <div class="timeline-entry-actions">
+            <button onclick="event.stopPropagation(); showToast('完成')">✅</button>
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+
+        <div class="timeline-item" onclick="toggleGraph('gp2')">
+          <div class="timeline-dot primary"></div>
+          <div class="timeline-name">语音学系统学习</div>
+          <div class="timeline-sub">1/4 已完成</div>
+          <div class="timeline-badges">
+            <span class="timeline-badge" style="background:#e8f0ff;color:#4A90B8;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              1/4
+            </span>
+          </div>
+          <div class="timeline-entry-actions">
+            <button onclick="event.stopPropagation(); showToast('完成')">✅</button>
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+
+        <div class="timeline-item" onclick="toggleGraph('gp3')">
+          <div class="timeline-dot derived"></div>
+          <div class="timeline-name">影子跟读练习</div>
+          <div class="timeline-sub">衍生于：语调不自然 · 1/3 已完成</div>
+          <div class="timeline-badges">
+            <span class="timeline-badge" style="background:#e8f0ff;color:#4A90B8;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              1/3
+            </span>
+            <span class="timeline-badge">💭 1</span>
+          </div>
+          <div class="timeline-entry-actions">
+            <button onclick="event.stopPropagation(); showToast('完成')">✅</button>
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sep"><span class="sep-dot"></span><div class="sep-line"></div><span class="sep-dot"></span></div>
+
+      <!-- 问题区 — 可折叠 -->
+      <div class="proj-section" onclick="toggleProjSection('issues')" style="cursor:pointer;">
+        <span class="proj-section-icon" style="background: var(--color-issue-bg);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-issue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </span>
+        <span class="proj-section-title">问题 (2)</span>
+        <span class="proj-section-line"></span>
+        <svg id="projSecArrow_issues" class="proj-sec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+
+      <div id="projSecContent_issues" class="timeline issue">
+        <div class="timeline-ii">
+          <div class="timeline-dot issue resolved">
+            <svg class="proj-issue-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="timeline-ii-name" style="opacity:0.5;text-decoration:line-through;">发音不到位</div>
+            <div class="timeline-sub" style="margin-top:2px;">已解决</div>
+            <div class="proj-thought-line">💭 关联 1 条思绪</div>
+          </div>
+          <div class="timeline-ii-actions">
+            <button onclick="event.stopPropagation(); showToast('恢复')">🔄</button>
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+
+        <div class="timeline-ii">
+          <div class="timeline-dot issue"></div>
+          <div style="flex:1;">
+            <div class="timeline-ii-name">语调不自然</div>
+            <div class="timeline-sub" style="margin-top:2px;">未解决 · 💬 语调很重要</div>
+            <div class="proj-thought-line">🏃 关联行为：影子跟读练习（衍生）、跟读训练</div>
+            <div class="timeline-badges" style="margin-top:6px;">
+              <span class="timeline-badge" style="background: var(--color-issue-bg); color: var(--color-issue);">未解决</span>
+              <span class="timeline-badge">💭 3</span>
+            </div>
+          </div>
+          <div class="timeline-ii-actions">
+            <button onclick="event.stopPropagation(); showToast('解决')">✔️</button>
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sep"><span class="sep-dot"></span><div class="sep-line"></div><span class="sep-dot"></span></div>
+
+      <!-- 收获区 — 可折叠 -->
+      <div class="proj-section" onclick="toggleProjSection('insights')" style="cursor:pointer;">
+        <span class="proj-section-icon" style="background: var(--color-insight-bg);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-insight)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+        </span>
+        <span class="proj-section-title">收获 (1)</span>
+        <span class="proj-section-line"></span>
+        <svg id="projSecArrow_insights" class="proj-sec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+
+      <div id="projSecContent_insights" class="timeline insight">
+        <div class="timeline-ii">
+          <div class="timeline-dot insight"></div>
+          <div style="flex:1;">
+            <div class="timeline-ii-name">阶段收获总结</div>
+            <div class="timeline-sub" style="margin-top:2px;">记录学习阶段性成果</div>
+            <div class="proj-thought-line">💭 已同步</div>
+          </div>
+          <div class="timeline-ii-actions">
+            <button onclick="event.stopPropagation(); showToast('编辑')">✏️</button>
+            <button onclick="event.stopPropagation(); showToast('删除')">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph Panel — 跟读训练 -->
+      <div class="graph-panel" id="gp1">
+        <div class="graph-panel-inner">
+          <div class="proj-graph-wrap">
+            <svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="170" cy="90" r="70" fill="none" stroke="rgba(0,0,0,0.03)" stroke-width="1" stroke-dasharray="4 4"/>
+              <circle cx="170" cy="90" r="45" fill="none" stroke="rgba(0,0,0,0.02)" stroke-width="1" stroke-dasharray="3 3"/>
+              <path d="M120,70 Q140,40 170,65" stroke="#D85A30" stroke-width="1.5" opacity="0.35" fill="none"/>
+              <path d="M170,65 Q200,35 220,70" stroke="#D85A30" stroke-width="1.5" opacity="0.35" fill="none"/>
+              <path d="M220,70 Q230,95 250,100" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.35" fill="none"/>
+              <path d="M170,90 Q170,140 190,145" stroke="#D4A017" stroke-width="1.5" opacity="0.35" fill="none"/>
+              <circle cx="170" cy="90" r="28" fill="rgba(90,125,107,0.12)"/>
+              <circle cx="170" cy="90" r="20" fill="#5a7d6b" opacity="0.8"/>
+              <text x="170" y="91" text-anchor="middle" dominant-baseline="central" fill="white" font-size="9" font-weight="600">跟读训练</text>
+              <circle cx="120" cy="70" r="8" fill="rgba(216,90,48,0.12)"/>
+              <circle cx="120" cy="70" r="6" fill="#D85A30" opacity="0.6"/>
+              <text x="120" y="56" text-anchor="middle" font-size="9" fill="#555" font-weight="500">发音不到位</text>
+              <circle cx="220" cy="70" r="8" fill="rgba(216,90,48,0.12)"/>
+              <circle cx="220" cy="70" r="6" fill="#D85A30" opacity="0.8"/>
+              <text x="220" y="56" text-anchor="middle" font-size="9" fill="#555" font-weight="500">语调不自然</text>
+              <circle cx="250" cy="100" r="8" fill="rgba(127,119,221,0.12)"/>
+              <circle cx="250" cy="100" r="6" fill="none" stroke="#7F77DD" stroke-width="2" opacity="0.8"/>
+              <text x="250" y="120" text-anchor="middle" font-size="9" fill="#555" font-weight="500">影子跟读</text>
+              <circle cx="190" cy="145" r="8" fill="rgba(212,160,23,0.12)"/>
+              <circle cx="190" cy="145" r="6" fill="#D4A017" opacity="0.6"/>
+              <text x="190" y="165" text-anchor="middle" font-size="9" fill="#555" font-weight="500">阶段收获</text>
+            </svg>
+          </div>
+          <div style="text-align:center;font-size:10px;color:var(--text-hint);padding:4px 0 2px;">拖动平移 · 点击节点查看详情</div>
+
+          <!-- 关联待办 -->
+          <div class="proj-tf">
+            <div class="proj-tf-label" onclick="toggleTodoFold('tf1')">
+              <svg id="tf1Arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="open"><path d="M9 18l6-6-6-6"/></svg>
+              关联待办 (7)
+            </div>
+            <div id="tf1List" class="proj-tf-list open">
+              <div class="proj-tf-bar"><div class="proj-tf-bar-fill" style="width:71%;background:var(--color-primary);"></div></div>
+              <div class="proj-tr"><span class="proj-tc done">✓</span><span style="text-decoration:line-through;color:#bbb">跟读视频1 - 基础音标</span></div>
+              <div class="proj-tr"><span class="proj-tc done">✓</span><span style="text-decoration:line-through;color:#bbb">跟读视频2 - 连读技巧</span></div>
+              <div class="proj-tr"><span class="proj-tc done">✓</span><span style="text-decoration:line-through;color:#bbb">跟读视频3 - 重音节奏</span></div>
+              <div class="proj-tr"><span class="proj-tc done">✓</span><span style="text-decoration:line-through;color:#bbb">跟读视频4 - 语调升降</span></div>
+              <div class="proj-tr"><span class="proj-tc done">✓</span><span style="text-decoration:line-through;color:#bbb">跟读视频5 - 实战对话</span></div>
+              <div class="proj-tr"><span class="proj-tc"> </span><span>跟读视频6 - 速度挑战</span></div>
+              <div class="proj-tr"><span class="proj-tc"> </span><span>跟读视频7 - 即兴表达</span></div>
+            </div>
+          </div>
+
+          <!-- 操作按钮 -->
+          <div style="display:flex;gap:6px;margin-top:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;" onclick="event.stopPropagation(); showToast('编辑')">✏️ 编辑</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;" onclick="event.stopPropagation(); showToast('待办')">📋 待办</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;color:#D85A30;" onclick="event.stopPropagation(); showToast('问题')">⚠️ 问题</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;" onclick="event.stopPropagation(); showToast('关联')">🔗 关联</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;color:#D85A30;" onclick="event.stopPropagation(); showToast('删除')">🗑️ 删除</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="graph-panel" id="gp2">
+        <div class="graph-panel-inner">
+          <div class="proj-tf">
+            <div class="proj-tf-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="open"><path d="M9 18l6-6-6-6"/></svg>
+              关联待办 (4)
+            </div>
+            <div class="proj-tf-bar"><div class="proj-tf-bar-fill" style="width:25%;background:var(--color-primary);"></div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;" onclick="event.stopPropagation(); showToast('编辑')">✏️ 编辑</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;color:#D85A30;" onclick="event.stopPropagation(); showToast('删除')">🗑️ 删除</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="graph-panel" id="gp3">
+        <div class="graph-panel-inner">
+          <div class="proj-tf">
+            <div class="proj-tf-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="open"><path d="M9 18l6-6-6-6"/></svg>
+              关联待办 (3)
+            </div>
+            <div class="proj-tf-bar"><div class="proj-tf-bar-fill" style="width:33%;background:var(--color-primary);"></div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;" onclick="event.stopPropagation(); showToast('编辑')">✏️ 编辑</button>
+            <button class="fab gho" style="flex:none;padding:6px 12px;font-size:11px;color:#D85A30;" onclick="event.stopPropagation(); showToast('删除')">🗑️ 删除</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- end main-scroll -->
+
+  <!-- Page-level FABs -->
+  <button class="page-fab" id="fab-ability" onclick="showToast('新增能力')">+</button>
+  <button class="page-fab" id="fab-goals" onclick="showToast('新增目标')">+</button>
+  <button class="page-fab" id="fab-thoughts" onclick="showToast('新增思绪')">+</button>
+  <button class="page-fab" id="fab-todos" onclick="showToast('新增待办')">+</button>
+
+  <!-- FAB buttons (only on project page) -->
+  <div class="fab-group" id="fabGroup" style="display: none;">
+    <button class="fab pri" onclick="showToast('新建行为')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      行为
+    </button>
+    <button class="fab gho" onclick="showToast('记录问题')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      问题
+    </button>
+    <button class="fab thi" onclick="showToast('记录收获')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      收获
+    </button>
+  </div>
+
+  <!-- Bottom Navigation — 保持原有 emoji 风格 -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home')" data-page="home">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="nav-label">首页</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('ability')" data-page="ability">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <span class="nav-label">能力</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('goals')" data-page="goals">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+        </svg>
+      </div>
+      <span class="nav-label">目标</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('thoughts')" data-page="thoughts">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+      </div>
+      <span class="nav-label">思绪</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('todos')" data-page="todos">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+      </div>
+      <span class="nav-label">待办</span>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentPage = 'home';
+
+const pageTitles = {
+  home: { title: '再塑法典', sub: '个人成长记录' },
+  ability: { title: '能力', sub: '独立自主模块' },
+  goals: { title: '目标', sub: '追踪你的成长方向' },
+  thoughts: { title: '思绪', sub: '记录灵感与反思' },
+  todos: { title: '待办', sub: '今日任务清单' },
+  project: { title: '项目详情', sub: '英语口语' }
+};
+
+function switchPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) {
+    el.classList.remove('active');
+    void el.offsetWidth;
+    el.classList.add('active');
+  }
+  document.getElementById('mainScroll').scrollTop = 0;
+
+  const info = pageTitles[page] || pageTitles.home;
+  document.getElementById('topTitle').textContent = info.title;
+  document.getElementById('topSubtitle').textContent = info.sub;
+
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.page === page);
+  });
+
+  document.getElementById('fabGroup').style.display = page === 'project' ? 'flex' : 'none';
+
+  // Show/hide page-level FABs
+  const fabMap = { ability: 'fab-ability', goals: 'fab-goals', thoughts: 'fab-thoughts', todos: 'fab-todos' };
+  document.querySelectorAll('.page-fab').forEach(f => f.classList.remove('visible'));
+  if (fabMap[page]) document.getElementById(fabMap[page])?.classList.add('visible');
+}
+
+function selectTab(el) {
+  el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleGraph(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function toggleProjSection(section) {
+  const content = document.getElementById('projSecContent_' + section);
+  const arrow = document.getElementById('projSecArrow_' + section);
+  if (!content) return;
+  const isOpen = content.style.maxHeight !== '0px';
+  if (isOpen) {
+    content.style.maxHeight = '0px';
+    content.style.overflow = 'hidden';
+    content.style.opacity = '0';
+    content.style.transition = 'max-height 0.3s ease, opacity 0.2s ease';
+    if (arrow) arrow.classList.add('rotated');
+  } else {
+    content.style.maxHeight = '1000px';
+    content.style.overflow = 'visible';
+    content.style.opacity = '1';
+    content.style.transition = 'max-height 0.4s ease, opacity 0.3s ease';
+    if (arrow) arrow.classList.remove('rotated');
+  }
+}
+
+function toggleTodoFold(id) {
+  const list = document.getElementById(id + 'List');
+  const arrow = document.getElementById(id + 'Arrow');
+  if (!list) return;
+  const isOpen = list.classList.contains('open');
+  list.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open');
+}
+
+function toggleTodo(card) {
+  const check = card.querySelector('.todo-check');
+  const text = card.querySelector('.todo-text');
+  const isDone = check.classList.toggle('done');
+  text.classList.toggle('done', isDone);
+  card.style.opacity = isDone ? '0.5' : '1';
+}
+
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1500);
+}
+
+function toggleCapSection(header) {
+  const section = header.closest('.cap-section');
+  const projList = section.querySelector('.proj-list');
+  const chevron = header.querySelector('.cap-chevron');
+  if (!projList) return;
+  const isExpanded = projList.classList.contains('expanded');
+  projList.classList.toggle('expanded');
+  if (chevron) chevron.classList.toggle('expanded', !isExpanded);
+}
+
+// ===== Tab 切换时切换能力页内容示例 =====
+const abilityTabContents = {
+  liberation: `<div class="empty-state">解放脑警示语记录<br><span style="font-size:12px;color:var(--text-hint)">点击右下角 + 添加记录</span></div>`,
+  independence: null, // 使用 HTML 中默认展示的内容
+  diplomacy: `<div class="empty-state">暂无外交墙记录<br><span style="font-size:12px;color:var(--text-hint)">点击右下角 + 添加记录</span></div>`
+};
+
+const originalSelectTab = selectTab;
+selectTab = function(el) {
+  originalSelectTab(el);
+  const tabText = el.textContent.trim();
+  let key = null;
+  if (tabText.includes('解放脑')) key = 'liberation';
+  else if (tabText.includes('外交墙')) key = 'diplomacy';
+
+  if (key && abilityTabContents[key] !== null) {
+    const pageEl = document.getElementById('page-ability');
+    const contentArea = pageEl.querySelector('.cap-section');
+    if (contentArea) {
+      // 保存当前内容
+      if (key === 'independence' && abilityTabContents.independence === null) {
+        abilityTabContents.independence = contentArea.outerHTML;
+      }
+      // Show tab content
+      if (key !== 'independence') {
+        contentArea.style.display = 'none';
+        const existing = pageEl.querySelector('.tab-content');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.className = 'tab-content';
+        div.innerHTML = abilityTabContents[key];
+        pageEl.appendChild(div);
+      } else {
+        contentArea.style.display = '';
+        const existing = pageEl.querySelector('.tab-content');
+        if (existing) existing.remove();
+      }
+    }
+  } else if (key === null) {
+    // independence tab - restore original
+    const pageEl = document.getElementById('page-ability');
+    const contentArea = pageEl.querySelector('.cap-section');
+    if (contentArea) contentArea.style.display = '';
+    const existing = pageEl.querySelector('.tab-content');
+    if (existing) existing.remove();
+  }
+};
+</script>
+
+</body>
+</html>

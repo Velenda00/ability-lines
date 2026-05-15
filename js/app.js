@@ -20,7 +20,19 @@ function switchPage(page) {
   const map = { home:'page-home', ability:'page-ability', goals:'page-goals',
     thoughts:'page-thoughts', todos:'page-todos', project:'page-project' };
   document.getElementById(map[page]||'page-home').classList.add('active');
-  updateTitle(); renderPage(); updateNav();
+  updateTitle(); renderPage(); updateNav(); updateFabs();
+}
+
+function updateFabs() {
+  document.querySelectorAll('.page-fab').forEach(f=>f.classList.remove('visible'));
+  const fabMap = {ability:'fab-ability', goals:'fab-goals', thoughts:'fab-thoughts', todos:'fab-todos'};
+  if(fabMap[currentPage]) document.getElementById(fabMap[currentPage])?.classList.add('visible');
+}
+
+function handleAbilityFab() {
+  if(_abilityTab==='liberation') showAddModal('liberation');
+  else if(_abilityTab==='diplomacy') showAddModal('diplomacy');
+  else showAddCapabilityModal();
 }
 
 function updateTitle() {
@@ -199,17 +211,15 @@ function renderAbility() {
 
   const con = document.getElementById('abilityContent');
   if (_abilityTab === 'liberation') {
-    con.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span></span><button class="add-btn" onclick="showAddModal(\'liberation\')">+</button></div>';
-    if(!appData.liberationEntries.length) { con.innerHTML+='<div class="empty-state">暂无记录</div>'; return; }
-    con.innerHTML += appData.liberationEntries.map(e=>`
+    if(!appData.liberationEntries.length) { con.innerHTML='<div class="empty-state">暂无记录</div>'; return; }
+    con.innerHTML = appData.liberationEntries.map(e=>`
       <div class="entry-card"><div class="entry-meta"><span>${fmtDate(e.createdAt)}</span>
         <span class="entry-actions"><button class="icon-btn" onclick="editLiberation('${e.id}')">✏️</button>
         <button class="icon-btn" onclick="deleteItem('liberation','${e.id}')">🗑️</button></span></div>
       <div class="entry-text">${esc(e.text)}</div></div>`).join('');
   } else if (_abilityTab === 'diplomacy') {
-    con.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span></span><button class="add-btn" onclick="showAddModal(\'diplomacy\')">+</button></div>';
-    if(!appData.diplomacyEntries.length) { con.innerHTML+='<div class="empty-state">暂无记录</div>'; return; }
-    con.innerHTML += appData.diplomacyEntries.map(e=>`
+    if(!appData.diplomacyEntries.length) { con.innerHTML='<div class="empty-state">暂无记录</div>'; return; }
+    con.innerHTML = appData.diplomacyEntries.map(e=>`
       <div class="entry-card"><div class="entry-meta"><span>${fmtDate(e.createdAt)}</span>
         <span class="entry-actions"><button class="icon-btn" onclick="editDiplomacy('${e.id}')">✏️</button>
         <button class="icon-btn" onclick="deleteItem('diplomacy','${e.id}')">🗑️</button></span></div>
@@ -223,43 +233,60 @@ function switchAbilityTab(tab) { _abilityTab=tab; renderAbility(); }
 
 function renderCapabilitiesIn(con) {
   const n=nc();
-  con.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span></span><button class="add-btn" onclick="showAddCapabilityModal()">+</button></div>';
-  if(!appData.capabilities.length) { con.innerHTML+='<div class="empty-state">还没有'+n.capability+'</div>'; return; }
+  if(!appData.capabilities.length) { con.innerHTML='<div class="empty-state">还没有'+n.capability+'</div>'; return; }
   const sorted = sortByImpThenTime(appData.capabilities);
-  con.innerHTML += sorted.map(cap=>{
+  con.innerHTML = sorted.map(cap=>{
     const isComp = cap.status==='completed';
     const total = cap.projects.reduce((s,p)=>s+Object.values(p.entries).reduce((a,arr)=>a+arr.length,0),0);
+    const projCount = cap.projects.length;
     const sortedProjs = sortByImpThenTime(cap.projects);
-    const capThoughts = findLinkedThoughts({ capId: cap.id });
-    return `<div class="capability-card" style="${isComp?'opacity:0.5':''}">
-      <div class="cap-header">
-        <span class="cap-name" style="${isComp?'text-decoration:line-through':''}">${isComp?'✅ ':''}${esc(cap.name)}${impStars(cap.importance)}</span>
-        <span style="display:flex;gap:4px">
-          <button class="icon-btn" onclick="toggleCapStatus('${cap.id}')" title="${isComp?'恢复':'完成'}">${isComp?'🔄':'✅'}</button>
-          <button class="icon-btn" onclick="editCap('${cap.id}')">✏️</button>
-          <button class="icon-btn" onclick="deleteItem('capability','${cap.id}')">🗑️</button>
-          <button class="icon-btn" onclick="showAddProjectModal('${cap.id}')">+${n.project}</button>
-        </span>
+    return `<div class="cap-section" style="${isComp?'opacity:0.5':''}">
+      <div class="cap-header" onclick="toggleCapSection(this)">
+        <span class="cap-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+        <div style="flex:1;min-width:0">
+          <div class="cap-name" style="${isComp?'text-decoration:line-through':''}">${isComp?'✅ ':''}${esc(cap.name)}${impStars(cap.importance)}</div>
+          <div class="cap-count">${projCount} 个${n.project} · ${total} 条记录</div>
+        </div>
+        <div class="cap-actions">
+          <button class="icon-btn" onclick="event.stopPropagation();toggleCapStatus('${cap.id}')" title="${isComp?'恢复':'完成'}">${isComp?'🔄':'✅'}</button>
+          <button class="icon-btn" onclick="event.stopPropagation();editCap('${cap.id}')">✏️</button>
+          <button class="icon-btn" onclick="event.stopPropagation();deleteItem('capability','${cap.id}')">🗑️</button>
+          <button class="icon-btn" style="font-size:11px;color:var(--color-primary);font-weight:600" onclick="event.stopPropagation();showAddProjectModal('${cap.id}')">+${n.project}</button>
+        </div>
       </div>
-      <div class="cap-count">${total}条记录</div>
-      ${sortedProjs.length===0?'<div class="cap-empty">暂无'+n.project+'</div>'
-        : sortedProjs.map(p=>{
-          const pComp = p.status==='completed';
-          const pTotal = Object.values(p.entries).reduce((a,arr)=>a+arr.length,0);
-          const projThoughts = findLinkedThoughts({ capId: cap.id, projId: p.id });
-          return `<div class="project-item" onclick="openProject('${cap.id}','${p.id}')" style="${pComp?'opacity:0.5':''}">
-            <span class="pj-name" style="${pComp?'text-decoration:line-through':''}">${pComp?'✅ ':''}${esc(p.name)}${impStars(p.importance)}</span>
-            <span style="display:flex;align-items:center;gap:6px">
-              <span class="pj-stats">${pTotal}条</span>
-              <button class="icon-btn" onclick="event.stopPropagation();toggleProjStatus('${cap.id}','${p.id}')" title="${pComp?'恢复':'完成'}" style="font-size:12px">${pComp?'🔄':'✅'}</button>
-              ${projThoughts.length?`<span title="关联${projThoughts.length}条思绪" style="font-size:11px;color:#aaa">💭${projThoughts.length}</span>`:''}
-              <button class="icon-btn" onclick="event.stopPropagation();editProj('${cap.id}','${p.id}')">✏️</button>
-              <button class="icon-btn" onclick="event.stopPropagation();deleteItem('project','${cap.id}','${p.id}')">🗑️</button>
-            </span>
-          </div>`;
-        }).join('')}
+      <div class="proj-list">
+        ${sortedProjs.length===0?'<div class="cap-empty">暂无'+n.project+'</div>'
+          : sortedProjs.map(p=>{
+            const pComp = p.status==='completed';
+            const pTotal = Object.values(p.entries).reduce((a,arr)=>a+arr.length,0);
+            const projThoughts = findLinkedThoughts({ capId: cap.id, projId: p.id });
+            return `<div class="project-item" onclick="openProject('${cap.id}','${p.id}')" style="${pComp?'opacity:0.5':''}">
+              <div class="proj-indicator" style="background:var(--color-primary);opacity:.55"></div>
+              <div style="flex:1;min-width:0">
+                <span class="pj-name" style="${pComp?'text-decoration:line-through':''}">${pComp?'✅ ':''}${esc(p.name)}${impStars(p.importance)}</span>
+                <div class="pj-stats">${pTotal}条${projThoughts.length?' · 💭'+projThoughts.length:''}</div>
+              </div>
+              <span style="display:flex;align-items:center;gap:2px">
+                <button class="icon-btn" onclick="event.stopPropagation();toggleProjStatus('${cap.id}','${p.id}')" title="${pComp?'恢复':'完成'}" style="font-size:12px">${pComp?'🔄':'✅'}</button>
+                <button class="icon-btn" onclick="event.stopPropagation();editProj('${cap.id}','${p.id}')">✏️</button>
+                <button class="icon-btn" onclick="event.stopPropagation();deleteItem('project','${cap.id}','${p.id}')">🗑️</button>
+                <span class="proj-item-arrow" style="color:var(--text-hint);display:flex;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px"><path d="M9 18l6-6-6-6"/></svg></span>
+              </span>
+            </div>`;
+          }).join('')}
+      </div>
     </div>`;
   }).join('');
+}
+
+function toggleCapSection(header) {
+  const section = header.closest('.cap-section');
+  const projList = section.querySelector('.proj-list');
+  const chevron = header.querySelector('.cap-chevron');
+  if(!projList) return;
+  const isExpanded = projList.classList.contains('expanded');
+  projList.classList.toggle('expanded');
+  if(chevron) chevron.classList.toggle('expanded', !isExpanded);
 }
 
 // ==================== 目标 ====================
@@ -1083,19 +1110,62 @@ function renderThoughts(){
   let thoughts=appData.thoughts;
   if(q)thoughts=thoughts.filter(t=>t.text.toLowerCase().includes(q)||(t.tags||[]).some(tag=>tag.toLowerCase().includes(q)));
   thoughts=sortByImpThenTime(thoughts);
-  if(!thoughts.length){list.innerHTML='<div class="empty-state">'+(q?'没有找到匹配的思绪':'💭 暂无思绪')+'</div>';return;}
+  if(!thoughts.length){list.innerHTML='<div class="empty-state">'+(q?'没有找到匹配的思绪':'暂无思绪')+'</div>';return;}
   list.innerHTML=thoughts.map(t=>{
     const linkInfo = resolveThoughtLink(t);
-    let extraHtml='';
-    if(t.note) extraHtml+=`<div style="font-size:12px;color:#888;margin-top:2px">💬 ${escNL(t.note)}</div>`;
-    if((t.tags||[]).length) extraHtml+=`<div style="margin-top:6px">${t.tags.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>`;
-    if(linkInfo) extraHtml+=`<div class="linked-todo" onclick="${linkInfo.type==='entry'?`openProject('${linkInfo.capId}','${linkInfo.projId}')`:linkInfo.type==='liberation'?`switchPage('ability');setTimeout(()=>{switchAbilityTab('liberation');},50)`:linkInfo.type==='project'?`openProject('${linkInfo.capId}','${linkInfo.projId}')`:`switchPage('ability')`}"><span>${linkInfo.icon} 关联${linkInfo.label}：${esc(linkInfo.text.slice(0,30))}</span><span style="font-size:10px;color:#aaa">🔗</span></div>`;
-    return `<div class="entry-card"><div class="entry-meta"><span>${fmtDate(t.createdAt)}${impStars(t.importance)}</span>
-      <span class="entry-actions"><button class="icon-btn" onclick="editThought('${t.id}')">✏️</button>
-      <button class="icon-btn" onclick="showThoughtLinkModal('${t.id}')" title="关联">🔗</button>
-      <button class="icon-btn" onclick="deleteItem('thought','${t.id}')">🗑️</button></span></div>
-      <div class="entry-text">${esc(t.text)}</div>
-      ${collapseWrap('th_'+t.id,extraHtml)}
+    const hasLink = !!linkInfo;
+    // 灯泡图标（有关联） / 云朵图标（独立）
+    const railIcon = hasLink
+      ? `<div class="thought-rail-icon" style="background:var(--color-primary-light)">
+           <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
+             <path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V18h-6v-2.5l-.7-.5A7 7 0 0112 2z"/>
+             <path d="M9 21h6"/><path d="M10 18v1.5a2 2 0 004 0V18"/>
+           </svg>
+         </div>`
+      : `<div class="thought-rail-icon" style="background:var(--bg-inset)">
+           <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
+             <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>
+           </svg>
+         </div>`;
+
+    let linkHtml='';
+    if(linkInfo) {
+      const clickAction = linkInfo.type==='entry'?`openProject('${linkInfo.capId}','${linkInfo.projId}')`
+        :linkInfo.type==='liberation'?`switchPage('ability');setTimeout(()=>{switchAbilityTab('liberation');},50)`
+        :linkInfo.type==='project'?`openProject('${linkInfo.capId}','${linkInfo.projId}')`
+        :`switchPage('ability')`;
+      linkHtml = `<div class="thought-link" onclick="${clickAction}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        ${esc(linkInfo.text.slice(0,35))}
+      </div>`;
+    }
+
+    let noteHtml='';
+    if(t.note) noteHtml=`<div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">💬 ${escNL(t.note)}</div>`;
+    let tagsHtml='';
+    if((t.tags||[]).length) tagsHtml=`<div style="margin-top:4px">${t.tags.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>`;
+
+    return `<div class="thought-item">
+      <div class="thought-rail">
+        ${railIcon}
+        <div class="thought-rail-line"></div>
+      </div>
+      <div class="thought-body">
+        <div class="thought-title">${esc(t.text.slice(0,50))}${t.text.length>50?'...':''}</div>
+        ${t.text.length>50?`<div class="thought-text">${esc(t.text)}</div>`:''}
+        ${noteHtml}
+        ${tagsHtml}
+        ${linkHtml}
+        <div class="thought-meta">
+          <span>${fmtDate(t.createdAt)}${impStars(t.importance)}</span>
+          ${hasLink?`<span class="tag primary">${esc(linkInfo.label)}</span>`:''}
+          <div class="thought-actions">
+            <button class="icon-btn" onclick="editThought('${t.id}')">✏️</button>
+            <button class="icon-btn" onclick="showThoughtLinkModal('${t.id}')" title="关联">🔗</button>
+            <button class="icon-btn" onclick="deleteItem('thought','${t.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
