@@ -244,7 +244,7 @@
               },
               {
                 "id": "entry_1778481580740_twyl",
-                "text": "短思考时间把事情说清楚",
+                "text": "短时间组织语言的逻辑",
                 "createdAt": "2026-05-11T06:39:40.740Z",
                 "importance": 3,
                 "relatedTodoId": null,
@@ -269,11 +269,7 @@
               "todoId": "todo_1778503664165_1yr1",
               "completedAt": "2026-05-12T15:07:44.546Z",
               "relatedEntryIds": [
-                "entry_1778483162950_hi0e",
-                "entry_1778598585755_d79w",
-                "entry_1778598658003_7bjj",
-                "entry_1778598777592_alyh",
-                "entry_1778598842679_52mn"
+                "entry_1778483162950_hi0e"
               ]
             }
           ],
@@ -283,7 +279,7 @@
                 "id": "entry_1778483162950_hi0e",
                 "text": "模仿朗读",
                 "createdAt": "2026-05-11T07:06:02.950Z",
-                "importance": 0,
+                "importance": 2,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
@@ -293,41 +289,41 @@
             "problem": [
               {
                 "id": "entry_1778598585755_d79w",
-                "text": "语速快的时候，会口齿不清，黏着感强",
+                "text": "字与字不清晰，语句重点不对",
                 "createdAt": "2026-05-12T15:09:45.755Z",
-                "importance": 0,
+                "importance": 2,
                 "relatedTodoId": null,
-                "relatedProcessId": "proc_1778598464553_8cf5",
+                "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": ""
               },
               {
                 "id": "entry_1778598658003_7bjj",
-                "text": "肢体不自然，眼睛一直盯着镜头也不自然",
+                "text": "肢体与眼神不自然",
                 "createdAt": "2026-05-12T15:10:58.003Z",
-                "importance": 0,
+                "importance": 2,
                 "relatedTodoId": null,
-                "relatedProcessId": "proc_1778598464553_8cf5",
+                "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": ""
               },
               {
                 "id": "entry_1778598777592_alyh",
-                "text": "眨眼、闭嘴、吞咽太用力，嘴部尝试保持微笑唇",
+                "text": "眨眼、闭嘴、吞咽太用力",
                 "createdAt": "2026-05-12T15:12:57.592Z",
                 "importance": 0,
                 "relatedTodoId": null,
-                "relatedProcessId": "proc_1778598464553_8cf5",
+                "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "尝试保持微笑唇，不要用表情用力成为思考的习惯动作"
               },
               {
                 "id": "entry_1778598842679_52mn",
-                "text": "整体内容有不连贯处，重点与顿点有些也不太准确",
+                "text": "整体演讲有不连贯处",
                 "createdAt": "2026-05-12T15:14:02.679Z",
                 "importance": 0,
                 "relatedTodoId": null,
-                "relatedProcessId": "proc_1778598464553_8cf5",
+                "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": ""
               }
@@ -345,14 +341,40 @@
               }
             ],
             "review": []
-          }
+          },
+          "relations": [
+            {
+              "id": "rel_1778806262113_2lbf",
+              "fromId": "entry_1778483162950_hi0e",
+              "toId": "entry_1778598585755_d79w",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1778806262116_39yu",
+              "fromId": "entry_1778483162950_hi0e",
+              "toId": "entry_1778598658003_7bjj",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1778806262117_0ahw",
+              "fromId": "entry_1778483162950_hi0e",
+              "toId": "entry_1778598777592_alyh",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1778806262118_y82m",
+              "fromId": "entry_1778483162950_hi0e",
+              "toId": "entry_1778598842679_52mn",
+              "type": "discover"
+            }
+          ]
         }
       ]
     },
     {
       "id": "cap_1778063127715_kxgz",
       "name": "审美能力",
-      "importance": 0,
+      "importance": 1,
       "createdAt": "2026-05-06T10:25:27.715Z",
       "projects": [
         {
@@ -362,27 +384,18 @@
           "createdAt": "2026-05-06T10:32:17.717Z",
           "process": [],
           "entries": {
-            "action": [
-              {
-                "id": "entry_1778079696389_6d72",
-                "text": "青岛照片p完发朋友圈",
-                "createdAt": "2026-05-06T15:01:36.389Z",
-                "importance": 3,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null
-              }
-            ],
+            "action": [],
             "problem": [],
             "learning": [
               {
                 "id": "entry_1778079775416_yjju",
-                "text": "人物p图要素，我的面部身材特点",
+                "text": "人物p图要素学习",
                 "createdAt": "2026-05-06T15:02:55.416Z",
                 "importance": 3,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
-                "createdFromTodoId": null
+                "createdFromTodoId": null,
+                "note": "研究我的面部身材特点，以及各风景强化方法"
               },
               {
                 "id": "entry_1778483530906_2glr",
@@ -392,7 +405,7 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "多对象？"
+                "note": "面向多对象？设置小巧思"
               }
             ],
             "review": []
@@ -405,44 +418,21 @@
           "createdAt": "2026-05-11T06:58:43.086Z",
           "process": [],
           "entries": {
-            "action": [],
-            "problem": [],
-            "learning": [],
-            "review": []
-          }
-        },
-        {
-          "id": "proj_1778646044955_fzh2",
-          "name": "网页画面构思",
-          "importance": 0,
-          "createdAt": "2026-05-13T04:20:44.955Z",
-          "process": [],
-          "entries": {
             "action": [
               {
-                "id": "entry_1778646081987_w0jl",
-                "text": "找到自己喜欢的ip",
-                "createdAt": "2026-05-13T04:21:21.987Z",
+                "id": "entry_1778807793571_15ua",
+                "text": "经典模板复刻",
+                "createdAt": "2026-05-15T01:16:33.571Z",
                 "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "感受素材拆分与组合，观察模板逻辑",
+                "syncThoughtId": null
               }
             ],
             "problem": [],
-            "learning": [
-              {
-                "id": "entry_1778646104045_nnbj",
-                "text": "设计课程",
-                "createdAt": "2026-05-13T04:21:44.045Z",
-                "importance": 0,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": ""
-              }
-            ],
+            "learning": [],
             "review": []
           }
         },
@@ -462,7 +452,7 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
+                "note": "建立或收集自己喜欢的ip或风格"
               },
               {
                 "id": "entry_1778732895607_klco",
@@ -504,7 +494,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "分为能力线与思考线两条主线，强可视化串联设计，辅以AI辅助录入与阶段总结。"
+                "note": "分为能力线与思考线两条主线，强可视化串联设计，辅以AI辅助录入与阶段总结。",
+                "status": "completed"
               },
               {
                 "id": "entry_1778479610090_wf4m",
@@ -514,7 +505,8 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "完成核心能力线搭建（独立自主），录入与分类完全手工，其他部分简化"
+                "note": "完成核心能力线搭建（独立自主），录入与分类完全手工，其他部分简化",
+                "status": "completed"
               },
               {
                 "id": "entry_1778479904731_heoc",
@@ -530,25 +522,27 @@
                 "id": "entry_1778480502198_3qak",
                 "text": "界面设计",
                 "createdAt": "2026-05-11T06:21:42.198Z",
-                "importance": 1,
+                "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "串联图谱，有热点、可点亮、明主次，主线感强"
               }
             ],
-            "problem": [],
-            "learning": [
+            "problem": [
               {
-                "id": "entry_1778479985681_n7hj",
-                "text": "AI工作总结prompt、skill等研究",
-                "createdAt": "2026-05-11T06:13:05.681Z",
+                "id": "entry_1778807194596_s237",
+                "text": "不懂设计拆分，素材无积累",
+                "createdAt": "2026-05-15T01:06:34.596Z",
                 "importance": 0,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": ""
-              },
+                "note": "",
+                "syncThoughtId": null
+              }
+            ],
+            "learning": [
               {
                 "id": "entry_1778480129819_39ki",
                 "text": "学习如何写好一个总结",
@@ -557,7 +551,7 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "国家报告、企业报告、个人工作报告、产品成果报告等"
+                "note": ""
               },
               {
                 "id": "entry_1778480359726_y8yj",
@@ -571,7 +565,15 @@
               }
             ],
             "review": []
-          }
+          },
+          "relations": [
+            {
+              "id": "rel_1778807194598_9gup",
+              "fromId": "entry_1778480502198_3qak",
+              "toId": "entry_1778807194596_s237",
+              "type": "discover"
+            }
+          ]
         },
         {
           "id": "proj_1778063506488_y2vn",
@@ -675,13 +677,26 @@
       "createdAt": "2026-05-11T12:40:23.681Z",
       "projects": [
         {
-          "id": "proj_1778503246727_mtlr",
-          "name": "领导金句",
+          "id": "proj_1778805708004_5q09",
+          "name": "向上社交能力",
           "importance": 3,
-          "createdAt": "2026-05-11T12:40:46.727Z",
+          "createdAt": "2026-05-15T00:41:48.004Z",
           "process": [],
+          "relations": [],
           "entries": {
-            "action": [],
+            "action": [
+              {
+                "id": "entry_1778805780706_meh4",
+                "text": "记录领导金句",
+                "createdAt": "2026-05-15T00:43:00.706Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null
+              }
+            ],
             "problem": [],
             "learning": [],
             "review": []
@@ -892,11 +907,12 @@
       "completedAt": null,
       "sourceCapId": "cap_1778063127715_kxgz",
       "sourceProjId": "proj_1778063537717_jbmt",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778079696389_6d72",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778079775416_yjju",
       "processCapId": null,
       "processProjId": null,
-      "processEntryIds": []
+      "processEntryIds": [],
+      "note": ""
     },
     {
       "id": "todo_1778079878130_2afy",
@@ -1080,7 +1096,7 @@
     },
     {
       "id": "todo_1778481653444_0z4k",
-      "text": "学习主持人大赛中的优秀案例",
+      "text": "观看2019年主持人大赛，学习邹韵组织语言的逻辑",
       "importance": 0,
       "createdAt": "2026-05-11T06:40:53.444Z",
       "isToday": true,
@@ -1393,9 +1409,65 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1778806226595_3vye",
+      "text": "了解播音腔",
+      "importance": 1,
+      "createdAt": "2026-05-15T00:50:26.595Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778483090549_505t",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778483216150_ejuy",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778807040057_mvgm",
+      "text": "AI总结使用prompt研究",
+      "importance": 1,
+      "createdAt": "2026-05-15T01:04:00.057Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778063134679_jxa3",
+      "sourceProjId": "proj_1778063428260_qe39",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778479904731_heoc",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778808955285_00cw",
+      "text": "学习国家报告、企业报告、个人工作报告、产品成果报告等的结构与内容",
+      "importance": 0,
+      "createdAt": "2026-05-15T01:35:55.285Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778063134679_jxa3",
+      "sourceProjId": "proj_1778063428260_qe39",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778480129819_39ki",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
+    {
+      "id": "lib_1778805894405_b9bk",
+      "text": "下意识向上社交",
+      "createdAt": "2026-05-15T00:44:54.405Z"
+    },
     {
       "id": "lib_1778231200099_tlmg",
       "text": "主动展示，不要等着别人发现",
