@@ -523,7 +523,19 @@
             ],
             "problem": [],
             "learning": [],
-            "review": []
+            "review": [
+              {
+                "id": "entry_1779066501905_rywy",
+                "text": "提高管理思维，可以不知道具体怎么做，但要知道有",
+                "createdAt": "2026-05-11T07:09:22.902Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "看东西不只停留在表面。做程序做视频做音乐门槛降低，只是生产这一步变得容易了，而素养、审美、技巧并没有降低，他们藏在构想、制作思路、prompt当中。所以要求的是掌握背后的原理与框架，换言之，最重要的还是要提高自己的管理思维。",
+                "syncThoughtId": "th_1778483362902_esbl"
+              }
+            ]
           },
           "status": "active",
           "relations": [
@@ -784,7 +796,7 @@
               },
               {
                 "id": "entry_1778829944899_3qpv",
-                "text": "学会提问大拿",
+                "text": "学会沙龙场合提问大拿",
                 "createdAt": "2026-05-15T07:25:44.899Z",
                 "importance": 2,
                 "relatedTodoId": null,
@@ -805,6 +817,28 @@
                 "note": "",
                 "syncThoughtId": null,
                 "status": "active"
+              },
+              {
+                "id": "entry_1779069808400_mo9m",
+                "text": "学会在电梯中与领导交流",
+                "createdAt": "2026-05-18T02:03:28.400Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null
+              },
+              {
+                "id": "entry_1779069850530_wisv",
+                "text": "学会饭桌中交流",
+                "createdAt": "2026-05-18T02:04:10.530Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null
               }
             ],
             "problem": [],
@@ -905,45 +939,45 @@
     },
     {
       "id": "th_1778484380066_3wcf",
-      "text": "竞争的魅力，在于所有机能在瞬间被调动的酣畅淋漓的感觉。我或许在乎输赢，在乎别人的看法，但是我更享受那一瞬间的感觉。\n但是我在决定参与竞争之前，又太害怕失败，陷入空想完美主义，总是觉得需要再准备的完美一点，于是总是错失机会。\n同时我还发现，我一直引以为傲却又总感觉没什么用的人性判断力，如果搭配上绝佳的现场即时反应力，那将会顶让我成为顶级的战略判断者。而我一直以来的性格与行为缺陷，让我的天赋无用武之地。\n所以，抓住一切机会，享受竞争！！",
+      "text": "竞争，并享受竞争！",
       "createdAt": "2026-05-11T07:26:20.066Z",
       "tags": [
         "竞争"
       ],
       "importance": 0,
-      "note": "",
+      "note": "竞争的魅力，在于所有机能在瞬间被调动的酣畅淋漓的感觉。我或许在乎输赢，在乎别人的看法，但是我更享受那一瞬间的感觉。\n但是我在决定参与竞争之前，又太害怕失败，陷入空想完美主义，总是觉得需要再准备的完美一点，于是总是错失机会。\n同时我还发现，我一直引以为傲却又总感觉没什么用的人性判断力，如果搭配上绝佳的现场即时反应力，那将会顶让我成为顶级的战略判断者。而我一直以来的性格与行为缺陷，让我的天赋无用武之地。\n所以，抓住一切机会，享受竞争！！",
       "relatedCapId": null,
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
       "relatedTodoId": null,
-      "relatedLiberationId": null
+      "relatedLiberationId": "lib_1778229487969_ekg4"
     },
     {
       "id": "th_1778483813881_dbaz",
-      "text": "以后一定要将MVP刻在脑门上，无论是交友、唱歌、学习、运动，我都没有一个最突出的东西，以后可以广、可以变，但是要在有“特区”的基础上再延申",
+      "text": "以后一定要将MVP刻在脑门上",
       "createdAt": "2026-05-11T07:16:53.881Z",
       "tags": [
         "行为准则"
       ],
       "importance": 3,
-      "note": "",
+      "note": "无论是交友、唱歌、学习、运动，我都没有一个最突出的东西。我认为这跟制作程序是一样的，一个能用、好用的应用，一定是先完善最核心的功能，在此基础上再去更新迭代，而不是从一开始就装入很多半吊子的东西。\n正如从“灵感管家”到“重塑法典”的制作，今后我会先打造我的MVP（目前选择的是表达感染力），之后在在此基础上去扩展、延申到不同类型、不同领域的MVP打造",
       "relatedCapId": null,
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
       "relatedTodoId": null,
-      "relatedLiberationId": null
+      "relatedLiberationId": "lib_1778063109786_y8pb"
     },
     {
       "id": "th_1778483463204_1c9u",
-      "text": "人际交往就是一个大型的服从性测试，说的好听一点是适应力强、善于因地制宜取长补短，实际上不就是改变不了别人，只能改变自己行为嘛。而我本人，或许就是这场测试的最忠诚的奴仆。",
+      "text": "人际交往就是一个大型的服从性测试",
       "createdAt": "2026-05-11T07:11:03.204Z",
       "tags": [
         "人际"
       ],
       "importance": 0,
-      "note": "",
+      "note": "说的好听一点是适应力强、善于因地制宜取长补短，实际上不就是改变不了别人，只能改变自己行为嘛。而我本人，或许就是这场测试的最忠诚的奴仆。",
       "relatedCapId": null,
       "relatedProjId": null,
       "relatedEntryType": null,
@@ -953,34 +987,37 @@
     },
     {
       "id": "th_1778483362902_esbl",
-      "text": "看东西不只停留在表面。做程序做视频做音乐门槛降低，只是生产这一步变得容易了，而素养、审美、技巧并没有降低，他们藏在构想、制作思路、prompt当中。所以要求的是掌握背后的原理与框架，换言之，最重要的还是要提高自己的管理思维。",
+      "text": "增强管理思维，可以不知道具体怎么做，但要知道有",
       "createdAt": "2026-05-11T07:09:22.902Z",
       "tags": [
         "时代思考"
       ],
       "importance": 0,
-      "note": "",
-      "relatedCapId": null,
-      "relatedProjId": null,
-      "relatedEntryType": null,
-      "relatedEntryId": null,
+      "note": "看东西不只停留在表面。做程序做视频做音乐门槛降低，只是生产这一步变得容易了，而素养、审美、技巧并没有降低，他们藏在构想、制作思路、prompt当中。所以要求的是掌握背后的原理与框架，换言之，最重要的还是要提高自己的管理思维。",
+      "relatedCapId": "cap_1778063127715_kxgz",
+      "relatedProjId": "proj_1778678332046_9nyy",
+      "relatedEntryType": "action",
+      "relatedEntryId": "entry_1778989066369_4iod",
       "relatedTodoId": null,
-      "relatedLiberationId": null
+      "relatedLiberationId": null,
+      "sourceReviewId": "entry_1779066501905_rywy",
+      "sourceReviewCapId": "cap_1778063127715_kxgz",
+      "sourceReviewProjId": "proj_1778678332046_9nyy"
     },
     {
       "id": "th_1778229292825_0xq7",
-      "text": "通过这次运动会，我也发现自己是一个注重结果的人，但不知道为什么总是差一点纳入奖励范围（上升玄学了）。\n我的竞争意识终究还是太弱了。对于变换的思路与战术总是不能即时执行，习惯按照准备完好再照本宣科的保守应对。对于劣势状态下，不能很好的找到自己的定位与局部优势。\n说到底，还是要主动参与竞争，享受竞争，争取结果但不在意丢脸。在竞争中成长，而不是通过磨洋工自娱自乐。",
+      "text": "提高竞争意识与即时策略执行胆量",
       "createdAt": "2026-05-08T08:34:52.825Z",
       "tags": [
         "竞争"
       ],
       "importance": 0,
-      "note": "",
+      "note": "通过这次运动会，我也发现自己是一个注重结果的人，但不知道为什么总是差一点纳入奖励范围（上升玄学了）。\n我的竞争意识终究还是太弱了。对于变换的思路与战术总是不能即时执行，习惯按照准备完好再照本宣科的保守应对。对于劣势状态下，不能很好的找到自己的定位与局部优势。\n说到底，还是要主动参与竞争，享受竞争，争取结果但不在意丢脸。在竞争中成长，而不是通过磨洋工自娱自乐。",
       "relatedCapId": null,
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedLiberationId": null
+      "relatedLiberationId": "lib_1778229487969_ekg4"
     },
     {
       "id": "th_1778064117729_ublf",
@@ -990,12 +1027,12 @@
         "程序"
       ],
       "importance": 0,
-      "note": "",
+      "note": "最开始我的构想很好，又是AI辅助录入与总结，又是能力树，又是灵感池，又是每日复盘，得到的结果是，确实VIBE出了一个微信小程序，每一项功能也都有，但是从最开始的录入就无法使用。于是我去调试AI录入，制定prompt，让他去按照我的理解分类。但在我花了大量时间沉溺于这一个小部分的调试的最后，我猛然发现，我好像也不知道我想要的分类模式是什么样的。或许被大量自媒体关于AI强大功能展示所洗脑，我理所应当的就认为，我提出的概念AI就是能够一键完美落地，即使我在自己使用AI的时候完全没有过这样的体验。\n于是我想自己去走一遍这个程序流，于是，我搭建了一个没有AI的网页作为MVP。\nMVP搭建完成后，即使也不完美、也需要调试、甚至离预想的模式很远，但我可以用了，并且能在用中发现问题并迭代。我能够很清晰的看到功能点、堵点、升级点，能够通过解决小问题快速回馈成就感，而不是花费大量token成本的同时，反复怀疑实际落地的可能性。我是在一步步搭建我的王国，而不是一点点修复王国的废墟。\n或许别人展示给你的是触手可得，但实际可能并非如此。而在这次的vibecoding中，我得到的不仅是一个专属于我的网页应用，更是对我思维惯性的一次冲击与突破。",
       "relatedCapId": null,
       "relatedProjId": null,
       "relatedEntryType": null,
       "relatedEntryId": null,
-      "relatedLiberationId": null
+      "relatedLiberationId": "lib_1778063109786_y8pb"
     }
   ],
   "todos": [
@@ -1386,7 +1423,7 @@
     {
       "id": "todo_1778830742016_j7b4",
       "text": "完成思绪整理",
-      "importance": 1,
+      "importance": 3,
       "createdAt": "2026-05-15T07:39:02.016Z",
       "isToday": true,
       "status": "active",
@@ -1436,17 +1473,17 @@
     },
     {
       "id": "todo_1778990547433_2sdb",
-      "text": "用已有产品学习产品经理思维",
-      "importance": 0,
+      "text": "用已有产品反推并学习产品经理思维",
+      "importance": 1,
       "createdAt": "2026-05-17T04:02:27.433Z",
       "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
+      "sourceCapId": "cap_1778063134679_jxa3",
+      "sourceProjId": "proj_1778063428260_qe39",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778479152563_zkfb",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -1464,6 +1501,23 @@
       "sourceProjId": null,
       "sourceEntryType": null,
       "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779069767882_sj3x",
+      "text": "观看对行业大拿的访谈，留意采访的问题",
+      "importance": 2,
+      "createdAt": "2026-05-18T02:02:47.882Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1778805708004_5q09",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778829944899_3qpv",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
