@@ -300,6 +300,18 @@
                 "createdFromTodoId": null,
                 "note": "背诵全文，模仿语音语调",
                 "status": "active"
+              },
+              {
+                "id": "entry_1778948692650_gs7y",
+                "text": "分析詹青云等优秀辩手的发言逻辑，是什么让你动容",
+                "createdAt": "2026-05-16T16:24:52.650Z",
+                "importance": 1,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "具体叙事与抽象总结结合？",
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [
@@ -478,7 +490,7 @@
                 "id": "entry_1778732858498_99dt",
                 "text": "素材收集",
                 "createdAt": "2026-05-14T04:27:38.498Z",
-                "importance": 0,
+                "importance": 3,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
@@ -495,6 +507,18 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "status": "active"
+              },
+              {
+                "id": "entry_1778989066369_4iod",
+                "text": "设计风格术语收集",
+                "createdAt": "2026-05-17T03:37:46.369Z",
+                "importance": 1,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "可以用喜欢的图片给ai反推",
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [],
@@ -502,7 +526,14 @@
             "review": []
           },
           "status": "active",
-          "relations": []
+          "relations": [
+            {
+              "id": "rel_1778989217237_k0ds",
+              "fromId": "entry_1778732895607_klco",
+              "toId": "entry_1778989066369_4iod",
+              "type": "derive"
+            }
+          ]
         }
       ],
       "status": "active"
@@ -760,7 +791,8 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "思考面对行业大拿，会提出什么问题",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               },
               {
                 "id": "entry_1778830304589_8frt",
@@ -771,7 +803,8 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [],
@@ -798,13 +831,15 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active"
               }
             ],
             "problem": [],
             "learning": [],
             "review": []
-          }
+          },
+          "status": "active"
         }
       ],
       "status": "active"
@@ -853,6 +888,21 @@
     }
   ],
   "thoughts": [
+    {
+      "id": "th_1779000569461_ezm8",
+      "text": "会框定义，更要会让别人接受定义",
+      "createdAt": "2026-05-17T06:49:29.461Z",
+      "tags": [
+        "时代思考"
+      ],
+      "importance": 0,
+      "note": "看辩论让我明白了下定义的重要性。看了几场辩论下来，我会发现辩论双方其实最重要的就是去框定义。\n今天看的辩论主题是，“如果你有超能力，可以让你爱的人也爱你，你要不要使用这个超能力？”，那我会发现拆解这个辩题其实是最重要的一个步骤。比如超能力是什么、它的使用对象是什么、它的作用结果是什么、爱是什么。而只要你框住了有力的定义并将它打出来，那么基本上就可以立于不败之地。\n而我在观看这个辩论的时候，我也会认为，比如反方就应该捉住正方高尚的爱的定义，一旦使用了超能力又是沦为自私的爱；正方就应该延伸爱上和爱下去的概念，表明超能力与其他追求的手段无异，只不过是能够必然拿到入场券的黑盒。\n但是我不否认我在一开始看到这个辩题的时候，也不会想的这么全面，甚至刚刚说的两个对于定义的观点，我也是在他们打的时候顺势自然而然的联想到的。\n那么我进一步思考，在有辩论与争辩的时候，是不是就在于双方对于定义的理解不一样？再回到我的日常当中，无论是跟别人沟通对接以及跟AI提出需求，让他给我交付，似乎无一例外都是在进行，划定定义、对接定义、对齐定义的工作。\n这就很好解释了，为什么让AI去做事情的时候，不是说简单一句，你帮我把这个写好，而是我们需要prompt、skill、需求文档等去限定住他。设计的时候可以发散，但是期望交付的时候，一定要限制，这样才不会总是感觉“没打到点上”、“应该抓着这一点”。而自己框定义同时能让别人接受这定义的能力，在生活中也会越来越重要。",
+      "relatedCapId": null,
+      "relatedProjId": null,
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null
+    },
     {
       "id": "th_1778484380066_3wcf",
       "text": "竞争的魅力，在于所有机能在瞬间被调动的酣畅淋漓的感觉。我或许在乎输赢，在乎别人的看法，但是我更享受那一瞬间的感觉。\n但是我在决定参与竞争之前，又太害怕失败，陷入空想完美主义，总是觉得需要再准备的完美一点，于是总是错失机会。\n同时我还发现，我一直引以为傲却又总感觉没什么用的人性判断力，如果搭配上绝佳的现场即时反应力，那将会顶让我成为顶级的战略判断者。而我一直以来的性格与行为缺陷，让我的天赋无用武之地。\n所以，抓住一切机会，享受竞争！！",
@@ -1366,6 +1416,57 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1778948776609_5pkb",
+      "text": "未曾爱过是不是人生的遗憾，体会姜思达发言时具体与抽象结合的方式，可尝试总结",
+      "importance": 1,
+      "createdAt": "2026-05-16T16:26:16.609Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778483090549_505t",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778948692650_gs7y",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1778990547433_2sdb",
+      "text": "用已有产品学习产品经理思维",
+      "importance": 0,
+      "createdAt": "2026-05-17T04:02:27.433Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779018780236_wqqa",
+      "text": "思绪内容折叠",
+      "importance": 0,
+      "createdAt": "2026-05-17T11:53:00.236Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
@@ -1423,6 +1524,24 @@
       "sourceLiberationId": "lib_1778229487969_ekg4",
       "note": "",
       "createdAt": "2026-05-15T03:05:08.227Z",
+      "archivedAt": null,
+      "completedDates": [],
+      "currentStreak": 0,
+      "bestStreak": 0
+    },
+    {
+      "id": "hab_1778989285080_2ug8",
+      "text": "收集自己喜欢的ppt、p图、ip、设计等",
+      "importance": 1,
+      "status": "active",
+      "sourceType": "behavior",
+      "sourceCapId": "cap_1778063127715_kxgz",
+      "sourceProjId": "proj_1778678332046_9nyy",
+      "sourceEntryId": "entry_1778732858498_99dt",
+      "sourceEntryType": "action",
+      "sourceLiberationId": null,
+      "note": "",
+      "createdAt": "2026-05-17T03:41:25.080Z",
       "archivedAt": null,
       "completedDates": [],
       "currentStreak": 0,
