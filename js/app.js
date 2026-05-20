@@ -300,6 +300,9 @@ function renderHome() {
       appData.thoughts.forEach(t => {
         if (t.createdAt && t.createdAt.slice(0,10) >= sd && t.relatedProjId === proj.id) score += 1;
       });
+      (appData.todos || []).forEach(td => {
+        if (td.status === 'completed' && td.sourceCapId === cap.id && td.sourceProjId === proj.id && td.completedAt && td.completedAt.slice(0,10) >= sd) score += 2;
+      });
       if (score > topProjectScore || (score === topProjectScore && score > 0 && topProject && new Date(proj.createdAt) > new Date(topProject.createdAt))) {
         topProjectScore = score; topProject = proj; topProjectCapId = cap.id;
       }
