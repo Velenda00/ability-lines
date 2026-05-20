@@ -166,7 +166,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "软件发布、小米汽车发布等",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:51:43.208Z"
               },
               {
                 "id": "entry_1778482915078_kcs3",
@@ -177,7 +179,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "课题：公司信息战略的收集与研究，十五五，行业风口、如何打好辩论、APEC会议与作用；对象：领导、团队、对外等",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:01:55.078Z"
               }
             ],
             "problem": [],
@@ -191,7 +195,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "不同场合、不同对象等",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:54:05.733Z"
               }
             ],
             "review": []
@@ -216,7 +222,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-06T10:38:28.445Z"
               },
               {
                 "id": "entry_1778063931149_z796",
@@ -227,7 +235,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-06T10:38:51.149Z"
               },
               {
                 "id": "entry_1778485661648_88qi",
@@ -238,10 +248,27 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "悬疑？",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:47:41.648Z"
               }
             ],
-            "problem": [],
+            "problem": [
+              {
+                "id": "entry_1779256991717_km0y",
+                "text": "语速慢，听着费劲",
+                "createdAt": "2026-05-20T06:03:11.717Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-20T06:03:11.717Z"
+              }
+            ],
             "learning": [
               {
                 "id": "entry_1778064027868_6f3e",
@@ -252,7 +279,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-06T10:40:27.868Z"
               },
               {
                 "id": "entry_1778481580740_twyl",
@@ -263,13 +292,22 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "主持人大赛、奇葩说",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:39:40.740Z"
               }
             ],
             "review": []
           },
           "status": "active",
-          "relations": []
+          "relations": [
+            {
+              "id": "rel_1779256991720_qcv9",
+              "fromId": "entry_1778485661648_88qi",
+              "toId": "entry_1779256991717_km0y",
+              "type": "discover"
+            }
+          ]
         },
         {
           "id": "proj_1778483090549_505t",
@@ -299,7 +337,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "背诵全文，模仿语音语调",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:06:02.950Z"
               },
               {
                 "id": "entry_1778948692650_gs7y",
@@ -311,7 +351,9 @@
                 "createdFromTodoId": null,
                 "note": "具体叙事与抽象总结结合？",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-16T16:24:52.650Z"
               }
             ],
             "problem": [
@@ -324,7 +366,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-12T15:09:45.755Z"
               },
               {
                 "id": "entry_1778598658003_7bjj",
@@ -335,7 +379,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-12T15:10:58.003Z"
               },
               {
                 "id": "entry_1778598777592_alyh",
@@ -346,7 +392,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "尝试保持微笑唇，不要用表情用力成为思考的习惯动作",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-12T15:12:57.592Z"
               },
               {
                 "id": "entry_1778598842679_52mn",
@@ -357,7 +405,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-12T15:14:02.679Z"
               }
             ],
             "learning": [
@@ -370,7 +420,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "更正统、舒服的发声位置",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:06:56.150Z"
               }
             ],
             "review": []
@@ -431,7 +483,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "研究我的面部身材特点，以及各风景强化方法",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-06T15:02:55.416Z"
               },
               {
                 "id": "entry_1778483530906_2glr",
@@ -442,7 +496,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "面向多对象？设置小巧思",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:12:10.906Z"
               }
             ],
             "review": []
@@ -468,7 +524,9 @@
                 "createdFromTodoId": null,
                 "note": "感受素材拆分与组合，观察模板逻辑",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T01:16:33.571Z"
               }
             ],
             "problem": [],
@@ -495,7 +553,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "建立或收集自己喜欢的ip或风格",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-14T04:27:38.498Z"
               },
               {
                 "id": "entry_1778732895607_klco",
@@ -506,7 +566,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-14T04:28:15.608Z"
               },
               {
                 "id": "entry_1778989066369_4iod",
@@ -518,7 +580,9 @@
                 "createdFromTodoId": null,
                 "note": "可以用喜欢的图片给ai反推",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-17T03:37:46.369Z"
               }
             ],
             "problem": [],
@@ -534,7 +598,9 @@
                 "createdFromTodoId": null,
                 "note": "看东西不只停留在表面。做程序做视频做音乐门槛降低，只是生产这一步变得容易了，而素养、审美、技巧并没有降低，他们藏在构想、制作思路、prompt当中。所以要求的是掌握背后的原理与框架，换言之，最重要的还是要提高自己的管理思维。",
                 "syncThoughtId": "th_1778483362902_esbl",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:09:22.902Z"
               }
             ]
           },
@@ -574,7 +640,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "分为能力线与思考线两条主线，强可视化串联设计，辅以AI辅助录入与阶段总结。",
-                "status": "completed"
+                "status": "completed",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T05:59:12.563Z"
               },
               {
                 "id": "entry_1778479610090_wf4m",
@@ -585,7 +653,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "完成核心能力线搭建（独立自主），录入与分类完全手工，其他部分简化",
-                "status": "completed"
+                "status": "completed",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:06:50.090Z"
               },
               {
                 "id": "entry_1778479904731_heoc",
@@ -596,7 +666,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "该如何总结、总结频率、AI使用prompt。有时其实也是手写总结，是否涉及连接？",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:11:44.731Z"
               },
               {
                 "id": "entry_1778480502198_3qak",
@@ -607,7 +679,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "串联图谱，有热点、可点亮、明主次，主线感强",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:21:42.198Z"
               }
             ],
             "problem": [
@@ -621,7 +695,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T01:06:34.596Z"
               }
             ],
             "learning": [
@@ -634,7 +710,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:15:29.819Z"
               },
               {
                 "id": "entry_1778480359726_y8yj",
@@ -645,7 +723,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "学习的成果输出可能内容会比较多，全放在这里不现实，那么该如何整理链接？可以先以总结的学习为例",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:19:19.726Z"
               }
             ],
             "review": [
@@ -659,7 +739,9 @@
                 "createdFromTodoId": null,
                 "note": "今天主要在继续思考并优化“灵感管家”MVP 的 UI 与整体成长逻辑。\n一开始，我的核心问题是：\n当前网站虽然已经具备基本功能，但整体呈现依然偏卡片化，缺少关联感、整体感与成长推进感。我希望它不只是“信息展示”，而是能够让我真正感受到能力之间的联系与成长轨迹。\n围绕这个问题，我今天持续与 AI 讨论并构思了多个方案。从最初的能力树、线性关联，到后面逐渐形成了“女帝成长计划”的世界观设定。\n这个设定的出现，重新点燃了我的兴趣，并且让我发觉了我的“燃点”。我并不是单纯喜欢“工具”或者“效率系统”，而是更容易被“叙事感”、“意义感”激发动力。当我把这个产品从“成长管理工具”转变为“女帝成长帝国”后，我明显重新燃起了热情。\n在这个过程中，我也明显感受到自己的一个典型行为模式：\n我很容易因为一个“宏大且有画面感的想法”而进入高热情状态，并迅速在脑海中构建出非常完整、震撼、精美的最终形态，并开始陷入空想完美主义。但现实执行时，由于自身能力、技术条件以及 AI 落地能力有限，我又会迅速因为“现实版本与脑内版本差距太大”而产生挫败感。\n不过，我觉得今天和以前相比，一个非常重要的变化是，我第一次开始真正接受，“现在的我，做不出脑海里的完整版。”，但即便如此，我依然想继续推进，而不是达不到理想效果就逐渐停滞。今天我开始主动思考，如何做简化版、如何保留核心体验、如何分阶段实现、如何先完成一个可运行可成长的 MVP。同时我发现，MVP 并不是“缩水”。而是让一个原本只存在于幻想中的东西，第一次真正进入现实。\n今天虽然没有真正完成新的页面，也没有做出理想中的 UI，但我并不觉得今天毫无成果。\n因为我感觉自己不仅是在做一个网站，更是在逐渐理解：我真正的兴趣驱动力是什么、我为什么会陷入空想完美主义、我为什么会进入高热情阶段、我应该如何让想法真正落地。相比于“我今天具体做出了什么”，我觉得这些认知上的变化，反而是更重要的成长。\n最后，我今天也越来越确认，我想做的，可能并不只是一个笔记工具。而是一个能够让我真正感受到“自己正在成长”的世界。",
                 "syncThoughtId": "th_1779091828238_2xpu",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-18T08:10:28.238Z"
               }
             ]
           },
@@ -690,7 +772,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "以地图为基础，去到哪里点亮哪里，点击还能看到旅行总结（吃喝玩乐感想及推荐），还能导出小红书推文。能够进行旅游规划，优先没去过的地方，能够查余票、介绍当地特色文化典籍历史人物等",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:30:25.725Z"
               }
             ],
             "problem": [],
@@ -741,7 +825,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "抓住令我动摇的那一刻，如詹qy如何感染人到让人忽略逻辑，而对方辩手又是如何突破的",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T06:56:52.633Z"
               }
             ],
             "problem": [],
@@ -768,7 +854,9 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "",
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-11T07:27:25.334Z"
               }
             ],
             "problem": [],
@@ -806,7 +894,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T00:43:00.706Z"
               },
               {
                 "id": "entry_1778829944899_3qpv",
@@ -818,7 +908,9 @@
                 "createdFromTodoId": null,
                 "note": "思考面对行业大拿，会提出什么问题",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T07:25:44.899Z"
               },
               {
                 "id": "entry_1778830304589_8frt",
@@ -830,7 +922,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T07:31:44.589Z"
               },
               {
                 "id": "entry_1779069808400_mo9m",
@@ -842,7 +936,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-18T02:03:28.400Z"
               },
               {
                 "id": "entry_1779069850530_wisv",
@@ -854,7 +950,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-18T02:04:10.530Z"
               }
             ],
             "problem": [],
@@ -882,7 +980,9 @@
                 "createdFromTodoId": null,
                 "note": "",
                 "syncThoughtId": null,
-                "status": "active"
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-15T07:35:43.808Z"
               }
             ],
             "problem": [],
@@ -1130,7 +1230,7 @@
       "text": "介绍再塑法典目前进展",
       "importance": 1,
       "createdAt": "2026-05-06T10:39:20.710Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "sourceCapId": "cap_1778063121284_l86i",
@@ -1497,9 +1597,9 @@
       "text": "首页重做",
       "importance": 2,
       "createdAt": "2026-05-15T07:19:33.644Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-20T07:04:18.337Z",
       "note": "思想枷锁需要像便签意义比较醒目的展示，看看自己决策、推进感、成就感到底需要什么信息",
       "sourceCapId": "cap_1778063134679_jxa3",
       "sourceProjId": "proj_1778063428260_qe39",
@@ -1644,28 +1744,66 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1779240221167_fs9a",
+      "text": "是否制作播客，主要是转文字看看语言条理",
+      "importance": 0,
+      "createdAt": "2026-05-20T01:23:41.167Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779256845659_dhgy",
+      "text": "给《阿嫲的一封情书》电影观后感",
+      "importance": 1,
+      "createdAt": "2026-05-20T06:00:45.659Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-20T06:01:16.145Z",
+      "note": "",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778063866807_3anq",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778485661648_88qi",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
     {
       "id": "lib_1778805894405_b9bk",
       "text": "下意识向上社交",
-      "createdAt": "2026-05-15T00:44:54.405Z"
+      "createdAt": "2026-05-15T00:44:54.405Z",
+      "importance": 0
     },
     {
       "id": "lib_1778231200099_tlmg",
       "text": "主动展示，不要等着别人发现",
-      "createdAt": "2026-05-08T09:06:40.099Z"
+      "createdAt": "2026-05-08T09:06:40.099Z",
+      "importance": 0
     },
     {
       "id": "lib_1778229487969_ekg4",
       "text": "乐在竞争，学在竞争，赢在竞争",
-      "createdAt": "2026-05-08T08:38:07.969Z"
+      "createdAt": "2026-05-08T08:38:07.969Z",
+      "importance": 0
     },
     {
       "id": "lib_1778063109786_y8pb",
       "text": "卸下空想完美主义，锁定最小执行单元",
-      "createdAt": "2026-05-06T10:25:09.786Z"
+      "createdAt": "2026-05-06T10:25:09.786Z",
+      "importance": 2
     }
   ],
   "diplomacyEntries": [],
@@ -1692,7 +1830,7 @@
       "id": "hab_1778814308227_nvjl",
       "text": "保持竞争思维",
       "importance": 2,
-      "status": "pool",
+      "status": "active",
       "sourceType": "liberation",
       "sourceCapId": null,
       "sourceProjId": null,
@@ -1710,7 +1848,7 @@
       "id": "hab_1778989285080_2ug8",
       "text": "收集自己喜欢的ppt、p图、ip、设计等",
       "importance": 1,
-      "status": "pool",
+      "status": "active",
       "sourceType": "behavior",
       "sourceCapId": "cap_1778063127715_kxgz",
       "sourceProjId": "proj_1778678332046_9nyy",
