@@ -112,6 +112,8 @@ const Store = {
             if (e.createdFromTodoId === undefined) e.createdFromTodoId = null;
             if (e.note === undefined) e.note = '';
             if (e.status === undefined) e.status = 'active';
+            if (e.occurrenceCount === undefined) e.occurrenceCount = 1;
+            if (e.updatedAt === undefined) e.updatedAt = e.createdAt || new Date().toISOString();
           });
         });
       });
@@ -149,6 +151,10 @@ const Store = {
       if (h.sourceEntryType === undefined) h.sourceEntryType = null;
       if (h.sourceLiberationId === undefined) h.sourceLiberationId = null;
       if (h.archivedAt === undefined) h.archivedAt = null;
+    });
+    // 解放脑补重要度
+    data.liberationEntries.forEach(e => {
+      if (e.importance === undefined) e.importance = 0;
     });
     // 保存补字段后的数据回 IDB
     await this.set('allData', data);
@@ -242,7 +248,7 @@ const Store = {
     }
     await this.saveAll(data); return entry;
   },
-  async updateEntry(capId, projId, type, entryId, text, importance, relatedProcessId, note, status) {
+  async updateEntry(capId, projId, type, entryId, text, importance, relatedProcessId, note, status, occurrenceCount, updatedAt) {
     const data = await this.getAll(); const cap = data.capabilities.find(c => c.id === capId);
     if (!cap) return null; const proj = cap.projects.find(p => p.id === projId);
     if (!proj) return null; const entry = (proj.entries[type]||[]).find(e => e.id === entryId);
@@ -251,6 +257,8 @@ const Store = {
     if (importance !== undefined) entry.importance = importance;
     if (note !== undefined) entry.note = note;
     if (status !== undefined) entry.status = status;
+    if (occurrenceCount !== undefined) entry.occurrenceCount = occurrenceCount;
+    if (updatedAt !== undefined) entry.updatedAt = updatedAt;
     if (relatedProcessId !== undefined) {
       if (entry.relatedProcessId) {
         const oldPe = (proj.process||[]).find(x => x.id === entry.relatedProcessId);
@@ -423,19 +431,37 @@ const Store = {
   },
 
   // ==================== 解放脑 ====================
-  async addLiberationEntry(text) {
+  async addLiberationEntry(text, importance) {
     const data = await this.getAll();
-    data.liberationEntries.unshift({ id: uid('lib'), text, createdAt: new Date().toISOString() });
+    data.liberationEntries.unshift({ id: uid('lib'), text, createdAt: new Date().toISOString(), importance: importance || 0 });
     await this.saveAll(data);
   },
-  async updateLiberationEntry(id, text) {
+  async updateLiberationEntry(id, text, importance) {
     const data = await this.getAll(); const e = data.liberationEntries.find(x => x.id === id);
-    if (!e) return null; e.text = text; await this.saveAll(data);
+    if (!e) return null;
+    if (text !== undefined) e.text = text;
+    if (importance !== undefined) e.importance = importance;
+    await this.saveAll(data);
   },
   async deleteLiberationEntry(id) {
     const data = await this.getAll();
     data.liberationEntries = data.liberationEntries.filter(x => x.id !== id);
     await this.saveAll(data);
+  },
+
+  // ==================== 问题计数 ====================
+  async addProblemOccurrence(capId, projId, entryId) {
+    const data = await this.getAll();
+    const cap = data.capabilities.find(c => c.id === capId);
+    if (!cap) return null;
+    const proj = cap.projects.find(p => p.id === projId);
+    if (!proj) return null;
+    const entry = (proj.entries.problem || []).find(e => e.id === entryId);
+    if (!entry) return null;
+    entry.occurrenceCount = (entry.occurrenceCount || 1) + 1;
+    entry.updatedAt = new Date().toISOString();
+    await this.saveAll(data);
+    return entry;
   },
 
   // ==================== 外交墙 ====================

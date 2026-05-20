@@ -7,6 +7,7 @@ let _impPickerCallback = null, _confirmCallback = null;
 let _abilityTab = 'independence'; // liberation | independence | diplomacy
 let _habitTab = 'active'; // active | pool | archived
 let _todoTab = 'today'; // today | library | completed
+let _thoughtTagFilter = null; // null | tag string
 
 function nc() { return appData.nameConfig || Store.getDefaultNameConfig(); }
 
@@ -155,48 +156,245 @@ function pickImp(lv) {
   if(_impPickerCallback) _impPickerCallback(lv);
 }
 
-// ==================== 首页（4卡片矩阵） ====================
+// ==================== 首页 ====================
+
+function pickWeightedQuote(entries) {
+  if (!entries.length) return null;
+  const w = { 3: 3, 2: 2, 1: 1, 0: 0.5 };
+  const weights = entries.map(e => w[e.importance] || 0.5);
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < entries.length; i++) { r -= weights[i]; if (r <= 0) return entries[i]; }
+  return entries[entries.length - 1];
+}
+function sevenDaysAgo() { const d = new Date(); d.setDate(d.getDate() - 7); return d.toISOString().slice(0, 10); }
+function yesterday() { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); }
+
+function resolveTodoSource(todo) {
+  if (!todo.sourceCapId) return '';
+  const cap = appData.capabilities.find(c => c.id === todo.sourceCapId);
+  if (!cap) return '';
+  if (todo.sourceProjId) {
+    const proj = cap.projects.find(p => p.id === todo.sourceProjId);
+    if (proj) return `来自：${cap.name} · ${proj.name}`;
+  }
+  return `来自：${cap.name}`;
+}
 
 function renderHome() {
   const h = document.getElementById('page-home');
-  const capCnt = appData.capabilities.length;
-  const { active: activeHabits } = Store.getHabits(appData);
-  const habitCnt = activeHabits.length;
-  const thCnt = appData.thoughts.length;
-  const {today:td} = Store.getTodos(appData);
-  const topCap = capCnt ? sortByImpThenTime(appData.capabilities)[0] : null;
-  const topHabit = habitCnt ? sortByImpThenTime(activeHabits)[0] : null;
-  const tagFreq = {};
-  appData.thoughts.forEach(t=>(t.tags||[]).forEach(tag=>{tagFreq[tag]=(tagFreq[tag]||0)+1;}));
-  const topTag = Object.entries(tagFreq).sort((a,b)=>b[1]-a[1])[0];
-  const topTodos = sortByImpThenTime(td).slice(0,2);
+  const n = nc();
+  const td = today();
+  const yd = yesterday();
+  const sd = sevenDaysAgo();
 
+  // ── 辅助：计算习惯断联天数 ──
+  function disconnectDays(hab) {
+    const dates = [...(hab.completedDates || [])].sort();
+    let days = 0;
+    const d = new Date();
+    while (true) {
+      const ds = d.toISOString().slice(0, 10);
+      if (dates.includes(ds)) break;
+      days++;
+      d.setDate(d.getDate() - 1);
+      if (days > 365) break;
+    }
+    return days;
+  }
+
+  // ── Section 1: 重塑箴言 ──
+  const quote = pickWeightedQuote(appData.liberationEntries);
+  const quoteHtml = quote
+    ? `<div class="home-quote">
+        <div class="home-quote-mark left">❝</div>
+        <div class="home-quote-text">${esc(quote.text)}</div>
+        <div class="home-quote-mark right">❞</div>
+      </div>`
+    : `<div class="home-quote home-quote-empty">暂无箴言，前往「${n.module1}」添加</div>`;
+
+  // ── Section 2: 今日焦点 ──
+
+  // 2.1 待办队列 (Top 2)
+  const { today: todayTodos } = Store.getTodos(appData);
+  const topTodos = sortByImpThenTime(todayTodos).slice(0, 2);
+  const todoHtml = topTodos.length
+    ? topTodos.map(t => {
+        const src = resolveTodoSource(t);
+        return `<div class="home-focus-card">
+          <div class="home-todo-item">
+            <button class="home-todo-check" onclick="event.stopPropagation();completeTodo('${t.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+            <div class="home-todo-body">
+              <div class="home-todo-title-row">
+                <div class="home-todo-text">${esc(t.text)}</div>
+                ${t.importance ? `<span class="home-todo-imp">${impStars(t.importance)}</span>` : ''}
+              </div>
+              ${src ? `<div class="home-todo-source">${esc(src)}</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="home-empty-hint">今日暂无待办</div>';
+
+  // 2.2 习惯追踪 (Top 2 未打卡，断联抢救置顶)
+  const { active: activeHabits } = Store.getHabits(appData);
+  const disconnectedHabits = [];
+  const normalHabits = [];
+  activeHabits.forEach(hab => {
+    const doneToday = isHabitDoneToday(hab, td);
+    const dDays = disconnectDays(hab);
+    if (!doneToday && dDays >= 2 && (hab.importance || 0) >= 2) {
+      disconnectedHabits.push({ ...hab, _disconnected: true, _dDays: dDays });
+    } else if (!doneToday) {
+      normalHabits.push({ ...hab, _dDays: dDays });
+    }
+  });
+  const allPending = [...sortByImpThenTime(disconnectedHabits), ...sortByImpThenTime(normalHabits)].slice(0, 2);
+  const habitHtml = allPending.length
+    ? allPending.map(hab => {
+        const dDays = hab._dDays || 0;
+        const streak = hab.currentStreak || 0;
+        return `<div class="home-focus-card">
+          <div class="home-habit-item">
+            <div class="home-habit-icon">🔥</div>
+            <div class="home-habit-body">
+              <div class="home-habit-title-row">
+                <div class="home-habit-text">${esc(hab.text)}</div>
+                ${hab.importance ? `<span class="home-habit-imp">${impStars(hab.importance)}</span>` : ''}
+                ${hab._disconnected ? `<span class="home-habit-warn">断联中！${dDays}天未打卡</span>` : ''}
+              </div>
+              <div class="home-habit-meta">
+                ${hab._disconnected
+                  ? `<span class="danger">再断1天将中断连击</span>`
+                  : `连续 ${streak} 天`}
+              </div>
+            </div>
+            <button class="home-habit-check" onclick="event.stopPropagation();toggleHabitToday('${hab.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="home-empty-hint">今日习惯已全部完成 🎉</div>';
+
+  // ── Section 3: 近期聚焦（7天窗口） ──
+
+  // 3.1 能力主线
+  const activeCaps = (appData.capabilities || []).filter(c => c.status !== 'completed');
+  const topCap = activeCaps.length ? sortByImpThenTime(activeCaps)[0] : null;
+
+  // 3.2 活跃专项
+  let topProject = null, topProjectCapId = null, topProjectScore = 0;
+  appData.capabilities.forEach(cap => {
+    (cap.projects || []).forEach(proj => {
+      if (proj.status === 'completed') return;
+      let score = 0;
+      (proj.entries.action || []).forEach(a => {
+        if (a.status === 'completed' && a.createdAt && a.createdAt.slice(0,10) >= sd) score += 2;
+      });
+      (proj.entries.problem || []).forEach(p => {
+        if (p.status === 'resolved' && p.createdAt && p.createdAt.slice(0,10) >= sd) score += 2;
+      });
+      appData.thoughts.forEach(t => {
+        if (t.createdAt && t.createdAt.slice(0,10) >= sd && t.relatedProjId === proj.id) score += 1;
+      });
+      if (score > topProjectScore || (score === topProjectScore && score > 0 && topProject && new Date(proj.createdAt) > new Date(topProject.createdAt))) {
+        topProjectScore = score; topProject = proj; topProjectCapId = cap.id;
+      }
+    });
+  });
+  const projProgress = topProjectScore ? Math.min(topProjectScore / 20 * 100, 100) : 0;
+
+  // 3.3 思绪焦点
+  const recentTagFreq = {};
+  appData.thoughts.forEach(t => {
+    if (t.createdAt && t.createdAt.slice(0,10) >= sd) {
+      (t.tags || []).forEach(tag => { recentTagFreq[tag] = (recentTagFreq[tag] || 0) + 1; });
+    }
+  });
+  const topRecentTag = Object.entries(recentTagFreq).sort((a,b) => b[1] - a[1])[0];
+
+  // 3.4 高频路障
+  const recentProblems = [];
+  appData.capabilities.forEach(cap => {
+    (cap.projects || []).forEach(proj => {
+      (proj.entries.problem || []).forEach(p => {
+        if (p.status !== 'resolved' && p.updatedAt && p.updatedAt.slice(0,10) >= sd) {
+          recentProblems.push({ ...p, _capId: cap.id, _projId: proj.id });
+        }
+      });
+    });
+  });
+  recentProblems.sort((a,b) => (b.occurrenceCount||1) - (a.occurrenceCount||1));
+  const topProblems = recentProblems.slice(0, 2);
+
+  const recentHtml = `
+    <div class="home-recent-grid">
+      <div class="home-recent-card" onclick="${topCap ? `openProject('${topCap.id}','${topCap.projects && topCap.projects.length ? topCap.projects[0].id : ''}')` : ''}">
+        <div class="home-recent-card-top">
+          <div class="home-recent-icon cap">👑</div>
+          <span class="home-recent-card-label">${n.capability}主线</span>
+        </div>
+        <div class="home-recent-card-title">${topCap ? esc(topCap.name) : '—'}</div>
+      </div>
+      <div class="home-recent-card" onclick="${topProject ? `openProject('${topProjectCapId}','${topProject.id}')` : ''}">
+        <div class="home-recent-card-top">
+          <div class="home-recent-icon proj">⚡</div>
+          <span class="home-recent-card-label">活跃${n.project}</span>
+        </div>
+        <div class="home-recent-card-title">${topProject ? esc(topProject.name) : '—'}</div>
+        ${topProjectScore ? `<div class="home-recent-card-sub">活性积分 ${topProjectScore}</div>` : ''}
+      </div>
+      <div class="home-recent-card" onclick="${topRecentTag ? `switchPage('thoughts');switchThoughtTagFilter('${topRecentTag[0].replace(/'/g,"\\'")}')` : ''}">
+        <div class="home-recent-card-top">
+          <div class="home-recent-icon thought">🌿</div>
+          <span class="home-recent-card-label">思绪焦点</span>
+        </div>
+        <div class="home-recent-card-title">${topRecentTag ? esc(topRecentTag[0]) : '—'}</div>
+        ${topRecentTag ? `<div class="home-recent-card-sub">出现 ${topRecentTag[1]} 次</div>` : ''}
+      </div>
+      <div class="home-recent-card">
+        <div class="home-recent-card-top">
+          <div class="home-recent-icon problem">⚠️</div>
+          <span class="home-recent-card-label">高频路障雷达</span>
+        </div>
+        ${topProblems.length
+          ? `<div class="home-recent-card-problems">
+              ${topProblems.map((p, i) => `
+                <div class="home-recent-problem-item" onclick="event.stopPropagation();openProject('${p._capId}','${p._projId}')">
+                  <div class="home-recent-problem-rank">${i + 1}</div>
+                  <div class="home-recent-problem-text">${esc(p.text)}</div>
+                  <div class="home-recent-problem-count">${p.occurrenceCount || 1}次</div>
+                </div>
+              `).join('')}
+             </div>`
+          : '<div class="home-recent-card-sub">暂无路障 🎉</div>'
+        }
+      </div>
+      <div class="home-recent-center-dot"></div>
+    </div>`;
+
+  // ── 组装 ──
   h.innerHTML = `
-    <div class="home-grid">
-      <div class="home-card" onclick="switchPage('ability')">
-        <div class="hc-icon">💪</div>
-        <div class="hc-num">${capCnt}</div>
-        <div class="hc-label">${nc().capability}</div>
-        <div class="hc-sub">${topCap ? '⭐'+topCap.name : ''}</div>
+    ${quoteHtml}
+    <div class="home-section">
+      <div class="home-section-title">🎯 今日焦点</div>
+      <div class="home-focus-wrap">
+        <div class="home-focus-col">
+          <div class="home-focus-subtitle todo">📋 今日待办 <span style="color:var(--text-hint);font-weight:400">Top 2</span></div>
+          <div class="home-focus-cards">${todoHtml}</div>
+        </div>
+        <div class="home-focus-col">
+          <div class="home-focus-subtitle habit">🔥 习惯追踪 <span style="color:var(--text-hint);font-weight:400">Top 2</span></div>
+          <div class="home-focus-cards">${habitHtml}</div>
+        </div>
       </div>
-      <div class="home-card" onclick="switchPage('goals')">
-        <div class="hc-icon">🔥</div>
-        <div class="hc-num">${habitCnt}</div>
-        <div class="hc-label">进行中习惯</div>
-        <div class="hc-sub">${topHabit ? '🔥'+(topHabit.currentStreak||0)+'天 '+esc(topHabit.text.slice(0,8)) : ''}</div>
-      </div>
-      <div class="home-card" onclick="switchPage('thoughts')">
-        <div class="hc-icon">💭</div>
-        <div class="hc-num">${thCnt}</div>
-        <div class="hc-label">思绪</div>
-        <div class="hc-sub">${topTag ? '🏷️'+topTag[0] : ''}</div>
-      </div>
-      <div class="home-card" onclick="switchPage('todos')">
-        <div class="hc-icon">📋</div>
-        <div class="hc-num">${td.length}</div>
-        <div class="hc-label">今日待办</div>
-        <div class="hc-sub">${topTodos.map(t=>'· '+esc(t.text.slice(0,12))).join('<br>')}</div>
-      </div>
+    </div>
+    <div class="home-section">
+      <div class="home-section-title">📈 近期聚焦 <span class="home-section-sub">过去 7 天</span></div>
+      ${recentHtml}
     </div>`;
 }
 
@@ -218,11 +416,13 @@ function renderAbility() {
     con.innerHTML = appData.liberationEntries.map(e=>{
       const libHabits = findHabitsByLiberation(e.id);
       const habitBadge = libHabits.length > 0 ? `<span style="font-size:11px;color:#D85A30;margin-left:6px">🔥 ${libHabits.length}</span>` : '';
-      return `<div class="entry-card"><div class="entry-meta"><span>${fmtDate(e.createdAt)}${habitBadge}</span>
+      const linkedThoughts = appData.thoughts.filter(t => t.relatedLiberationId === e.id);
+      const thoughtBadge = linkedThoughts.length > 0 ? `<span style="font-size:11px;color:var(--color-primary);margin-left:6px">💭 ${linkedThoughts.length}</span>` : '';
+      return `<div class="entry-card"><div class="entry-meta"><span>${fmtDate(e.createdAt)}${habitBadge}${thoughtBadge}</span>
         <span class="entry-actions"><button class="icon-btn" onclick="showAddHabitForLiberation('${e.id}')" title="创建习惯" style="font-size:12px">🔥</button>
         <button class="icon-btn" onclick="editLiberation('${e.id}')">✏️</button>
         <button class="icon-btn" onclick="deleteItem('liberation','${e.id}')">🗑️</button></span></div>
-      <div class="entry-text">${esc(e.text)}</div></div>`;
+      <div class="entry-text">${esc(e.text)}${impStars(e.importance)}</div></div>`;
     }).join('');
   } else if (_abilityTab === 'diplomacy') {
     if(!appData.diplomacyEntries.length) { con.innerHTML='<div class="empty-state">暂无记录</div>'; return; }
@@ -692,8 +892,10 @@ function renderProject() {
           <div class="proj-li-name" style="${eIsDone?'opacity:.5;text-decoration:line-through':''}">${esc(e.text)}</div>
           <div class="proj-li-sub">${subParts}</div>
         </div>
-        ${badges}
-        <button class="icon-btn" onclick="event.stopPropagation();toggleEntryStatus('${currentCapId}','${currentProjId}','${eType}','${e.id}')" title="${eIsDone?'恢复':'完成'}" style="font-size:12px;margin-left:4px">${eIsDone?'🔄':'✅'}</button>
+        <div class="proj-li-right">
+          ${badges}
+          <button class="icon-btn" onclick="event.stopPropagation();toggleEntryStatus('${currentCapId}','${currentProjId}','${eType}','${e.id}')" title="${eIsDone?'恢复':'完成'}" style="font-size:12px">${eIsDone?'🔄':'✅'}</button>
+        </div>
       </div>`;
 
       // 关系图面板
@@ -730,14 +932,18 @@ function renderProject() {
         <div class="proj-idot ${eIsDone?'issue-ok':'issue'}">
           ${eIsDone?'<svg class="proj-issue-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>':''}
         </div>
-        <div style="flex:1" onclick="editProjEntryById('${e.id}')">
+        <div style="flex:1;min-width:0" onclick="editProjEntryById('${e.id}')">
           <div class="proj-iname" style="${eIsDone?'opacity:.5;text-decoration:line-through':''}">${esc(e.text)}</div>
           ${extraInfo2?`<div class="proj-li-sub" style="margin-top:2px">${extraInfo2}</div>`:''}
+          ${(e.occurrenceCount||1)>1?`<div class="proj-li-sub" style="margin-top:2px;color:var(--color-issue)">⚠️ 出现 ${e.occurrenceCount} 次</div>`:''}
           ${linkedActions.length?`<div class="proj-thought-line">🏃 关联${n.action}：${linkedActions.slice(0,2).map(a=>esc(a.text.slice(0,20))+(a.type==='derive'?'（衍生）':'')).join('、')}${linkedActions.length>2?' 等'+linkedActions.length+'条':''}</div>`:''}
         </div>
-        ${badges}
-        <button class="icon-btn" onclick="event.stopPropagation();toggleEntryStatus('${currentCapId}','${currentProjId}','problem','${e.id}')" title="${eIsDone?'恢复':'解决'}" style="font-size:12px">${eIsDone?'🔄':'✔️'}</button>
-        <button class="icon-btn" onclick="event.stopPropagation();projDeleteEntry('${e.id}','problem')" title="删除" style="font-size:12px">🗑️</button>
+        <div class="proj-li-right">
+          ${badges}
+          ${!eIsDone?`<button class="icon-btn" onclick="event.stopPropagation();incrementProblemCount('${currentCapId}','${currentProjId}','${e.id}')" title="再次发生" style="font-size:11px;color:var(--color-issue)">+1</button>`:''}
+          <button class="icon-btn" onclick="event.stopPropagation();toggleEntryStatus('${currentCapId}','${currentProjId}','problem','${e.id}')" title="${eIsDone?'恢复':'解决'}" style="font-size:12px">${eIsDone?'🔄':'✔️'}</button>
+          <button class="icon-btn" onclick="event.stopPropagation();projDeleteEntry('${e.id}','problem')" title="删除" style="font-size:12px">🗑️</button>
+        </div>
       </div>`;
     });
   }
@@ -763,14 +969,16 @@ function renderProject() {
 
       insightsHtml += `<div class="proj-ii">
         <div class="proj-idot insight"></div>
-        <div style="flex:1" onclick="editProjEntryById('${e.id}')">
+        <div style="flex:1;min-width:0" onclick="editProjEntryById('${e.id}')">
           <div class="proj-iname">${esc(e.text)}${impStars(e.importance)}${syncMark}</div>
           ${_noteP?`<div class="proj-li-sub" style="margin-top:2px">${_noteP}</div>`:''}
           ${linkedActions.length?`<div class="proj-thought-line">🏃 关联${n.action}：${linkedActions.slice(0,2).map(a=>esc(a.slice(0,20))).join('、')}${linkedActions.length>2?' 等'+linkedActions.length+'条':''}</div>`:''}
         </div>
-        ${badges}
-        <button class="icon-btn" onclick="event.stopPropagation();editProjEntryById('${e.id}')" title="编辑" style="font-size:12px">✏️</button>
-        <button class="icon-btn" onclick="event.stopPropagation();projDeleteEntry('${e.id}','review')" title="删除" style="font-size:12px">🗑️</button>
+        <div class="proj-li-right">
+          ${badges}
+          <button class="icon-btn" onclick="event.stopPropagation();editProjEntryById('${e.id}')" title="编辑" style="font-size:12px">✏️</button>
+          <button class="icon-btn" onclick="event.stopPropagation();projDeleteEntry('${e.id}','review')" title="删除" style="font-size:12px">🗑️</button>
+        </div>
       </div>`;
     });
   }
@@ -1399,8 +1607,22 @@ function renderThoughts(){
   const q=document.getElementById('thoughtSearch')?.value?.toLowerCase().trim()||'';
   let thoughts=appData.thoughts;
   if(q)thoughts=thoughts.filter(t=>t.text.toLowerCase().includes(q)||(t.tags||[]).some(tag=>tag.toLowerCase().includes(q)));
+  if(_thoughtTagFilter)thoughts=thoughts.filter(t=>(t.tags||[]).includes(_thoughtTagFilter));
   thoughts=sortByImpThenTime(thoughts);
-  if(!thoughts.length){list.innerHTML='<div class="empty-state">'+(q?'没有找到匹配的思绪':'暂无思绪')+'</div>';return;}
+
+  // 标签栏
+  const tagsBar=document.getElementById('thoughtTagsBar');
+  const allTags=Store.getAllTags();
+  if(allTags.length){
+    const tagCounts={};
+    allTags.forEach(tag=>{tagCounts[tag]=appData.thoughts.filter(t=>(t.tags||[]).includes(tag)).length;});
+    tagsBar.innerHTML=`<div class="thought-tags-bar">
+      <span class="thought-tag-chip ${_thoughtTagFilter===null?'active':''}" onclick="switchThoughtTagFilter(null)">全部 (${appData.thoughts.length})</span>
+      ${allTags.map(tag=>`<span class="thought-tag-chip ${_thoughtTagFilter===tag?'active':''}" onclick="switchThoughtTagFilter('${esc(tag)}')">${esc(tag)} (${tagCounts[tag]})</span>`).join('')}
+    </div>`;
+  }else{tagsBar.innerHTML='';}
+
+  if(!thoughts.length){list.innerHTML='<div class="empty-state">'+((_thoughtTagFilter||q)?'没有找到匹配的思绪':'暂无思绪')+'</div>';return;}
   list.innerHTML=thoughts.map(t=>{
     const linkInfo = resolveThoughtLink(t);
     const hasLink = !!linkInfo;
@@ -1431,7 +1653,18 @@ function renderThoughts(){
     }
 
     let noteHtml='';
-    if(t.note) noteHtml=`<div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">💬 ${escNL(t.note)}</div>`;
+    if(t.note) {
+      const shouldCollapse = t.note.length > 40 || (t.note.match(/\n/g)||[]).length > 0;
+      const noteId = `th-note-${t.id}`;
+      if (shouldCollapse) {
+        noteHtml = `<div class="thought-note-wrap" id="${noteId}">
+          <div class="thought-note thought-note-collapsed">💬 ${escNL(t.note)}</div>
+          <span class="thought-note-toggle" onclick="toggleThNote('${noteId}')">展开</span>
+        </div>`;
+      } else {
+        noteHtml = `<div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">💬 ${escNL(t.note)}</div>`;
+      }
+    }
     let tagsHtml='';
     if((t.tags||[]).length) tagsHtml=`<div style="margin-top:4px">${t.tags.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>`;
 
@@ -1473,8 +1706,8 @@ function showThoughtEditModal(title,defaultValue,existingTags,existingNote,onSav
     <button onclick="addThoughtTag()">+</button></div>
     ${allTags.length>0?`<div style="font-size:11px;color:#999;margin-bottom:6px">已用：${allTags.map(t=>`<span class="tag" style="cursor:pointer" onclick="addTagByName('${esc(t)}')">${esc(t)}</span>`).join('')}</div>`:''}
     <div id="thoughtTags" style="margin-bottom:8px"></div>
-    <textarea id="mThoughtText" rows="3" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(defaultValue)}</textarea>
-    <textarea id="mThoughtNote" placeholder="💬 备注（选填）" rows="2" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;margin-bottom:10px;resize:vertical">${esc(existingNote||'')}</textarea>
+    <input id="mThoughtText" type="text" placeholder="标题" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:15px;font-weight:600;font-family:inherit;outline:none;margin-bottom:10px;background:#faf8f5">
+    <textarea id="mThoughtNote" placeholder="📝 内容（选填）" rows="6" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;line-height:1.7;outline:none;margin-bottom:10px;resize:vertical;min-height:120px;box-sizing:border-box">${esc(existingNote||'')}</textarea>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeThModal()">取消</button><button class="btn-primary" onclick="confirmThModal()">保存</button></div></div>`;
   document.body.appendChild(overlay);overlay.querySelector('#mThoughtText').focus();
   renderThTags();
@@ -1489,6 +1722,13 @@ function showThoughtEditModal(title,defaultValue,existingTags,existingNote,onSav
 }
 function renderThTags(){const el=document.getElementById('thoughtTags');if(!el)return;el.innerHTML=(window._editTags||[]).map(t=>`<span class="tag" style="cursor:pointer" onclick="removeThTag('${esc(t)}')">${esc(t)} ✕</span>`).join('');}
 function cleanThModal(){delete window.addThoughtTag;delete window.addTagByName;delete window.removeThTag;delete window.closeThModal;delete window.confirmThModal;delete window._editTags;}
+function switchThoughtTagFilter(tag){_thoughtTagFilter=tag;renderThoughts();}
+function toggleThNote(noteId){
+  const wrap=document.getElementById(noteId);if(!wrap)return;
+  const note=wrap.querySelector('.thought-note');const toggle=wrap.querySelector('.thought-note-toggle');
+  if(note.classList.contains('thought-note-collapsed')){note.classList.remove('thought-note-collapsed');toggle.textContent='收起';}
+  else{note.classList.add('thought-note-collapsed');toggle.textContent='展开';}
+}
 
 // ==================== 思绪关联弹窗 ====================
 
@@ -1895,8 +2135,15 @@ async function toggleEntryStatus(capId,projId,type,entryId){
   await Store.updateEntry(capId,projId,type,entryId,undefined,undefined,undefined,undefined,newStatus);
   await refresh();showToast(!isDone?'✅ 已标记':'🔄 已恢复');
 }
+async function incrementProblemCount(capId,projId,entryId){
+  await Store.addProblemOccurrence(capId,projId,entryId);
+  await refresh();showToast('⚠️ 已记录再次发生');
+}
 
-function editLiberation(id){const e=appData.liberationEntries.find(x=>x.id===id);showEditModal('编辑',e.text,async txt=>{await Store.updateLiberationEntry(id,txt);await refresh();});}
+function editLiberation(id){const e=appData.liberationEntries.find(x=>x.id===id);
+  let _newImp=e.importance||0;
+  showEditModal('编辑',e.text,async txt=>{await Store.updateLiberationEntry(id,txt,_newImp);await refresh();},
+    e.importance||0,async imp=>{_newImp=imp;});}
 function editDiplomacy(id){const e=appData.diplomacyEntries.find(x=>x.id===id);showEditModal('编辑',e.text,async txt=>{await Store.updateDiplomacyEntry(id,txt);await refresh();});}
 function editCap(id){const c=appData.capabilities.find(x=>x.id===id);
   showEditModal('修改'+nc().capability,c.name,async txt=>{await Store.updateCapability(id,txt);await refresh();},
@@ -1908,7 +2155,12 @@ function editProj(capId,projId){const cap=appData.capabilities.find(c=>c.id===ca
   showEditModal('修改'+nc().project,p?.name||'',async txt=>{await Store.updateProject(capId,projId,txt);await refresh();},
     p?.importance||0,async imp=>{await Store.updateProject(capId,projId,undefined,imp);await refresh();});}
 function showAddModal(module){const n=nc();const name=module==='liberation'?n.module1:n.module3;
-  showEditModal('添加'+name+'记录','',async txt=>{if(module==='liberation')await Store.addLiberationEntry(txt);else await Store.addDiplomacyEntry(txt);await refresh();});}
+  let _addLibImp=0;
+  showEditModal('添加'+name+'记录','',async txt=>{
+    if(module==='liberation')await Store.addLiberationEntry(txt,_addLibImp);
+    else await Store.addDiplomacyEntry(txt);
+    await refresh();
+  },module==='liberation'?0:-1,module==='liberation'?imp=>{_addLibImp=imp;}:undefined);}
 function showAddCapabilityModal(){const n=nc();showEditModal('新建'+n.capability,'',async txt=>{await Store.addCapability(txt,_addCapImp||0);await refresh();},
   0,async imp=>{_addCapImp=imp;});}
 let _addCapImp=0;

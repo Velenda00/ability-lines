@@ -1,5 +1,5 @@
 // 再塑法典 - Service Worker
-const CACHE_NAME = 'ability-lines-v4-1';
+const CACHE_NAME = 'ability-lines-v5-3';
 const urlsToCache = [
   '/',
   '/index.html',
