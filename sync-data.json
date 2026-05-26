@@ -990,6 +990,36 @@
             "review": []
           },
           "status": "active"
+        },
+        {
+          "id": "proj_1779767694925_o575",
+          "name": "工作总结撰写",
+          "importance": 3,
+          "createdAt": "2026-05-26T03:54:54.925Z",
+          "process": [],
+          "relations": [],
+          "entries": {
+            "action": [
+              {
+                "id": "entry_1779767741475_pt8y",
+                "text": "向佳敏姐学习写材料",
+                "createdAt": "2026-05-26T03:55:41.475Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-26T03:55:41.475Z"
+              }
+            ],
+            "problem": [],
+            "learning": [],
+            "review": []
+          },
+          "status": "active"
         }
       ],
       "status": "active"
@@ -1493,7 +1523,7 @@
       "text": "以自己为原型，生成卡通形象，设计壁纸、头像、手机壳等",
       "importance": 1,
       "createdAt": "2026-05-13T04:11:57.690Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1678,23 +1708,6 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1779018780236_wqqa",
-      "text": "思绪内容折叠",
-      "importance": 0,
-      "createdAt": "2026-05-17T11:53:00.236Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1779069767882_sj3x",
       "text": "观看对行业大拿的访谈，留意采访的问题",
       "importance": 2,
@@ -1798,7 +1811,7 @@
     },
     {
       "id": "todo_1779281277659_0q0d",
-      "text": "粉底液 睫毛胶水 散粉 身体防晒",
+      "text": "粉底液 睫毛胶水 洗面奶",
       "importance": 2,
       "createdAt": "2026-05-20T12:47:57.659Z",
       "isToday": false,
@@ -1819,6 +1832,40 @@
       "importance": 0,
       "createdAt": "2026-05-20T15:50:48.112Z",
       "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779704835361_i5a0",
+      "text": "记账、藏海传、收纳",
+      "importance": 0,
+      "createdAt": "2026-05-25T10:27:15.361Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-05-25T15:06:31.829Z",
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779770337245_vf40",
+      "text": "咖啡 毯子 水杯",
+      "importance": 0,
+      "createdAt": "2026-05-26T04:38:57.246Z",
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1881,7 +1928,7 @@
       "id": "hab_1778814308227_nvjl",
       "text": "保持竞争思维",
       "importance": 2,
-      "status": "active",
+      "status": "pool",
       "sourceType": "liberation",
       "sourceCapId": null,
       "sourceProjId": null,
@@ -1908,6 +1955,24 @@
       "sourceLiberationId": null,
       "note": "",
       "createdAt": "2026-05-17T03:41:25.080Z",
+      "archivedAt": null,
+      "completedDates": [],
+      "currentStreak": 0,
+      "bestStreak": 0
+    },
+    {
+      "id": "hab_1779767766867_5erx",
+      "text": "向佳敏姐学习材料撰写",
+      "importance": 2,
+      "status": "active",
+      "sourceType": "behavior",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1779767694925_o575",
+      "sourceEntryId": "entry_1779767741475_pt8y",
+      "sourceEntryType": "action",
+      "sourceLiberationId": null,
+      "note": "",
+      "createdAt": "2026-05-26T03:56:06.867Z",
       "archivedAt": null,
       "completedDates": [],
       "currentStreak": 0,
