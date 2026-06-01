@@ -267,6 +267,20 @@
                 "status": "active",
                 "occurrenceCount": 1,
                 "updatedAt": "2026-05-20T06:03:11.717Z"
+              },
+              {
+                "id": "entry_1779876342285_l2xe",
+                "text": "解释过多，重点被埋没",
+                "createdAt": "2026-05-27T10:05:42.285Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-27T10:05:42.285Z"
               }
             ],
             "learning": [
@@ -305,6 +319,12 @@
               "id": "rel_1779256991720_qcv9",
               "fromId": "entry_1778485661648_88qi",
               "toId": "entry_1779256991717_km0y",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1779876342303_vcgo",
+              "fromId": "entry_1778481580740_twyl",
+              "toId": "entry_1779876342285_l2xe",
               "type": "discover"
             }
           ]
@@ -987,7 +1007,22 @@
             ],
             "problem": [],
             "learning": [],
-            "review": []
+            "review": [
+              {
+                "id": "entry_1779891031315_cim4",
+                "text": "工作就应该拿到手就去做",
+                "createdAt": "2026-05-27T14:09:51.572Z",
+                "importance": 1,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "下班回家的路上，看到侯姐给我发消息，说明天就要把初稿给她。我脑海里快速闪过的念头就是明天应该跟不了班了，并且大概率会加班。后面我回到家想了一下，发现是我的思维并没有转变过来。我依旧抱着一个实习生来学习的态度，而不是把自己当成一个需要独自产出成果的正式员工。而显然，侯姐已经把我当成一个干活的人了。\n所以我现在的流程应该改为拿到东西就尝试去做，而不是研究这个材料，研究那个来源，弄个半天，结果什么都没有。\n是的，颤抖吧，我又要成长了！",
+                "syncThoughtId": "th_1779890991572_ns9v",
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-05-27T14:09:51.572Z"
+              }
+            ]
           },
           "status": "active"
         },
@@ -1068,6 +1103,24 @@
     }
   ],
   "thoughts": [
+    {
+      "id": "th_1779890991572_ns9v",
+      "text": "工作就是一拿到就要开始做",
+      "createdAt": "2026-05-27T14:09:51.572Z",
+      "tags": [
+        "职场法则"
+      ],
+      "importance": 1,
+      "note": "下班回家的路上，侯姐给我发了条消息。她说明天就要交一版初稿。我脑海里顿时闪过两个念头-明天应该跟不了班，并且大概率会加班。后面我进一步思考发现，其实是我的思维并没有转变过来。我依旧抱着一个实习生来学习的态度，而侯姐已经把我当成一个可以独自干活的人了。\n所以我明天开始，我要转变我的做法。一接到任务就尝试去产出，而不是花大量时间研究，结果什么都没有。\n是的，颤抖吧，我又要成长了！",
+      "relatedCapId": "cap_1778503223681_32kq",
+      "relatedProjId": "proj_1778830376905_pwnj",
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null,
+      "sourceReviewId": "entry_1779891031315_cim4",
+      "sourceReviewCapId": "cap_1778503223681_32kq",
+      "sourceReviewProjId": "proj_1778830376905_pwnj"
+    },
     {
       "id": "th_1779121064455_o7rs",
       "text": "关于天赋被浪费",
@@ -1866,8 +1919,8 @@
       "importance": 3,
       "createdAt": "2026-05-26T04:38:57.246Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-27T09:54:54.068Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
@@ -1883,13 +1936,81 @@
       "importance": 2,
       "createdAt": "2026-05-26T09:08:31.867Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-05-27T09:55:13.779Z",
       "note": "重点在于说服力",
       "sourceCapId": "cap_1778063121284_l86i",
       "sourceProjId": "proj_1778063866807_3anq",
       "sourceEntryType": "learning",
       "sourceEntryId": "entry_1778481580740_twyl",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779876526528_lb4k",
+      "text": "重新录狗狗，增强故事感",
+      "importance": 2,
+      "createdAt": "2026-05-27T10:08:46.528Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "减少解释的感觉，突出重点，增强故事感，提高感染力",
+      "sourceCapId": "cap_1778063121284_l86i",
+      "sourceProjId": "proj_1778063866807_3anq",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778481580740_twyl",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1779892100335_rp9k",
+      "text": "思绪重新编辑的时候不会保留标题部分",
+      "importance": 0,
+      "createdAt": "2026-05-27T14:28:20.335Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1780032061836_lelm",
+      "text": "课题，选购，歌会",
+      "importance": 3,
+      "createdAt": "2026-05-29T05:21:01.836Z",
+      "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-06-01T04:22:16.664Z",
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1780288065419_9874",
+      "text": "完成歌会修图，发布朋友圈",
+      "importance": 3,
+      "createdAt": "2026-06-01T04:27:45.419Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "整理一下朋友圈可见",
+      "sourceCapId": "cap_1778063127715_kxgz",
+      "sourceProjId": "proj_1778063537717_jbmt",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778483530906_2glr",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -1990,6 +2111,26 @@
       "sourceLiberationId": null,
       "note": "向优秀同事（如佳敏姐！）学习材料撰写",
       "createdAt": "2026-05-26T03:56:06.867Z",
+      "archivedAt": null,
+      "completedDates": [
+        "2026-05-27"
+      ],
+      "currentStreak": 1,
+      "bestStreak": 1
+    },
+    {
+      "id": "hab_1780287982166_r4dc",
+      "text": "少吃多动",
+      "importance": 3,
+      "status": "active",
+      "sourceType": "direct",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryId": null,
+      "sourceEntryType": null,
+      "sourceLiberationId": null,
+      "note": "",
+      "createdAt": "2026-06-01T04:26:22.166Z",
       "archivedAt": null,
       "completedDates": [],
       "currentStreak": 0,
