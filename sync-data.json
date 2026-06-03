@@ -1967,7 +1967,7 @@
     {
       "id": "todo_1779892100335_rp9k",
       "text": "思绪重新编辑的时候不会保留标题部分",
-      "importance": 0,
+      "importance": 3,
       "createdAt": "2026-05-27T14:28:20.335Z",
       "isToday": true,
       "status": "active",
@@ -2011,6 +2011,23 @@
       "sourceProjId": "proj_1778063537717_jbmt",
       "sourceEntryType": "learning",
       "sourceEntryId": "entry_1778483530906_2glr",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1780479432011_z0ya",
+      "text": "自习室查看，洞洞鞋",
+      "importance": 0,
+      "createdAt": "2026-06-03T09:37:12.011Z",
+      "isToday": false,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
