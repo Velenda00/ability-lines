@@ -1032,7 +1032,14 @@
           "importance": 3,
           "createdAt": "2026-05-26T03:54:54.925Z",
           "process": [],
-          "relations": [],
+          "relations": [
+            {
+              "id": "rel_1781596233845_7svu",
+              "fromId": "entry_1779767741475_pt8y",
+              "toId": "entry_1781596233835_gvjc",
+              "type": "discover"
+            }
+          ],
           "entries": {
             "action": [
               {
@@ -1050,7 +1057,19 @@
                 "updatedAt": "2026-05-26T03:55:41.475Z"
               }
             ],
-            "problem": [],
+            "problem": [
+              {
+                "id": "entry_1781596233835_gvjc",
+                "text": "缺少意义感",
+                "createdAt": "2026-06-16T07:50:33.835Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "重流程叙事，总结提炼重点与意义较弱",
+                "syncThoughtId": null
+              }
+            ],
             "learning": [],
             "review": []
           },
@@ -1507,8 +1526,8 @@
       "importance": 3,
       "createdAt": "2026-05-12T09:51:44.172Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-06-16T07:48:46.634Z",
       "note": "今日推进，卡点，收获，下一步，近期关注点变化",
       "sourceCapId": "cap_1778503223681_32kq",
       "sourceProjId": "proj_1779767694925_o575",
@@ -2035,7 +2054,7 @@
     {
       "id": "todo_1781222025124_y9h5",
       "text": "记录最常用的Excel公式、做过的流程（报账、应用等）",
-      "importance": 3,
+      "importance": 2,
       "createdAt": "2026-06-11T23:53:45.125Z",
       "isToday": true,
       "status": "active",
