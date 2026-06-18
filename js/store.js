@@ -586,7 +586,7 @@ const Store = {
       id: uid('evt'),
       title: evt.title || '',
       tags: evt.tags || [],
-      work_content: evt.work_content || { task:'', contribution:'', result:'', value:'' },
+      work_content: evt.work_content || { background:'', task:'', contribution:'', result:'', value:'' },
       growth: evt.growth || '',
       problem: evt.problem || { reason:'', suggestion:'', value:'' },
       next_steps: evt.next_steps || [],
@@ -701,7 +701,8 @@ const Store = {
         if (e.work_content) {
           const wc = e.work_content;
           const wcLines = [];
-          if (wc.contribution) wcLines.push(`    *   **我的贡献**：${wc.contribution}`);
+          if (wc.background) wcLines.push(`    *   **任务背景**：${wc.background}`);
+          if (wc.contribution) wcLines.push(`    *   **阻力与行动**：${wc.contribution}`);
           if (wc.result) wcLines.push(`    *   **结论/结果**：${wc.result}`);
           if (wc.value) wcLines.push(`    *   **价值**：${wc.value}`);
           if (wcLines.length) { md += `*   **工作内容**\n${wcLines.join('\n')}\n`; }

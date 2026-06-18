@@ -775,8 +775,7 @@ function workCalToday() { _workCalMonth = today(); renderWorkOverview(); }
 // -- 圆环图 --
 function renderDonutChart(stats, total) {
   const entries = Object.entries(stats).sort((a,b) => b[1] - a[1]);
-  const r = 40, C = 2 * Math.PI * r; // ~251.3
-  const colors = ['#7B9E8C','#B08968','#9B8EC4','#C49A6C','#88A4B8','#C48A8A'];
+  const r = 60, C = 2 * Math.PI * r; // ~377
   let offset = 0;
   let circles = '';
   const legendItems = [];
@@ -784,16 +783,17 @@ function renderDonutChart(stats, total) {
   entries.forEach(([tag, count], i) => {
     const pct = count / total;
     const dash = pct * C;
-    const color = colors[i % colors.length];
-    circles += `<circle cx="60" cy="60" r="${r}" class="donut-color-${i%6}" stroke="${color}" stroke-width="12" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 60 60)" />`;
+    const cssColors = ['#7B9E8C','#89B4C8','#A8C5A0','#C4A6B8','#B8A88C','#9B8EC4','#D4A8A0','#8CB5A0'];
+    const color = cssColors[i % cssColors.length];
+    circles += `<circle cx="90" cy="90" r="${r}" class="donut-color-${i%8}" stroke-width="16" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 90 90)" />`;
     offset += dash;
     legendItems.push(`<div class="work-donut-legend-item"><span class="work-donut-legend-dot" style="background:${color}"></span>${esc(tag)} ${Math.round(pct*100)}%</div>`);
   });
 
   return `<div class="work-donut-section"><h3>📊 本月精力分布</h3><div class="work-donut-wrap">
     <div style="position:relative">
-      <svg class="work-donut-svg" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--work-empty)" stroke-width="12"/>
+      <svg class="work-donut-svg" viewBox="0 0 180 180">
+        <circle cx="90" cy="90" r="${r}" fill="none" stroke="var(--work-empty)" stroke-width="16"/>
         ${circles}
       </svg>
       <div class="work-donut-center"><div class="donut-total">${total}</div><div class="donut-label">事件</div></div>
@@ -827,7 +827,7 @@ function renderWorkEventCard(evt, dateStr) {
   const ns = evt.next_steps || [];
 
   // 只要有内容才渲染对应区域
-  const wcParts = [renderFormText(wc.contribution, '我的贡献'), renderFormText(wc.result, '结论/结果'), renderFormText(wc.value, '价值')].filter(Boolean);
+  const wcParts = [renderFormText(wc.background, '任务背景'), renderFormText(wc.contribution, '阻力与行动'), renderFormText(wc.result, '结论/结果'), renderFormText(wc.value, '价值')].filter(Boolean);
   const pbParts = [renderFormText(pb.reason, '原因分析'), renderFormText(pb.suggestion, '改进建议'), renderFormText(pb.value, '执行价值')].filter(Boolean);
 
   let detailHtml = '';
@@ -938,9 +938,10 @@ function showAddWorkEventModal(dateStr) {
   }
   const accHtml =
     buildWMAccordion('wm_wc', '📋 工作内容', [
-      buildWMField('wm_contrib', '我的贡献'),
+      buildWMField('wm_background', '任务背景', false, '安排人、原因、紧迫度'),
+      buildWMField('wm_contrib', '阻力与行动', false, '遇到困难及解决方法、协调人'),
       buildWMField('wm_result', '结论/结果'),
-      buildWMField('wm_value', '价值')
+      buildWMField('wm_value', '价值', false, '可量化价值、可复用模式')
     ]) +
     buildWMAccordion('wm_pb', '⚠️ 发现问题', [
       buildWMField('wm_reason', '原因分析'),
@@ -1003,6 +1004,7 @@ function showAddWorkEventModal(dateStr) {
 
     const evt = { title, tags: [...window._wmTags] };
     evt.work_content = {
+      background: gv('wm_background'),
       contribution: gv('wm_contrib'),
       result: gv('wm_result'), value: gv('wm_value')
     };
@@ -1038,9 +1040,10 @@ function buildWMAccordion(id, label, fields) {
   </div>`;
 }
 
-function buildWMField(id, label, big) {
+function buildWMField(id, label, big, placeholder) {
   const rows = big ? 3 : 2;
-  return `<div class="work-form-group">${label ? `<span class="work-form-label">${label}</span>` : ''}<textarea id="${id}" class="work-form-textarea" rows="${rows}" placeholder="${label || '成长总结…'}"></textarea></div>`;
+  const ph = placeholder || (label || '成长总结…');
+  return `<div class="work-form-group">${label ? `<span class="work-form-label">${label}</span>` : ''}<textarea id="${id}" class="work-form-textarea" rows="${rows}" placeholder="${ph}"></textarea></div>`;
 }
 
 // -- 编辑事件 --
@@ -1098,8 +1101,9 @@ function showEditWorkEventModal(dateStr, eventId) {
 
   const accHtml =
     buildWMAccordion('we_wc', '📋 工作内容', [
-      buildWMField('we_contrib', '我的贡献'),
-      buildWMField('we_result', '结论/结果'), buildWMField('we_value', '价值')
+      buildWMField('we_background', '任务背景', false, '安排人、原因、紧迫度'),
+      buildWMField('we_contrib', '阻力与行动', false, '遇到困难及解决方法、协调人'),
+      buildWMField('we_result', '结论/结果'), buildWMField('we_value', '价值', false, '可量化价值、可复用模式')
     ]) +
     buildWMAccordion('we_pb', '⚠️ 发现问题', [
       buildWMField('we_reason', '原因分析'), buildWMField('we_suggest', '改进建议'),
@@ -1114,6 +1118,7 @@ function showEditWorkEventModal(dateStr, eventId) {
   document.getElementById('weAccordions').innerHTML = accHtml;
 
   // 填充值
+  sv('we_background', wc.background);
   sv('we_contrib', wc.contribution);
   sv('we_result', wc.result); sv('we_value', wc.value);
   sv('we_reason', pb.reason); sv('we_suggest', pb.suggestion); sv('we_pbvalue', pb.value);
@@ -1161,6 +1166,7 @@ function showEditWorkEventModal(dateStr, eventId) {
 
     const updates = { title, tags: [...window._weTags] };
     updates.work_content = {
+      background: gv2('we_background'),
       contribution: gv2('we_contrib'),
       result: gv2('we_result'), value: gv2('we_value')
     };
