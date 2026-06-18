@@ -1067,7 +1067,10 @@
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
                 "note": "重流程叙事，总结提炼重点与意义较弱",
-                "syncThoughtId": null
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-06-16T07:50:33.835Z"
               }
             ],
             "learning": [],
@@ -1332,7 +1335,7 @@
       "text": "介绍再塑法典目前进展",
       "importance": 1,
       "createdAt": "2026-05-06T10:39:20.710Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "sourceCapId": "cap_1778063121284_l86i",
@@ -1502,23 +1505,6 @@
       "processEntryIds": [
         "proc_1778598464553_8cf5"
       ]
-    },
-    {
-      "id": "todo_1778579385294_i4xl",
-      "text": "按照女帝成长游戏设定布局，跟Gemini讨论后定方案和代码",
-      "importance": 0,
-      "createdAt": "2026-05-12T09:49:45.294Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": "cap_1778063134679_jxa3",
-      "sourceProjId": "proj_1778063428260_qe39",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778480502198_3qak",
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
     },
     {
       "id": "todo_1778579504172_fjsr",
@@ -1780,23 +1766,6 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1779085874058_pf71",
-      "text": "首页更新后，编写现况系统盘点文档",
-      "importance": 0,
-      "createdAt": "2026-05-18T06:31:14.058Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1779158338085_yij4",
       "text": "gpt学习设计基础知识",
       "importance": 0,
@@ -1818,7 +1787,7 @@
       "text": "是否制作播客，主要是转文字看看语言条理",
       "importance": 0,
       "createdAt": "2026-05-20T01:23:41.167Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1955,8 +1924,8 @@
       "importance": 3,
       "createdAt": "2026-05-27T14:28:20.335Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-06-18T07:02:20.383Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
@@ -2052,25 +2021,8 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1781222025124_y9h5",
-      "text": "记录最常用的Excel公式、做过的流程（报账、应用等）",
-      "importance": 2,
-      "createdAt": "2026-06-11T23:53:45.125Z",
-      "isToday": true,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1781366221707_k7in",
-      "text": "多考证，寻找副业",
+      "text": "端午：学习，探索副业，练车，蛋糕",
       "importance": 3,
       "createdAt": "2026-06-13T15:57:01.707Z",
       "isToday": true,
@@ -2087,6 +2039,12 @@
     }
   ],
   "liberationEntries": [
+    {
+      "id": "lib_1781753839546_i4np",
+      "text": "注意记录工作流",
+      "createdAt": "2026-06-18T03:37:19.546Z",
+      "importance": 2
+    },
     {
       "id": "lib_1778805894405_b9bk",
       "text": "下意识向上社交",
@@ -2206,5 +2164,80 @@
       "currentStreak": 0,
       "bestStreak": 0
     }
+  ],
+  "workEvents": {
+    "2026-06-17": [
+      {
+        "id": "evt_1781765557195_fh7e",
+        "title": "根据不同表具规格日均用气量，制定增量方案",
+        "tags": [
+          "气量分析"
+        ],
+        "work_content": {
+          "task": "",
+          "contribution": "统计1-5月均有用气数据的表具规格、台数、总用气量、用气占比、单台天均用气量、增加台数（按照用气占比分配）",
+          "result": "得出为了实现补足预测下降用气的基础上再增长1%，各表具还需要扩展的数量",
+          "value": "提前熟悉一下操作方法，为下一步正式的1-6月气量分析与增量方案做准备"
+        },
+        "growth": "1.指标敏感度还需提高。我起初是想按照预计增量占现有规模的比例统一分配台数，但是一直没想到利用率低的表具规格如何解决。后面侯姐说按照每种表具用气量占比来分配，则在一定程度上解决了这个问题。\n2.统计时要更细心。因为这一次还做了一版1-4月的，对比后及时发现了月份天数错误的问题（下半年184天算为了124天）",
+        "problem": {
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [
+          {
+            "id": "ns_1781765557193_on0b",
+            "text": "继续研究",
+            "completed": false
+          }
+        ],
+        "createdAt": "2026-06-18T06:52:37.195Z"
+      },
+      {
+        "id": "evt_1781768264066_maqu",
+        "title": "111111",
+        "tags": [],
+        "work_content": {
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-06-18T07:37:44.066Z"
+      }
+    ],
+    "2026-06-16": [
+      {
+        "id": "evt_1781767411838_7kxy",
+        "title": "安检日进度表维护",
+        "tags": [
+          "安检分析"
+        ],
+        "work_content": {
+          "contribution": "将最新数据导出后应用到上周做的统计模板当中，发现一些时间及编号格式需调整、导出数据内容形式变更等问题，将统计模板进行相应的调整并统计出当天的安检进度情况",
+          "result": "",
+          "value": "便于班组长进行安检进度跟进"
+        },
+        "growth": "",
+        "problem": {
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-06-18T07:23:31.838Z"
+      }
+    ]
+  },
+  "workTags": [
+    "气量分析",
+    "安检分析"
   ]
 }
