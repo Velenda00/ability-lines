@@ -1709,7 +1709,7 @@ function showThoughtEditModal(title,defaultValue,existingTags,existingNote,onSav
     <button onclick="addThoughtTag()">+</button></div>
     ${allTags.length>0?`<div style="font-size:11px;color:#999;margin-bottom:6px">已用：${allTags.map(t=>`<span class="tag" style="cursor:pointer" onclick="addTagByName('${esc(t)}')">${esc(t)}</span>`).join('')}</div>`:''}
     <div id="thoughtTags" style="margin-bottom:8px"></div>
-    <input id="mThoughtText" type="text" placeholder="标题" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:15px;font-weight:600;font-family:inherit;outline:none;margin-bottom:10px;background:#faf8f5">
+    <input id="mThoughtText" type="text" value="${esc(defaultValue||'')}" placeholder="标题" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:10px 12px;font-size:15px;font-weight:600;font-family:inherit;outline:none;margin-bottom:10px;background:#faf8f5">
     <textarea id="mThoughtNote" placeholder="📝 内容（选填）" rows="6" style="width:100%;border:1px solid #e0d8d0;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;line-height:1.7;outline:none;margin-bottom:10px;resize:vertical;min-height:120px;box-sizing:border-box">${esc(existingNote||'')}</textarea>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeThModal()">取消</button><button class="btn-primary" onclick="confirmThModal()">保存</button></div></div>`;
   document.body.appendChild(overlay);overlay.querySelector('#mThoughtText').focus();
