@@ -5,8 +5,7 @@ let currentCapId = null, currentProjId = null, currentProjTab = 'action';
 let projSelectedEntryId = null; // 项目详情页当前展开的行为条目ID
 let _impPickerCallback = null, _confirmCallback = null;
 let _abilityTab = 'independence'; // liberation | independence | diplomacy
-let _habitTab = 'active'; // active | pool | archived
-let _todoTab = 'today'; // today | library | completed
+let _actionTab = 'today'; // today | library | archived
 let _thoughtTagFilter = null; // null | tag string
 
 function nc() { return appData.nameConfig || Store.getDefaultNameConfig(); }
@@ -20,15 +19,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 function switchPage(page) {
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const map = { home:'page-home', ability:'page-ability', goals:'page-goals',
-    thoughts:'page-thoughts', todos:'page-todos', project:'page-project' };
+  const map = { home:'page-home', ability:'page-ability', action:'page-action',
+    thoughts:'page-thoughts', work:'page-work', project:'page-project' };
   document.getElementById(map[page]||'page-home').classList.add('active');
   updateTitle(); renderPage(); updateNav(); updateFabs();
 }
 
 function updateFabs() {
   document.querySelectorAll('.page-fab').forEach(f=>f.classList.remove('visible'));
-  const fabMap = {ability:'fab-ability', goals:'fab-goals', thoughts:'fab-thoughts', todos:'fab-todos'};
+  const fabMap = {ability:'fab-ability', action:'fab-action', thoughts:'fab-thoughts'};
   if(fabMap[currentPage]) document.getElementById(fabMap[currentPage])?.classList.add('visible');
 }
 
@@ -40,14 +39,14 @@ function handleAbilityFab() {
 
 function updateTitle() {
   const n=nc();
-  const t = { home:n.topLevel, ability:'💪 '+n.capability, goals:'🎯 目标',
-    thoughts:'💭 思绪', todos:'📋 待办', project:'📋 '+n.project+'详情' };
+  const t = { home:n.topLevel, ability:'💪 '+n.capability, action:'⚡ 行动',
+    thoughts:'💭 思绪', work:'🛤️ 工作轨', project:'📋 '+n.project+'详情' };
   document.getElementById('pageTitle').textContent = t[currentPage]||n.topLevel;
   document.getElementById('pageTitleA').textContent = '💪 '+n.capability;
 }
 
 function updateNav() {
-  const idx = { home:0, ability:1, goals:2, thoughts:3, todos:4 };
+  const idx = { home:0, ability:1, action:2, thoughts:3, work:4 };
   document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',i===(idx[currentPage]??0)));
 }
 
@@ -55,9 +54,8 @@ function renderPage() {
   switch(currentPage) {
     case 'home': renderHome(); break;
     case 'ability': renderAbility(); break;
-    case 'goals': renderHabits(); break;
+    case 'action': renderAction(); break;
     case 'thoughts': renderThoughts(); break;
-    case 'todos': renderTodos(); break;
     case 'project': renderProject(); break;
   }
 }
@@ -499,44 +497,102 @@ function toggleCapSection(header) {
   if(chevron) chevron.classList.toggle('expanded', !isExpanded);
 }
 
-// ==================== 习惯 ====================
+// ==================== 行动（待办+习惯合并） ====================
 
-function renderHabits() {
+function renderAction() {
   const tabs = [
-    { key: 'active', label: '进行中', emoji: '🔥' },
-    { key: 'pool', label: '习惯池', emoji: '📦' },
-    { key: 'archived', label: '归档库', emoji: '🗄️' }
+    { key: 'today', label: '今日', emoji: '🎯' },
+    { key: 'library', label: '库', emoji: '📦' },
+    { key: 'archived', label: '归档', emoji: '🗄️' }
   ];
-  document.getElementById('habitTabs').innerHTML = tabs.map(t =>
-    `<div class="tab ${t.key === _habitTab ? 'active' : ''}" onclick="switchHabitTab('${t.key}')">${t.emoji} ${t.label}</div>`
+  document.getElementById('actionTabs').innerHTML = tabs.map(t =>
+    `<div class="tab ${t.key===_actionTab?'active':''}" onclick="switchActionTab('${t.key}')">${t.emoji} ${t.label}</div>`
   ).join('');
-
-  const con = document.getElementById('habitContent');
-  const { active, pool, archived } = Store.getHabits(appData);
+  const con = document.getElementById('actionContent');
   const td = today();
+  const { today: tTodos, library: libTodos, completed: compTodos } = Store.getTodos(appData);
+  const { active: actHabits, pool: poolHabits, archived: arcHabits } = Store.getHabits(appData);
 
-  if (_habitTab === 'active') {
-    if (!active.length) {
-      con.innerHTML = '<div class="empty-state">暂无进行中的习惯<br><span style="font-size:12px;color:var(--text-hint)">从习惯池激活，或点击 + 直接创建</span></div>';
-      return;
-    }
-    con.innerHTML = `<div class="habit-list">${sortByImpThenTime(active).map(h => renderHabitCard(h, td)).join('')}</div>`;
-  } else if (_habitTab === 'pool') {
-    if (!pool.length) {
-      con.innerHTML = '<div class="empty-state">习惯池为空<br><span style="font-size:12px;color:var(--text-hint)">从行为条目或解放脑创建习惯</span></div>';
-      return;
-    }
-    con.innerHTML = `<div class="habit-list">${sortByImpThenTime(pool).map(h => renderHabitPoolCard(h)).join('')}</div>`;
+  if (_actionTab === 'today') {
+    con.innerHTML =
+      renderCollapseSection('todo-today', '📋 今日待办', tTodos.length) +
+      '<div id="body-todo-today" class="action-collapse-body"><div class="habit-list">' +
+      sortByImpThenTime(tTodos).map(t=>renderTodoCard(t,true)).join('') +
+      '</div></div></div>' +
+      renderCollapseSection('habit-active', '🔥 进行中习惯', actHabits.length) +
+      '<div id="body-habit-active" class="action-collapse-body"><div class="habit-list">' +
+      sortByImpThenTime(actHabits).map(h=>renderHabitCard(h,td)).join('') +
+      '</div></div></div>';
+  } else if (_actionTab === 'library') {
+    con.innerHTML =
+      renderCollapseSection('todo-lib', '📦 待办库', libTodos.length) +
+      '<div id="body-todo-lib" class="action-collapse-body"><div class="habit-list">' +
+      sortByImpThenTime(libTodos).map(t=>renderTodoCard(t,false)).join('') +
+      '</div></div></div>' +
+      renderCollapseSection('habit-pool', '📦 习惯池', poolHabits.length) +
+      '<div id="body-habit-pool" class="action-collapse-body"><div class="habit-list">' +
+      sortByImpThenTime(poolHabits).map(h=>renderHabitPoolCard(h)).join('') +
+      '</div></div></div>';
   } else {
-    if (!archived.length) {
-      con.innerHTML = '<div class="empty-state">暂无归档习惯</div>';
-      return;
-    }
-    con.innerHTML = `<div class="habit-list">${[...archived].sort((a, b) => new Date(b.archivedAt || 0) - new Date(a.archivedAt || 0)).map(h => renderArchivedHabitCard(h)).join('')}</div>`;
+    con.innerHTML =
+      renderCollapseSection('todo-comp', '✅ 已完成待办', compTodos.length) +
+      '<div id="body-todo-comp" class="action-collapse-body"><div class="habit-list">' +
+      compTodos.sort((a,b)=>new Date(b.completedAt)-new Date(a.completedAt)).map(t=>`
+        <div class="todo-card" style="opacity:0.6">
+          <div>✅</div>
+          <div class="todo-body">
+            <div class="todo-text"><s>${esc(t.text)}</s></div>
+            ${t.note?`<div class="todo-source">${esc(t.note)}</div>`:''}
+            <div class="todo-source">完成于 ${fmtDate(t.completedAt)}</div>
+          </div>
+          <div class="todo-actions"><button onclick="deleteItem('todo','${t.id}')">🗑️</button></div>
+        </div>`).join('') +
+      '</div></div></div>' +
+      renderCollapseSection('habit-arc', '🗄️ 归档习惯', arcHabits.length) +
+      '<div id="body-habit-arc" class="action-collapse-body"><div class="habit-list">' +
+      [...arcHabits].sort((a,b)=>new Date(b.archivedAt||0)-new Date(a.archivedAt||0)).map(h=>renderArchivedHabitCard(h)).join('') +
+      '</div></div></div>';
   }
 }
 
-function switchHabitTab(tab) { _habitTab = tab; renderHabits(); }
+function renderCollapseSection(id, title, count) {
+  return `<div class="action-collapse" id="collapse-${id}">
+    <div class="action-collapse-header" onclick="toggleCollapse('${id}')">
+      <span class="action-collapse-arrow">▼</span>
+      <span class="action-collapse-title">${title}</span>
+      <span class="action-collapse-count">${count||''}</span>
+    </div>`;
+}
+
+function switchActionTab(tab) { _actionTab = tab; renderAction(); }
+
+function toggleCollapse(id) {
+  const el = document.getElementById('collapse-' + id);
+  if (el) el.classList.toggle('collapsed');
+}
+
+function showActionFabMenu() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:280px">
+    <h3>新建</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+      <button onclick="closeActionFab();showAddTodoModal()" style="padding:14px;border-radius:12px;border:1px solid var(--border-light);background:var(--bg-inset);font-size:15px;cursor:pointer;text-align:left">📋 待办</button>
+      <button onclick="closeActionFab();showAddHabitModal()" style="padding:14px;border-radius:12px;border:1px solid var(--border-light);background:var(--bg-inset);font-size:15px;cursor:pointer;text-align:left">🔥 习惯</button>
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeActionFab()">取消</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+  window.closeActionFab = ()=>{overlay.remove();delete window.closeActionFab;};
+}
+
+// ==================== 习惯 ====================
+
+// ==================== 习惯（子函数供 renderAction 调用） ====================
+
+function renderHabits() { /* legacy: merged into renderAction */ }
+function switchHabitTab(tab) { switchActionTab(tab === 'active' ? 'today' : tab === 'pool' ? 'library' : 'archived'); }
 
 function isHabitDoneToday(h, td) { return (h.completedDates || []).includes(td); }
 
@@ -689,7 +745,7 @@ function showAddHabitModal() {
     overlay.remove(); delete window.confirmAddHabitM; delete window.closeAddHabitM; _impPickerCallback = null;
     try {
       await Store.addHabit(txt, _imp, { type: 'direct', note });
-      _habitTab = 'pool';
+      _actionTab = 'library';
       await refresh(); showToast('✅ 习惯已创建，在习惯池中');
     } catch(err) { showToast('❌ 创建失败: ' + err.message); console.error(err); }
   };
@@ -731,7 +787,7 @@ async function toggleHabitToday(id) {
 
 async function activateHabit(id) {
   await Store.activateHabit(id);
-  _habitTab = 'active';
+  _actionTab = 'today';
   await refresh(); showToast('✅ 习惯已激活，开始打卡吧！');
 }
 
@@ -742,7 +798,7 @@ async function archiveHabit(id) {
 
 async function unarchiveHabit(id) {
   await Store.unarchiveHabit(id);
-  _habitTab = 'pool';
+  _actionTab = 'library';
   await refresh(); showToast('🔄 习惯已恢复到习惯池');
 }
 
@@ -765,7 +821,7 @@ function showAddHabitForEntry(entryId, entryType) {
     overlay.remove(); delete window.confirmHabitEntryM; delete window.closeHabitEntryM; _impPickerCallback = null;
     try {
       await Store.addHabit(txt, _imp, { type: 'behavior', capId: currentCapId, projId: currentProjId, entryType: eType, entryId: eid, note });
-      _habitTab = 'pool';
+      _actionTab = 'library';
       await refresh(); showToast('✅ 习惯已创建，在习惯池中');
     } catch(err) { showToast('❌ 创建失败: ' + err.message); console.error(err); }
   };
@@ -791,7 +847,7 @@ function showAddHabitForLiberation(liberationId) {
     overlay.remove(); delete window.confirmHabitLibM; delete window.closeHabitLibM; _impPickerCallback = null;
     try {
       await Store.addHabit(txt, _imp, { type: 'liberation', liberationId: libId, note });
-      _habitTab = 'pool';
+      _actionTab = 'library';
       await refresh(); showToast('✅ 习惯已创建，在习惯池中');
     } catch(err) { showToast('❌ 创建失败: ' + err.message); console.error(err); }
   };
@@ -1842,49 +1898,9 @@ function showThoughtLinkModal(thoughtId){
 
 // ==================== 待办 ====================
 
-function renderTodos(){
-  const tabs = [
-    { key: 'today', label: '今日待办', emoji: '📌' },
-    { key: 'library', label: '待办库', emoji: '📦' },
-    { key: 'completed', label: '已完成', emoji: '✅' }
-  ];
-  document.getElementById('todoTabs').innerHTML = tabs.map(t =>
-    `<div class="tab ${t.key === _todoTab ? 'active' : ''}" onclick="switchTodoTab('${t.key}')">${t.emoji} ${t.label}</div>`
-  ).join('');
+function renderTodos(){ /* legacy: merged into renderAction */ }
 
-  const con=document.getElementById('todoContent');const n=nc();
-  const{today:td,library:lib,completed:comp}=Store.getTodos(appData);
-
-  if (_todoTab === 'today') {
-    const tdS=sortByImpThenTime(td);
-    if (!tdS.length) {
-      con.innerHTML = '<div class="empty-state">暂无今日待办<br><span style="font-size:12px;color:var(--text-hint)">从待办库添加，或点击 + 直接创建</span></div>';
-      return;
-    }
-    con.innerHTML = tdS.map(t=>renderTodoCard(t,true)).join('');
-  } else if (_todoTab === 'library') {
-    const libS=sortByImpThenTime(lib);
-    if (!libS.length) {
-      con.innerHTML = '<div class="empty-state">待办库为空<br><span style="font-size:12px;color:var(--text-hint)">点击 + 创建新待办</span></div>';
-      return;
-    }
-    con.innerHTML = libS.map(t=>renderTodoCard(t,false)).join('');
-  } else {
-    const compS=[...comp].sort((a,b)=>new Date(b.completedAt)-new Date(a.completedAt));
-    if (!compS.length) {
-      con.innerHTML = '<div class="empty-state">暂无已完成待办</div>';
-      return;
-    }
-    con.innerHTML = compS.map(t=>`
-      <div class="todo-card" style="opacity:0.6">
-        <div style="width:18px;height:18px;flex-shrink:0;margin-top:2px;color:#5a7d6b">✅</div>
-        <div class="todo-body"><div class="todo-text"><s>${esc(t.text)}</s></div>${t.note?`<div style="font-size:11px;color:#aaa;margin-top:2px">💬 ${escNL(t.note)}</div>`:''}<div class="todo-source">完成于 ${fmtDate(t.completedAt)}</div></div>
-        <div class="todo-actions"><button class="icon-btn" onclick="deleteItem('todo','${t.id}')">🗑️</button></div>
-      </div>`).join('');
-  }
-}
-
-function switchTodoTab(tab) { _todoTab = tab; renderTodos(); }
+function switchTodoTab(tab) { switchActionTab(tab); }
 
 function renderTodoCard(t,isToday){
   let srcEntry = null, srcCap = null, srcProj = null;

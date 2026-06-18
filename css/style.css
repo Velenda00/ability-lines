@@ -681,6 +681,39 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
 .nav-icon svg { width: 22px; height: 22px; }
 .nav-label { font-size: 10px; margin-top: 2px; }
 
+/* ===== Action Collapse Sections ===== */
+.action-collapse {
+  margin-bottom: var(--sp-4);
+}
+.action-collapse-header {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) 0;
+  cursor: pointer; user-select: none;
+}
+.action-collapse-header:active { opacity: 0.7; }
+.action-collapse-arrow {
+  font-size: 10px; color: var(--text-tertiary);
+  transition: transform 0.2s;
+  width: 14px; text-align: center; flex-shrink: 0;
+}
+.action-collapse.collapsed .action-collapse-arrow {
+  transform: rotate(-90deg);
+}
+.action-collapse-title {
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+}
+.action-collapse-count {
+  font-size: 11px; color: var(--text-hint); font-weight: 400;
+}
+.action-collapse-body {
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+  max-height: 2000px;
+}
+.action-collapse.collapsed .action-collapse-body {
+  max-height: 0;
+}
+
 /* ===== Modal Overlay ===== */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;

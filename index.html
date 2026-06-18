@@ -40,14 +40,14 @@
       <div id="abilityContent" class="entry-list"></div>
     </section>
 
-    <!-- 习惯 -->
-    <section id="page-goals" class="page">
+    <!-- 行动（待办+习惯合并） -->
+    <section id="page-action" class="page">
       <div class="page-header">
-        <span class="page-title-text">🔥 每日习惯</span>
+        <span class="page-title-text">⚡ 行动</span>
         <span style="width:36px"></span>
       </div>
-      <div class="tab-bar" id="habitTabs" style="margin-bottom:12px"></div>
-      <div id="habitContent" class="entry-list"></div>
+      <div class="tab-bar" id="actionTabs" style="margin-bottom:12px"></div>
+      <div id="actionContent"></div>
     </section>
 
     <!-- 思绪 -->
@@ -66,14 +66,13 @@
       <div id="thoughtList" class="entry-list"></div>
     </section>
 
-    <!-- 待办 -->
-    <section id="page-todos" class="page">
+    <!-- 工作轨（占位） -->
+    <section id="page-work" class="page">
       <div class="page-header">
-        <span class="page-title-text">📋 待办</span>
+        <span class="page-title-text">🛤️ 工作轨</span>
         <span style="width:36px"></span>
       </div>
-      <div class="tab-bar" id="todoTabs" style="margin-bottom:12px"></div>
-      <div id="todoContent"></div>
+      <div class="empty-state"><div style="font-size:48px;margin-bottom:16px">🛠️</div><div style="font-size:15px;color:var(--text-secondary)">工作轨模块开发中…</div><div style="font-size:12px;color:var(--text-hint);margin-top:8px">敬请期待</div></div>
     </section>
 
     <!-- 专项详情 V2 -->
@@ -91,9 +90,8 @@
 
   <!-- 页面级 FAB 按钮 -->
   <button class="page-fab" id="fab-ability" onclick="handleAbilityFab()">+</button>
-  <button class="page-fab" id="fab-goals" onclick="showAddHabitModal()">+</button>
+  <button class="page-fab" id="fab-action" onclick="showActionFabMenu()">+</button>
   <button class="page-fab" id="fab-thoughts" onclick="showAddThoughtModal()">+</button>
-  <button class="page-fab" id="fab-todos" onclick="showAddTodoModal()">+</button>
 
   <!-- 底部导航（5项，SVG 图标） -->
   <nav id="bottomNav">
@@ -105,17 +103,17 @@
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
       <span class="nav-label">能力</span>
     </div>
-    <div class="nav-item" onclick="switchPage('goals')">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1.5 4-2 6-2 10a4 4 0 008 0c0-2-1-3.5-1-5.5 3 2.5 4 5.5 4 8.5a8 8 0 11-16 0C5 10 8 6 12 2z"/></svg></span>
-      <span class="nav-label">习惯</span>
+    <div class="nav-item" onclick="switchPage('action')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+      <span class="nav-label">行动</span>
     </div>
     <div class="nav-item" onclick="switchPage('thoughts')">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></span>
       <span class="nav-label">思绪</span>
     </div>
-    <div class="nav-item" onclick="switchPage('todos')">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
-      <span class="nav-label">待办</span>
+    <div class="nav-item" onclick="switchPage('work')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg></span>
+      <span class="nav-label">工作轨</span>
     </div>
   </nav>
 
