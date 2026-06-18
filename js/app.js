@@ -7,6 +7,10 @@ let _impPickerCallback = null, _confirmCallback = null;
 let _abilityTab = 'independence'; // liberation | independence | diplomacy
 let _actionTab = 'today'; // today | library | archived
 let _thoughtTagFilter = null; // null | tag string
+let _workView = 'overview'; // overview | focus
+let _workCalMonth = today(); // 'YYYY-MM-DD' 当天
+let _workWeekStart = null; // 视图B当前周的周一
+let _workFocusDate = null; // 视图B聚焦日期
 
 function nc() { return appData.nameConfig || Store.getDefaultNameConfig(); }
 
@@ -27,7 +31,7 @@ function switchPage(page) {
 
 function updateFabs() {
   document.querySelectorAll('.page-fab').forEach(f=>f.classList.remove('visible'));
-  const fabMap = {ability:'fab-ability', action:'fab-action', thoughts:'fab-thoughts'};
+  const fabMap = {ability:'fab-ability', action:'fab-action', thoughts:'fab-thoughts', work:'fab-work'};
   if(fabMap[currentPage]) document.getElementById(fabMap[currentPage])?.classList.add('visible');
 }
 
@@ -56,6 +60,7 @@ function renderPage() {
     case 'ability': renderAbility(); break;
     case 'action': renderAction(); break;
     case 'thoughts': renderThoughts(); break;
+    case 'work': renderWork(); break;
     case 'project': renderProject(); break;
   }
 }
@@ -585,6 +590,784 @@ function showActionFabMenu() {
   document.body.appendChild(overlay);
   overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
   window.closeActionFab = ()=>{overlay.remove();delete window.closeActionFab;};
+}
+
+// ==================== 工作轨 ====================
+
+function renderWork() {
+  if (_workView === 'overview') renderWorkOverview();
+  else renderWorkFocus();
+}
+
+// -- 视图A：鸟瞰 --
+function renderWorkOverview() {
+  const ov = document.getElementById('workOverview');
+  const foc = document.getElementById('workFocus');
+  ov.classList.add('active'); foc.classList.remove('active');
+  document.getElementById('workTitle').textContent = '🛤️ 工作轨';
+
+  const ym = _workCalMonth.slice(0, 7); // 'YYYY-MM'
+  const [yr, mo] = ym.split('-').map(Number);
+  const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+  // 热力图日历
+  const calHtml = renderWorkCalendar(yr, mo, 'full');
+
+  // 圆环图
+  const stats = Store.getWorkStats(appData, ym);
+  const totalEvts = Object.values(stats).reduce((s,v)=>s+v, 0);
+  const donutHtml = totalEvts > 0 ? renderDonutChart(stats, totalEvts) : '';
+
+  // 下一步待办
+  const pending = Store.getPendingNextSteps(appData);
+  const pendingHtml = pending.length > 0 ? renderPendingNextSteps(pending) : '';
+
+  ov.innerHTML = calHtml +
+    (donutHtml || (totalEvts === 0 ? `<div class="work-empty">
+  <svg viewBox="0 0 140 110" width="140" height="110" style="margin:0 auto 12px;display:block;opacity:0.45">
+    <!-- 桌子 -->
+    <rect x="15" y="68" width="110" height="6" rx="2" fill="#b8b4ae"/>
+    <!-- 显示器 -->
+    <rect x="32" y="28" width="52" height="36" rx="3" fill="none" stroke="#888" stroke-width="1.8"/>
+    <rect x="36" y="32" width="44" height="26" rx="1" fill="#ddd"/>
+    <line x1="58" y1="64" x2="58" y2="68" stroke="#888" stroke-width="1.5"/>
+    <rect x="48" y="68" width="20" height="3" rx="1.5" fill="#888"/>
+    <!-- 人物（简笔画坐姿） -->
+    <circle cx="100" cy="32" r="9" fill="none" stroke="#888" stroke-width="1.5"/>
+    <path d="M88 52 Q88 44 100 44 Q112 44 112 52" fill="none" stroke="#888" stroke-width="1.5"/>
+    <line x1="100" y1="41" x2="100" y2="58" stroke="#888" stroke-width="1.5"/>
+    <line x1="100" y1="58" x2="92" y2="68" stroke="#888" stroke-width="1.5"/>
+    <line x1="100" y1="58" x2="108" y2="68" stroke="#888" stroke-width="1.5"/>
+    <!-- 键盘 -->
+    <rect x="80" y="62" width="20" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/>
+  </svg>
+  <div>本月暂无工作记录</div>
+  <div style="font-size:11px;color:var(--text-hint);margin-top:4px">点击日期开始记录</div>
+</div>` : '')) +
+    pendingHtml;
+}
+
+// -- 视图B：聚焦 --
+function renderWorkFocus(dateStr) {
+  if (dateStr) _workFocusDate = dateStr;
+  if (!_workFocusDate) _workFocusDate = today();
+  if (!_workWeekStart) _workWeekStart = getMonday(new Date(_workFocusDate + 'T12:00:00'));
+
+  const ov = document.getElementById('workOverview');
+  const foc = document.getElementById('workFocus');
+  ov.classList.remove('active'); foc.classList.add('active');
+  document.getElementById('workTitle').innerHTML = '<button class="work-back-btn" onclick="switchWorkView(\'overview\')">← 返回</button> ' + _workFocusDate;
+
+  // 微型周历条
+  const weekDates = getWeekDates(_workWeekStart);
+  const weekStripHtml = '<div class="work-week-strip">' +
+    weekDates.map(d => {
+      const dt = new Date(d + 'T12:00:00');
+      const dayNames = ['日','一','二','三','四','五','六'];
+      const cnt = (appData.workEvents?.[d] || []).length;
+      const level = getHeatLevel(cnt);
+      const isToday = d === today();
+      const isSel = d === _workFocusDate;
+      let cls = 'work-week-cell';
+      if (isToday) cls += ' wk-today';
+      if (isSel) cls += ' wk-selected';
+      return `<div class="${cls}" data-level="${level}" onclick="selectWorkDate('${d}')">${dt.getDate()}<div class="wk-day">${dayNames[dt.getDay()]}</div></div>`;
+    }).join('') + '</div>';
+
+  // 事件卡片流
+  const evts = appData.workEvents?.[_workFocusDate] || [];
+  const cardsHtml = evts.length > 0
+    ? evts.map(e => renderWorkEventCard(e, _workFocusDate)).join('')
+    : '<div class="work-empty">当日暂无工作事件</div>';
+
+  const addBtn = `<button class="work-add-btn" onclick="showAddWorkEventModal('${_workFocusDate}')">+ 新增工作事件</button>`;
+
+  foc.innerHTML = weekStripHtml + cardsHtml + addBtn;
+}
+
+function selectWorkDate(d) { _workFocusDate = d; renderWorkFocus(); }
+
+function switchWorkView(view, dateStr) {
+  _workView = view;
+  if (view === 'focus' && dateStr) _workFocusDate = dateStr;
+  renderWork();
+}
+
+// -- 热力图日历 --
+function renderWorkCalendar(year, month, mode) {
+  const firstDay = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0);
+  const startWeekday = firstDay.getDay(); // 0=Sun
+  const daysInMonth = lastDay.getDate();
+  const todayStr = today();
+  const ym = `${year}-${String(month).padStart(2,'0')}`;
+  const prevMonth = new Date(year, month - 1, 0);
+  const prevDays = prevMonth.getDate();
+
+  // 预计算每个日期的未完成下一步数
+  const pendingCounts = {};
+  Object.entries(appData.workEvents || {}).forEach(([date, evts]) => {
+    if (!date.startsWith(ym)) return;
+    let cnt = 0;
+    evts.forEach(e => (e.next_steps || []).forEach(s => { if (!s.completed) cnt++; }));
+    if (cnt > 0) pendingCounts[date] = cnt;
+  });
+
+  const monthNames = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+  const isCurMonth = year === new Date().getFullYear() && month === new Date().getMonth() + 1;
+  let html = '<div class="work-cal">';
+  html += `<div class="work-cal-nav">
+    <button class="work-cal-nav-btn" onclick="workCalNav(-1)">‹</button>
+    <span class="work-cal-nav-title">${year}年${monthNames[month]}</span>
+    ${isCurMonth ? '' : '<button class="work-cal-today-btn" onclick="workCalToday()">今天</button>'}
+    <button class="work-cal-nav-btn" onclick="workCalNav(1)">›</button>
+  </div>`;
+
+  if (mode === 'full') {
+    const dayLabels = ['日','一','二','三','四','五','六'];
+    html += '<div class="work-cal-weekdays">' + dayLabels.map(d => `<div class="work-cal-weekday">${d}</div>`).join('') + '</div>';
+    html += '<div class="work-cal-grid">';
+
+    // 上月填充
+    for (let i = startWeekday - 1; i >= 0; i--) {
+      html += `<div class="work-cal-cell other-month">${prevDays - i}</div>`;
+    }
+
+    // 本月
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${ym}-${String(d).padStart(2,'0')}`;
+      const cnt = (appData.workEvents?.[dateStr] || []).length;
+      const level = getHeatLevel(cnt);
+      const isToday = dateStr === todayStr;
+      const pending = pendingCounts[dateStr] || 0;
+      let cls = 'work-cal-cell';
+      if (isToday) cls += ' today';
+      let badges = '';
+      if (cnt > 0) badges += `<span class="cell-count-top">${cnt}</span>`;
+      if (pending > 0) badges += `<span class="cell-pending-bottom">${pending}</span>`;
+      html += `<div class="${cls}" data-level="${level}" onclick="switchWorkView('focus','${dateStr}')">${d}${badges}</div>`;
+    }
+
+    // 下月填充
+    const totalCells = startWeekday + daysInMonth;
+    const remaining = (7 - totalCells % 7) % 7;
+    for (let i = 1; i <= remaining; i++) {
+      html += `<div class="work-cal-cell other-month">${i}</div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function workCalNav(delta) {
+  const [yr, mo] = _workCalMonth.slice(0,7).split('-').map(Number);
+  let newMo = mo + delta, newYr = yr;
+  if (newMo > 12) { newMo = 1; newYr++; }
+  if (newMo < 1) { newMo = 12; newYr--; }
+  _workCalMonth = `${newYr}-${String(newMo).padStart(2,'0')}-01`;
+  renderWorkOverview();
+}
+
+function workCalToday() { _workCalMonth = today(); renderWorkOverview(); }
+
+// -- 圆环图 --
+function renderDonutChart(stats, total) {
+  const entries = Object.entries(stats).sort((a,b) => b[1] - a[1]);
+  const r = 40, C = 2 * Math.PI * r; // ~251.3
+  const colors = ['#7B9E8C','#B08968','#9B8EC4','#C49A6C','#88A4B8','#C48A8A'];
+  let offset = 0;
+  let circles = '';
+  const legendItems = [];
+
+  entries.forEach(([tag, count], i) => {
+    const pct = count / total;
+    const dash = pct * C;
+    const color = colors[i % colors.length];
+    circles += `<circle cx="60" cy="60" r="${r}" class="donut-color-${i%6}" stroke="${color}" stroke-width="12" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 60 60)" />`;
+    offset += dash;
+    legendItems.push(`<div class="work-donut-legend-item"><span class="work-donut-legend-dot" style="background:${color}"></span>${esc(tag)} ${Math.round(pct*100)}%</div>`);
+  });
+
+  return `<div class="work-donut-section"><h3>📊 本月精力分布</h3><div class="work-donut-wrap">
+    <div style="position:relative">
+      <svg class="work-donut-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--work-empty)" stroke-width="12"/>
+        ${circles}
+      </svg>
+      <div class="work-donut-center"><div class="donut-total">${total}</div><div class="donut-label">事件</div></div>
+    </div>
+    <div class="work-donut-legend">${legendItems.join('')}</div>
+  </div></div>`;
+}
+
+// -- 下一步待办 --
+function renderPendingNextSteps(pending) {
+  const items = pending.slice(0, 10).map(p => {
+    const dateShort = p.sourceDate.slice(5); // 'MM-DD'
+    return `<div class="work-pending-item">
+      <button class="work-pending-cb ${p.completed?'checked':''}" onclick="toggleWorkNextStep('${p.sourceDate}','${p.eventId}','${p.id}')"></button>
+      <span class="work-pending-text ${p.completed?'done':''}">${esc(p.text)}</span>
+      <span class="work-pending-date" onclick="switchWorkView('focus','${p.sourceDate}')">${dateShort}</span>
+    </div>`;
+  }).join('');
+
+  return `<div class="work-pending-section"><h3>⚡ 聚焦 · 下一步待办</h3>${items}${pending.length > 10 ? '<div style="font-size:11px;color:var(--text-hint);text-align:center;margin-top:8px">仅显示前10条</div>' : ''}</div>`;
+}
+
+// -- 事件卡片（有机风格，无卡片边框） --
+function renderWorkEventCard(evt, dateStr) {
+  const tagPills = (evt.tags || []).map(t =>
+    `<span class="work-event-tag active" onclick="event.stopPropagation();removeWorkTag('${dateStr}','${evt.id}','${esc(t)}')">${esc(t)}</span>`
+  ).join('') + `<span class="work-event-tag" onclick="event.stopPropagation();showWorkTagPicker('${dateStr}','${evt.id}')">+</span>`;
+
+  const wc = evt.work_content || {};
+  const pb = evt.problem || {};
+  const ns = evt.next_steps || [];
+
+  // 只要有内容才渲染对应区域
+  const wcParts = [renderFormText(wc.contribution, '我的贡献'), renderFormText(wc.result, '结论/结果'), renderFormText(wc.value, '价值')].filter(Boolean);
+  const pbParts = [renderFormText(pb.reason, '原因分析'), renderFormText(pb.suggestion, '改进建议'), renderFormText(pb.value, '执行价值')].filter(Boolean);
+
+  let detailHtml = '';
+  if (wcParts.length)
+    detailHtml += `<div class="work-section"><div class="work-section-title">📋 工作内容</div>${wcParts.join('')}</div>`;
+  if (pbParts.length)
+    detailHtml += `<div class="work-section"><div class="work-section-title">⚠️ 发现问题</div>${pbParts.join('')}</div>`;
+  if (evt.growth)
+    detailHtml += `<div class="work-section"><div class="work-section-title">🌱 成长</div><div class="work-growth-text">${escNL(evt.growth)}</div></div>`;
+  if (ns.length)
+    detailHtml += `<div class="work-section"><div class="work-section-title">➡️ 下一步</div>
+      ${ns.map(s => `<div class="work-step-row ${s.completed?'completed':''}">
+        <button class="work-step-cb ${s.completed?'checked':''}" onclick="toggleWorkNextStep('${dateStr}','${evt.id}','${s.id}')"></button>
+        <span class="work-step-text">${esc(s.text)}</span>
+        <button class="work-step-del" onclick="deleteWorkNextStep('${dateStr}','${evt.id}','${s.id}')">×</button>
+      </div>`).join('')}
+      <button class="work-step-add" onclick="addWorkNextStepInline('${dateStr}','${evt.id}')">+ 添加</button>
+    </div>`;
+
+  const hasDetail = !!detailHtml;
+
+  return `<div class="work-event-card collapsed" onclick="this.classList.toggle('collapsed')">
+    <div class="work-event-dot"></div>
+    <div class="work-event-body">
+      <div class="work-event-header">
+        <span class="work-event-title">${esc(evt.title || '未命名事件')}</span>
+        ${tagPills}
+        ${hasDetail ? `<span class="work-event-arrow">▼</span>` : ''}
+        <div class="work-event-actions" onclick="event.stopPropagation()">
+          <button onclick="showEditWorkEventModal('${dateStr}','${evt.id}')">✏️</button>
+          <button onclick="confirmDeleteWorkEvent('${dateStr}','${evt.id}')">🗑️</button>
+        </div>
+      </div>
+      ${hasDetail ? `<div class="work-event-detail">${detailHtml}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderAccordion(key, label, contentParts, evt) {
+  const contentId = `acc-${key}`;
+  const [icon, ...rest] = label.split(' ');
+  return `<div class="work-accordion collapsed" id="${contentId}">
+    <div class="work-accordion-header" onclick="toggleWorkAccordion('${contentId}')">
+      <span class="work-accordion-icon">${icon}</span>
+      <span class="work-accordion-label">${rest.join(' ')}</span>
+      <span class="work-accordion-arrow">▼</span>
+    </div>
+    <div class="work-accordion-body">${contentParts.join('')}</div>
+  </div>`;
+}
+
+function renderFormText(text, label) {
+  if (!text) return '';
+  return `<div class="work-form-group"><span class="work-form-label">${label}</span><div class="work-form-textarea" style="background:none;border:none;padding:0;min-height:auto" readonly>${escNL(text)}</div></div>`;
+}
+
+function toggleWorkAccordion(id) {
+  document.getElementById(id)?.classList.toggle('collapsed');
+}
+
+// -- 新增/编辑事件模态框 --
+function showAddWorkEventModal(dateStr) {
+  if (!dateStr) {
+    if (_workView === 'focus') dateStr = _workFocusDate;
+    else dateStr = today();
+  }
+  const allTags = Store.getAllWorkTags(appData);
+  const tagOptions = allTags.map(t => `<option value="${esc(t)}">`).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:400px;max-height:85vh;overflow-y:auto">
+    <h3>新增工作事件</h3>
+    <div style="margin-top:12px">
+      <div class="work-form-group">
+        <span class="work-form-label">日期</span>
+        <input id="wmDate" type="date" value="${dateStr}" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit">
+      </div>
+      <div class="work-form-group">
+        <span class="work-form-label">事项</span>
+        <input id="wmTitle" type="text" placeholder="工作事项" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:14px;font-weight:600;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none">
+      </div>
+      <div class="work-form-group">
+        <span class="work-form-label">标签</span>
+        <div class="work-modal-tags" id="wmTags"></div>
+        <div class="work-tag-input-row">
+          <input id="wmTagInput" type="text" placeholder="输入标签…" autocomplete="off">
+          <button class="work-tag-add-btn" onclick="addWorkModalTag()">+</button>
+        </div>
+        <div id="wmTagHints" class="work-tag-hints"></div>
+      </div>
+      <div id="wmAccordions"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeWM()">取消</button>
+      <button class="btn-primary" onclick="confirmAddWM()">保存</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeWM(); });
+
+  // 标签输入回车处理（用 addEventListener 确保拦截）
+  const wmTagInput = document.getElementById('wmTagInput');
+  if (wmTagInput) {
+    wmTagInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkModalTag(); }
+    });
+  }
+  const accHtml =
+    buildWMAccordion('wm_wc', '📋 工作内容', [
+      buildWMField('wm_contrib', '我的贡献'),
+      buildWMField('wm_result', '结论/结果'),
+      buildWMField('wm_value', '价值')
+    ]) +
+    buildWMAccordion('wm_pb', '⚠️ 发现问题', [
+      buildWMField('wm_reason', '原因分析'),
+      buildWMField('wm_suggest', '改进建议'),
+      buildWMField('wm_pbvalue', '执行价值')
+    ]) +
+    buildWMAccordion('wm_growth', '🌱 成长', [
+      buildWMField('wm_growth_text', '', true)
+    ]) +
+    buildWMAccordion('wm_ns', '➡️ 下一步', [
+      `<div id="wmSteps"></div><button class="work-step-add" onclick="addWMStep()">+ 添加下一步</button>`
+    ]);
+  document.getElementById('wmAccordions').innerHTML = accHtml;
+
+  window._wmTags = [];
+  // 标签提示
+  function refreshWMHints() {
+    const hints = document.getElementById('wmTagHints');
+    if (!hints) return;
+    const matched = allTags.filter(t => !window._wmTags.includes(t)).slice(0, 5);
+    hints.innerHTML = matched.length ? matched.map(t =>
+      `<span class="work-tag-hint-pill" onclick="pickWMHint('${esc(t)}')">${esc(t)}</span>`
+    ).join('') : '';
+  }
+  window.pickWMHint = function(t) {
+    if (!window._wmTags.includes(t)) { window._wmTags.push(t); refreshWMTags(); refreshWMHints(); }
+    document.getElementById('wmTagInput').value = '';
+  };
+  window.addWorkModalTag = function() {
+    const input = document.getElementById('wmTagInput');
+    const v = input.value.trim();
+    if (v && !window._wmTags.includes(v)) {
+      window._wmTags.push(v);
+      refreshWMTags();
+      refreshWMHints();
+    }
+    input.value = '';
+    input.focus();
+  };
+  function refreshWMTags() {
+    document.getElementById('wmTags').innerHTML = window._wmTags.map(t =>
+      `<span class="work-modal-tag" onclick="removeWMTag('${esc(t)}')">${esc(t)}</span>`
+    ).join('');
+  }
+  window.removeWMTag = function(t) {
+    window._wmTags = window._wmTags.filter(x => x !== t);
+    refreshWMTags();
+  };
+  window.addWMStep = function() {
+    const c = document.getElementById('wmSteps');
+    const idx = c.children.length;
+    c.innerHTML += `<div class="work-step-row" id="wm_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('wm_step_${idx}').remove()">×</button></div>`;
+  };
+  window.closeWM = function() { overlay.remove(); delete window._wmTags; delete window.addWorkModalTag; delete window.removeWMTag; delete window.closeWM; delete window.confirmAddWM; delete window.addWMStep; delete window.pickWMHint; };
+  window.confirmAddWM = async function() {
+    const dateStr2 = document.getElementById('wmDate').value;
+    const title = document.getElementById('wmTitle').value.trim();
+    if (!title) { showToast('请输入标题'); return; }
+    if (!dateStr2) { showToast('请选择日期'); return; }
+
+    const evt = { title, tags: [...window._wmTags] };
+    evt.work_content = {
+      contribution: gv('wm_contrib'),
+      result: gv('wm_result'), value: gv('wm_value')
+    };
+    evt.problem = {
+      reason: gv('wm_reason'), suggestion: gv('wm_suggest'), value: gv('wm_pbvalue')
+    };
+    evt.growth = gv('wm_growth_text');
+    evt.next_steps = [];
+    const stepEls = document.querySelectorAll('#wmSteps .work-step-row input');
+    stepEls.forEach(inp => {
+      const t = inp.value.trim();
+      if (t) evt.next_steps.push({ id: uid('ns'), text: t, completed: false });
+    });
+
+    await Store.addWorkEvent(dateStr2, evt);
+    closeWM();
+    _workFocusDate = dateStr2;
+    await refresh();
+    showToast('✅ 已保存');
+  };
+  function gv(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+}
+
+function buildWMAccordion(id, label, fields) {
+  const [icon, ...rest] = label.split(' ');
+  return `<div class="work-accordion collapsed" id="${id}">
+    <div class="work-accordion-header" onclick="toggleWorkAccordion('${id}')">
+      <span class="work-accordion-icon">${icon}</span>
+      <span class="work-accordion-label">${rest.join(' ')}</span>
+      <span class="work-accordion-arrow">▼</span>
+    </div>
+    <div class="work-accordion-body">${fields.join('')}</div>
+  </div>`;
+}
+
+function buildWMField(id, label, big) {
+  const rows = big ? 3 : 2;
+  return `<div class="work-form-group">${label ? `<span class="work-form-label">${label}</span>` : ''}<textarea id="${id}" class="work-form-textarea" rows="${rows}" placeholder="${label || '成长总结…'}"></textarea></div>`;
+}
+
+// -- 编辑事件 --
+function showEditWorkEventModal(dateStr, eventId) {
+  const evts = appData.workEvents?.[dateStr];
+  if (!evts) return;
+  const evt = evts.find(e => e.id === eventId);
+  if (!evt) return;
+
+  const allTags = Store.getAllWorkTags(appData);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:400px;max-height:85vh;overflow-y:auto">
+    <h3>编辑工作事件</h3>
+    <div style="margin-top:12px">
+      <div class="work-form-group">
+        <span class="work-form-label">日期</span>
+        <input id="weDate" type="date" value="${dateStr}" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit">
+      </div>
+      <div class="work-form-group">
+        <span class="work-form-label">事项</span>
+        <input id="weTitle" type="text" value="${esc(evt.title)}" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:14px;font-weight:600;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none">
+      </div>
+      <div class="work-form-group">
+        <span class="work-form-label">标签</span>
+        <div class="work-modal-tags" id="weTags"></div>
+        <div class="work-tag-input-row">
+          <input id="weTagInput" type="text" placeholder="输入标签…" autocomplete="off">
+          <button class="work-tag-add-btn" onclick="addWorkEditTag()">+</button>
+        </div>
+        <div id="weTagHints" class="work-tag-hints"></div>
+      </div>
+      <div id="weAccordions"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeWE()">取消</button>
+      <button class="btn-primary" onclick="confirmEditWM()">保存</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeWE(); });
+
+  // 标签输入回车处理（用 addEventListener 确保拦截）
+  const weTagInput = document.getElementById('weTagInput');
+  if (weTagInput) {
+    weTagInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkEditTag(); }
+    });
+  }
+
+  const wc = evt.work_content || {};
+  const pb = evt.problem || {};
+  const ns = evt.next_steps || [];
+
+  const accHtml =
+    buildWMAccordion('we_wc', '📋 工作内容', [
+      buildWMField('we_contrib', '我的贡献'),
+      buildWMField('we_result', '结论/结果'), buildWMField('we_value', '价值')
+    ]) +
+    buildWMAccordion('we_pb', '⚠️ 发现问题', [
+      buildWMField('we_reason', '原因分析'), buildWMField('we_suggest', '改进建议'),
+      buildWMField('we_pbvalue', '执行价值')
+    ]) +
+    buildWMAccordion('we_growth', '🌱 成长', [
+      buildWMField('we_growth_text', '', true)
+    ]) +
+    buildWMAccordion('we_ns', '➡️ 下一步', [
+      `<div id="weSteps">${ns.map((s,i) => `<div class="work-step-row" id="we_step_${i}"><input type="text" value="${esc(s.text)}" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('we_step_${i}').remove()">×</button></div>`).join('')}</div><button class="work-step-add" onclick="addWEStep()">+ 添加</button>`
+    ]);
+  document.getElementById('weAccordions').innerHTML = accHtml;
+
+  // 填充值
+  sv('we_contrib', wc.contribution);
+  sv('we_result', wc.result); sv('we_value', wc.value);
+  sv('we_reason', pb.reason); sv('we_suggest', pb.suggestion); sv('we_pbvalue', pb.value);
+  sv('we_growth_text', evt.growth || '');
+
+  window._weTags = [...(evt.tags || [])];
+  // 标签提示
+  function refreshWEHints() {
+    const hints = document.getElementById('weTagHints');
+    if (!hints) return;
+    const matched = allTags.filter(t => !window._weTags.includes(t)).slice(0, 5);
+    hints.innerHTML = matched.length ? matched.map(t =>
+      `<span class="work-tag-hint-pill" onclick="pickWEHint('${esc(t)}')">${esc(t)}</span>`
+    ).join('') : '';
+  }
+  window.pickWEHint = function(t) {
+    if (!window._weTags.includes(t)) { window._weTags.push(t); refreshWETags(); refreshWEHints(); }
+    document.getElementById('weTagInput').value = '';
+  };
+  refreshWETags();
+  refreshWEHints();
+  window.addWorkEditTag = function() {
+    const input = document.getElementById('weTagInput');
+    const v = input.value.trim();
+    if (v && !window._weTags.includes(v)) { window._weTags.push(v); refreshWETags(); refreshWEHints(); }
+    input.value = '';
+    input.focus();
+  };
+  function refreshWETags() {
+    document.getElementById('weTags').innerHTML = window._weTags.map(t =>
+      `<span class="work-modal-tag" onclick="removeWETag('${esc(t)}')">${esc(t)}</span>`
+    ).join('');
+  }
+  window.removeWETag = function(t) { window._weTags = window._weTags.filter(x => x !== t); refreshWETags(); refreshWEHints(); };
+  window.addWEStep = function() {
+    const c = document.getElementById('weSteps');
+    const idx = c.children.length;
+    c.innerHTML += `<div class="work-step-row" id="we_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('we_step_${idx}').remove()">×</button></div>`;
+  };
+  window.closeWE = function() { overlay.remove(); delete window._weTags; delete window.addWorkEditTag; delete window.removeWETag; delete window.closeWE; delete window.confirmEditWM; delete window.addWEStep; delete window.pickWEHint; };
+  window.confirmEditWM = async function() {
+    const newDate = document.getElementById('weDate').value;
+    const title = document.getElementById('weTitle').value.trim();
+    if (!title) { showToast('请输入标题'); return; }
+
+    const updates = { title, tags: [...window._weTags] };
+    updates.work_content = {
+      contribution: gv2('we_contrib'),
+      result: gv2('we_result'), value: gv2('we_value')
+    };
+    updates.problem = {
+      reason: gv2('we_reason'), suggestion: gv2('we_suggest'), value: gv2('we_pbvalue')
+    };
+    updates.growth = gv2('we_growth_text');
+    updates.next_steps = [];
+    document.querySelectorAll('#weSteps .work-step-row input').forEach(inp => {
+      const t = inp.value.trim();
+      if (t) updates.next_steps.push({ id: uid('ns'), text: t, completed: false });
+    });
+
+    // 如果日期改变了，需要迁移事件
+    if (newDate !== dateStr) {
+      await Store.deleteWorkEvent(dateStr, eventId);
+      await Store.addWorkEvent(newDate, updates);
+    } else {
+      await Store.updateWorkEvent(dateStr, eventId, updates);
+    }
+    closeWE();
+    _workFocusDate = newDate;
+    await refresh();
+    showToast('✅ 已更新');
+  };
+  function sv(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+  function gv2(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+}
+
+// -- 标签快速选择器 --
+function showWorkTagPicker(dateStr, eventId) {
+  const allTags = Store.getAllWorkTags(appData);
+  const evts = appData.workEvents?.[dateStr];
+  const evt = evts?.find(e => e.id === eventId);
+  const current = new Set(evt?.tags || []);
+  const available = allTags.filter(t => !current.has(t));
+
+  if (!available.length && !current.size) { showToast('暂无标签，请在编辑中添加'); return; }
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:300px">
+    <h3>选择标签</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+      ${available.map(t => `<span class="work-event-tag" onclick="pickWorkTag('${dateStr}','${eventId}','${esc(t)}')">${esc(t)}</span>`).join('')}
+    </div>
+    ${current.size ? `<div style="margin-top:12px;font-size:11px;color:var(--text-hint)">当前标签</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+      ${[...current].map(t => `<span class="work-modal-tag" onclick="removeWorkTag('${dateStr}','${eventId}','${esc(t)}')">${esc(t)}</span>`).join('')}
+    </div>` : ''}
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeWTP()">关闭</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeWTP(); });
+  window.closeWTP = function() { overlay.remove(); delete window.closeWTP; };
+}
+
+async function pickWorkTag(dateStr, eventId, tag) {
+  const evts = appData.workEvents?.[dateStr];
+  if (!evts) return;
+  const evt = evts.find(e => e.id === eventId);
+  if (!evt) return;
+  if (!evt.tags) evt.tags = [];
+  evt.tags.push(tag);
+  await Store.saveAll(appData);
+  Store._syncWorkTags(appData);
+  closeWTP?.();
+  await refresh();
+}
+
+async function removeWorkTag(dateStr, eventId, tag) {
+  const evts = appData.workEvents?.[dateStr];
+  if (!evts) return;
+  const evt = evts.find(e => e.id === eventId);
+  if (!evt) return;
+  evt.tags = (evt.tags || []).filter(t => t !== tag);
+  await Store.saveAll(appData);
+  Store._syncWorkTags(appData);
+  closeWTP?.();
+  await refresh();
+}
+
+// -- 下一步待办操作 --
+async function toggleWorkNextStep(dateStr, eventId, stepId) {
+  await Store.toggleNextStep(dateStr, eventId, stepId);
+  await refresh();
+}
+
+async function addWorkNextStepInline(dateStr, eventId) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:300px">
+    <h3>添加下一步</h3>
+    <textarea id="wStepInput" class="work-form-textarea" rows="2" placeholder="描述下一步行动…"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeWStep()">取消</button>
+      <button class="btn-primary" onclick="confirmWStep()">添加</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeWStep(); });
+  window.closeWStep = function() { overlay.remove(); delete window.closeWStep; delete window.confirmWStep; };
+  window.confirmWStep = async function() {
+    const text = document.getElementById('wStepInput').value.trim();
+    if (!text) return;
+    await Store.addNextStep(dateStr, eventId, text);
+    closeWStep();
+    await refresh();
+  };
+}
+
+async function deleteWorkNextStep(dateStr, eventId, stepId) {
+  await Store.deleteNextStep(dateStr, eventId, stepId);
+  await refresh();
+}
+
+// -- 删除事件 --
+function confirmDeleteWorkEvent(dateStr, eventId) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:280px">
+    <h3>确认删除</h3>
+    <p style="font-size:14px;color:var(--text-secondary);margin:12px 0">删除后不可恢复，确定？</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDelWE()">取消</button>
+      <button class="btn-primary" style="background:var(--color-danger)" onclick="doDelWE()">删除</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeDelWE(); });
+  window.closeDelWE = function() { overlay.remove(); delete window.closeDelWE; delete window.doDelWE; };
+  window.doDelWE = async function() {
+    await Store.deleteWorkEvent(dateStr, eventId);
+    closeDelWE();
+    await refresh();
+    showToast('🗑️ 已删除');
+  };
+}
+
+// -- 导出 --
+function showWorkExportModal() {
+  const todayStr = today();
+  const thirtyDaysAgo = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box" style="max-width:320px">
+    <h3>📤 导出工作轨</h3>
+    <div style="margin-top:12px">
+      <div class="work-form-group">
+        <span class="work-form-label">起始日期</span>
+        <input id="wExpStart" type="date" value="${thirtyDaysAgo}" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit">
+      </div>
+      <div class="work-form-group">
+        <span class="work-form-label">结束日期</span>
+        <input id="wExpEnd" type="date" value="${todayStr}" style="width:100%;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeWExp()">取消</button>
+      <button class="btn-primary" onclick="doExport()">复制到剪贴板</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeWExp(); });
+  window.closeWExp = function() { overlay.remove(); delete window.closeWExp; delete window.doExport; };
+  window.doExport = function() {
+    const start = document.getElementById('wExpStart').value;
+    const end = document.getElementById('wExpEnd').value;
+    if (!start || !end) { showToast('请选择日期范围'); return; }
+    const md = Store.buildWorkExportMd(appData, start, end);
+    navigator.clipboard.writeText(md).then(() => {
+      showToast('✅ 已复制到剪贴板');
+      closeWExp();
+    }).catch(() => {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = md; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('✅ 已复制到剪贴板'); closeWExp();
+    });
+  };
+}
+
+// -- 辅助函数 --
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  return d.toISOString().slice(0, 10);
+}
+
+function getWeekDates(mondayStr) {
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(mondayStr + 'T12:00:00');
+    d.setDate(d.getDate() + i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+function getHeatLevel(count) {
+  if (!count) return 0;
+  if (count <= 2) return 1;
+  if (count <= 4) return 2;
+  return 3;
 }
 
 // ==================== 习惯 ====================

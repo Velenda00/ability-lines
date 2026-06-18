@@ -83,7 +83,9 @@ const Store = {
         thoughts: [],
         todos: [],
         liberationEntries: [],
-        diplomacyEntries: []
+        diplomacyEntries: [],
+        workEvents: {},
+        workTags: []
       };
       await this.set('allData', def);
       return def;
@@ -156,6 +158,9 @@ const Store = {
     data.liberationEntries.forEach(e => {
       if (e.importance === undefined) e.importance = 0;
     });
+    // 工作轨补字段
+    if (!data.workEvents) data.workEvents = {};
+    if (!data.workTags) data.workTags = [];
     // 保存补字段后的数据回 IDB
     await this.set('allData', data);
     return data;
@@ -570,6 +575,157 @@ const Store = {
       pool: data.habits.filter(h => h.status === 'pool'),
       archived: data.habits.filter(h => h.status === 'archived')
     };
+  },
+
+  // ==================== 工作轨 ====================
+  async addWorkEvent(dateStr, evt) {
+    const data = await this.getAll();
+    if (!data.workEvents) data.workEvents = {};
+    if (!data.workEvents[dateStr]) data.workEvents[dateStr] = [];
+    const newEvt = {
+      id: uid('evt'),
+      title: evt.title || '',
+      tags: evt.tags || [],
+      work_content: evt.work_content || { task:'', contribution:'', result:'', value:'' },
+      growth: evt.growth || '',
+      problem: evt.problem || { reason:'', suggestion:'', value:'' },
+      next_steps: evt.next_steps || [],
+      createdAt: new Date().toISOString()
+    };
+    data.workEvents[dateStr].push(newEvt);
+    this._syncWorkTags(data);
+    await this.saveAll(data);
+    return newEvt;
+  },
+
+  async updateWorkEvent(dateStr, eventId, updates) {
+    const data = await this.getAll();
+    const evts = data.workEvents?.[dateStr];
+    if (!evts) return null;
+    const idx = evts.findIndex(e => e.id === eventId);
+    if (idx < 0) return null;
+    Object.assign(evts[idx], updates);
+    this._syncWorkTags(data);
+    await this.saveAll(data);
+    return evts[idx];
+  },
+
+  async deleteWorkEvent(dateStr, eventId) {
+    const data = await this.getAll();
+    if (!data.workEvents?.[dateStr]) return;
+    data.workEvents[dateStr] = data.workEvents[dateStr].filter(e => e.id !== eventId);
+    if (!data.workEvents[dateStr].length) delete data.workEvents[dateStr];
+    this._syncWorkTags(data);
+    await this.saveAll(data);
+  },
+
+  async toggleNextStep(dateStr, eventId, stepId) {
+    const data = await this.getAll();
+    const evts = data.workEvents?.[dateStr];
+    if (!evts) return;
+    const evt = evts.find(e => e.id === eventId);
+    if (!evt) return;
+    const step = evt.next_steps?.find(s => s.id === stepId);
+    if (step) step.completed = !step.completed;
+    await this.saveAll(data);
+  },
+
+  async addNextStep(dateStr, eventId, text) {
+    const data = await this.getAll();
+    const evts = data.workEvents?.[dateStr];
+    if (!evts) return;
+    const evt = evts.find(e => e.id === eventId);
+    if (!evt) return;
+    if (!evt.next_steps) evt.next_steps = [];
+    evt.next_steps.push({ id: uid('ns'), text, completed: false });
+    await this.saveAll(data);
+    return evt.next_steps[evt.next_steps.length - 1];
+  },
+
+  async deleteNextStep(dateStr, eventId, stepId) {
+    const data = await this.getAll();
+    const evts = data.workEvents?.[dateStr];
+    if (!evts) return;
+    const evt = evts.find(e => e.id === eventId);
+    if (!evt) return;
+    evt.next_steps = (evt.next_steps || []).filter(s => s.id !== stepId);
+    await this.saveAll(data);
+  },
+
+  _syncWorkTags(data) {
+    if (!data.workEvents) return;
+    const tagSet = new Set(data.workTags || []);
+    Object.values(data.workEvents).forEach(evts => {
+      evts.forEach(e => (e.tags || []).forEach(t => tagSet.add(t)));
+    });
+    data.workTags = [...tagSet];
+  },
+
+  getAllWorkTags(data) { return data.workTags || []; },
+
+  getWorkStats(data, yearMonth) {
+    // yearMonth: 'YYYY-MM'
+    const stats = {};
+    Object.entries(data.workEvents || {}).forEach(([date, evts]) => {
+      if (!date.startsWith(yearMonth)) return;
+      evts.forEach(e => {
+        (e.tags || []).forEach(t => { stats[t] = (stats[t] || 0) + 1; });
+      });
+    });
+    return stats;
+  },
+
+  getPendingNextSteps(data) {
+    const result = [];
+    Object.entries(data.workEvents || {}).forEach(([date, evts]) => {
+      evts.forEach(evt => {
+        (evt.next_steps || []).forEach(s => {
+          if (!s.completed) result.push({ ...s, sourceDate: date, eventId: evt.id, eventTitle: evt.title });
+        });
+      });
+    });
+    return result;
+  },
+
+  buildWorkExportMd(data, startDate, endDate) {
+    const dates = Object.keys(data.workEvents || {}).sort().filter(d => d >= startDate && d <= endDate);
+    if (!dates.length) return '# 工作轨导出报告\n\n暂无数据。';
+    let md = `# 🛠️ 再塑法典 · 工作轨导出报告 (${startDate} ~ ${endDate})\n\n---\n`;
+    dates.forEach(date => {
+      const evts = data.workEvents[date];
+      if (!evts?.length) return;
+      md += `## 📅 ${date}\n`;
+      evts.forEach((e, i) => {
+        md += `### 🔹 ${i+1}：${e.title}\n`;
+        if (e.tags?.length) md += `> **标记**：${e.tags.map(t=>'#'+t).join(' ')}\n\n`;
+        if (e.work_content) {
+          const wc = e.work_content;
+          const wcLines = [];
+          if (wc.contribution) wcLines.push(`    *   **我的贡献**：${wc.contribution}`);
+          if (wc.result) wcLines.push(`    *   **结论/结果**：${wc.result}`);
+          if (wc.value) wcLines.push(`    *   **价值**：${wc.value}`);
+          if (wcLines.length) { md += `*   **工作内容**\n${wcLines.join('\n')}\n`; }
+        }
+        if (e.problem) {
+          const pb = e.problem;
+          const pbLines = [];
+          if (pb.reason) pbLines.push(`    *   **原因分析**：${pb.reason}`);
+          if (pb.suggestion) pbLines.push(`    *   **建议**：${pb.suggestion}`);
+          if (pb.value) pbLines.push(`    *   **执行价值**：${pb.value}`);
+          if (pbLines.length) { md += `*   **发现问题**\n${pbLines.join('\n')}\n`; }
+        }
+        if (e.growth) md += `*   **成长**：${e.growth}\n`;
+        if (e.next_steps?.length) {
+          md += `*   **下一步**\n`;
+          e.next_steps.forEach(s => {
+            const status = s.completed ? '✅ 已完成' : '⬜ 未完成';
+            md += `    *   ${s.completed?'[x]':'[ ]'} ${s.text}（${status}）\n`;
+          });
+        }
+        md += '\n';
+      });
+    });
+    return md;
   },
 
   // ==================== 导出 ====================

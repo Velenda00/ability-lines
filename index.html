@@ -66,13 +66,16 @@
       <div id="thoughtList" class="entry-list"></div>
     </section>
 
-    <!-- 工作轨（占位） -->
+    <!-- 工作轨 -->
     <section id="page-work" class="page">
-      <div class="page-header">
-        <span class="page-title-text">🛤️ 工作轨</span>
-        <span style="width:36px"></span>
+      <div class="page-header" style="justify-content:space-between">
+        <span id="workTitle" class="page-title-text">🛤️ 工作轨</span>
+        <button class="work-export-btn" onclick="showWorkExportModal()">📤</button>
       </div>
-      <div class="empty-state"><div style="font-size:48px;margin-bottom:16px">🛠️</div><div style="font-size:15px;color:var(--text-secondary)">工作轨模块开发中…</div><div style="font-size:12px;color:var(--text-hint);margin-top:8px">敬请期待</div></div>
+      <div id="workViewContainer">
+        <div id="workOverview" class="work-view active"></div>
+        <div id="workFocus" class="work-view"></div>
+      </div>
     </section>
 
     <!-- 专项详情 V2 -->
@@ -92,6 +95,7 @@
   <button class="page-fab" id="fab-ability" onclick="handleAbilityFab()">+</button>
   <button class="page-fab" id="fab-action" onclick="showActionFabMenu()">+</button>
   <button class="page-fab" id="fab-thoughts" onclick="showAddThoughtModal()">+</button>
+  <button class="page-fab" id="fab-work" onclick="showAddWorkEventModal()">+</button>
 
   <!-- 底部导航（5项，SVG 图标） -->
   <nav id="bottomNav">
