@@ -588,7 +588,7 @@ const Store = {
       tags: evt.tags || [],
       work_content: evt.work_content || { background:'', task:'', contribution:'', result:'', value:'' },
       growth: evt.growth || '',
-      problem: evt.problem || { reason:'', suggestion:'', value:'' },
+      problem: evt.problem || { text:'', reason:'', suggestion:'', value:'' },
       next_steps: evt.next_steps || [],
       createdAt: new Date().toISOString()
     };
@@ -710,6 +710,7 @@ const Store = {
         if (e.problem) {
           const pb = e.problem;
           const pbLines = [];
+          if (pb.text) pbLines.push(`    *   **问题内容**：${pb.text}`);
           if (pb.reason) pbLines.push(`    *   **原因分析**：${pb.reason}`);
           if (pb.suggestion) pbLines.push(`    *   **建议**：${pb.suggestion}`);
           if (pb.value) pbLines.push(`    *   **执行价值**：${pb.value}`);

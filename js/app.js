@@ -828,7 +828,7 @@ function renderWorkEventCard(evt, dateStr) {
 
   // 只要有内容才渲染对应区域
   const wcParts = [renderFormText(wc.background, '任务背景'), renderFormText(wc.contribution, '阻力与行动'), renderFormText(wc.result, '结论/结果'), renderFormText(wc.value, '价值')].filter(Boolean);
-  const pbParts = [renderFormText(pb.reason, '原因分析'), renderFormText(pb.suggestion, '改进建议'), renderFormText(pb.value, '执行价值')].filter(Boolean);
+  const pbParts = [renderFormText(pb.text, '问题内容'), renderFormText(pb.reason, '原因分析'), renderFormText(pb.suggestion, '改进建议'), renderFormText(pb.value, '执行价值')].filter(Boolean);
 
   let detailHtml = '';
   if (wcParts.length)
@@ -944,6 +944,7 @@ function showAddWorkEventModal(dateStr) {
       buildWMField('wm_value', '价值', false, '可量化价值、可复用模式')
     ]) +
     buildWMAccordion('wm_pb', '⚠️ 发现问题', [
+      buildWMField('wm_pbtext', '问题内容', false, '描述发现的问题'),
       buildWMField('wm_reason', '原因分析'),
       buildWMField('wm_suggest', '改进建议'),
       buildWMField('wm_pbvalue', '执行价值')
@@ -1009,6 +1010,7 @@ function showAddWorkEventModal(dateStr) {
       result: gv('wm_result'), value: gv('wm_value')
     };
     evt.problem = {
+      text: gv('wm_pbtext'),
       reason: gv('wm_reason'), suggestion: gv('wm_suggest'), value: gv('wm_pbvalue')
     };
     evt.growth = gv('wm_growth_text');
@@ -1106,6 +1108,7 @@ function showEditWorkEventModal(dateStr, eventId) {
       buildWMField('we_result', '结论/结果'), buildWMField('we_value', '价值', false, '可量化价值、可复用模式')
     ]) +
     buildWMAccordion('we_pb', '⚠️ 发现问题', [
+      buildWMField('we_pbtext', '问题内容', false, '描述发现的问题'),
       buildWMField('we_reason', '原因分析'), buildWMField('we_suggest', '改进建议'),
       buildWMField('we_pbvalue', '执行价值')
     ]) +
@@ -1122,6 +1125,7 @@ function showEditWorkEventModal(dateStr, eventId) {
   sv('we_contrib', wc.contribution);
   sv('we_result', wc.result); sv('we_value', wc.value);
   sv('we_reason', pb.reason); sv('we_suggest', pb.suggestion); sv('we_pbvalue', pb.value);
+  sv('we_pbtext', pb.text);
   sv('we_growth_text', evt.growth || '');
 
   window._weTags = [...(evt.tags || [])];
@@ -1171,6 +1175,7 @@ function showEditWorkEventModal(dateStr, eventId) {
       result: gv2('we_result'), value: gv2('we_value')
     };
     updates.problem = {
+      text: gv2('we_pbtext'),
       reason: gv2('we_reason'), suggestion: gv2('we_suggest'), value: gv2('we_pbvalue')
     };
     updates.growth = gv2('we_growth_text');
