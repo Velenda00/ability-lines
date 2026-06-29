@@ -2036,6 +2036,40 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1782480456497_zyi9",
+      "text": "蔡康永面包",
+      "importance": 3,
+      "createdAt": "2026-06-26T13:27:36.497Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1782480493424_pegr",
+      "text": "待办无法关联",
+      "importance": 2,
+      "createdAt": "2026-06-26T13:28:13.425Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
@@ -2233,6 +2267,30 @@
         },
         "next_steps": [],
         "createdAt": "2026-06-25T02:46:02.389Z"
+      }
+    ],
+    "2026-06-26": [
+      {
+        "id": "evt_1782480285789_nsbt",
+        "title": "陪同集团安运部检查对点酒店隐患整改情况",
+        "tags": [
+          "安检分析"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-06-26T13:24:45.790Z"
       }
     ]
   },
