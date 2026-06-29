@@ -2046,10 +2046,10 @@
       "status": "active",
       "completedAt": null,
       "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1778805708004_5q09",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1778805780706_meh4",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -2060,6 +2060,23 @@
       "importance": 2,
       "createdAt": "2026-06-26T13:28:13.425Z",
       "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-06-29T01:25:15.357Z",
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1782697780487_ojv5",
+      "text": "生活提升与工作配比显示？",
+      "importance": 0,
+      "createdAt": "2026-06-29T01:49:40.487Z",
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -2175,7 +2192,8 @@
       "createdAt": "2026-05-26T03:56:06.867Z",
       "archivedAt": null,
       "completedDates": [
-        "2026-05-27"
+        "2026-05-27",
+        "2026-06-29"
       ],
       "currentStreak": 1,
       "bestStreak": 1
@@ -2272,15 +2290,39 @@
     "2026-06-26": [
       {
         "id": "evt_1782480285789_nsbt",
-        "title": "陪同集团安运部检查对点酒店隐患整改情况",
+        "title": "陪同集团安运部检查挂点酒店隐患整改情况",
         "tags": [
           "安检分析"
         ],
         "work_content": {
           "background": "",
           "contribution": "",
-          "result": "",
+          "result": "借着这次机会，熟悉了挂点酒店的场地及管线基本情况，对接人接触下来整体也比较配合",
           "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "挂点酒店工作想让我们多把握酒店信息、跟踪隐患、用气安全宣传、保障用气安全，但实际上能够进入酒店进行这些工作的机会很少，尤其频率高了更多的是打扰，当然还要看后续集团如何安排",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-06-26T13:24:45.790Z"
+      }
+    ],
+    "2026-06-27": [
+      {
+        "id": "evt_1782696193514_dx04",
+        "title": "1-6月非居气量分析",
+        "tags": [
+          "气量分析"
+        ],
+        "work_content": {
+          "background": "这个月底领导要求要再一次进行气量分析，下周一（29）日就要，形式参照1-4月的气量分析，此次不是辅助，需要我独立进行",
+          "contribution": "1.数据提供延后。工作要求上周就提出了，但月底赛易特也比较忙，直到周四快下班才给出，加上周五上午又有外勤，只能周末加班进行；\n2.数据质量较低。依据上次经验，已经提前修正极大数（月3万以上），但此次发现有些1万左右的也出现错误（判断依据为与其他月用气量差距加大，系统核对后发现就是错了），导致前面统计的东西又需调整；\n3.我对于数据逻辑、统计口径不熟悉。因为有之前佳敏姐的数据，先自己处理一遍，核对不上的话再去询问佳敏姐，最后做出来的分析也给她过了一遍；\n4.气量上升下降的原因不清楚。先参考1-4月的原因，对照气量数据以及系统工单数据，对不上的删掉，后续看情况与网格员核对；\n5.对于数据不敏感。最有体会的是，给佳敏姐看了之后，她能立刻反馈出有些差别较大，让我继续核对一下，而我只是有个模糊的感知说学校、医院貌似上升了点。",
+          "result": "独立完成了1-6月的气量分析，基本理解数据逻辑，初步体会了同比、占比等指标对于分析气量问题与趋势的意义",
+          "value": "与1-4月情况对比，为部门下一步工作提供参考。\n下次进行分析的时候，先修正极大数，再进行气量排名分析，这过程中修正其他异常数，最后再进行总量统计。"
         },
         "growth": "",
         "problem": {
@@ -2289,8 +2331,24 @@
           "suggestion": "",
           "value": ""
         },
-        "next_steps": [],
-        "createdAt": "2026-06-26T13:24:45.790Z"
+        "next_steps": [
+          {
+            "id": "ns_1782697029609_5n3a",
+            "text": "与网格员核对气量变化原因",
+            "completed": false
+          },
+          {
+            "id": "ns_1782697029609_zhki",
+            "text": "制作气量课题ppt",
+            "completed": false
+          },
+          {
+            "id": "ns_1782697029609_6mar",
+            "text": "与1-4月气量情况进行对比",
+            "completed": false
+          }
+        ],
+        "createdAt": "2026-06-29T01:23:13.514Z"
       }
     ]
   },
