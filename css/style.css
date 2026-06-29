@@ -925,7 +925,7 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* ===== 工作轨模块 ===== */
+/* ===== 工作模块 ===== */
 #page-work {
   --work-mint: #C8E6D0;
   --work-mint-light: #E8F5EC;
@@ -1039,8 +1039,24 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
 .work-donut-wrap { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); }
 .work-donut-svg { width: 180px; height: 180px; }
 .work-donut-legend { width: 100%; display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; }
-.work-donut-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); }
+.work-donut-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 3px 8px; border-radius: 12px; transition: background 0.15s; }
+.work-donut-legend-item:active { opacity: 0.7; }
+.work-donut-legend-item.active { background: var(--work-tag-bg); color: var(--text-primary); font-weight: 600; }
 .work-donut-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+/* 标签筛选结果列表（浮动卡片式） */
+.work-tag-filter-section {
+  margin-top: var(--sp-4);
+  background: #fff;
+  border: 1px solid var(--work-accent);
+  border-radius: 14px;
+  padding: var(--sp-3);
+  box-shadow: 0 2px 12px rgba(123, 158, 140, 0.12);
+}
+.work-tag-filter-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-2); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--work-tag-bg); }
+.work-tag-filter-title { font-size: 13px; font-weight: 600; color: var(--work-accent); }
+.work-tag-filter-clear { font-size: 11px; color: var(--text-hint); cursor: pointer; padding: 3px 10px; border-radius: 10px; background: var(--work-tag-bg); }
+.work-tag-filter-clear:active { opacity: 0.7; }
+.work-tag-filter-section .work-event-card { background: #FAFCFB; border-color: var(--work-border); }
 .work-donut-center {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   text-align: center;
@@ -1204,7 +1220,7 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   color: var(--text-hint); font-size: 13px;
 }
 
-/* -- 工作轨模态框内标签输入 -- */
+/* -- 工作模态框内标签输入 -- */
 .work-tag-input-row {
   display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2);
 }

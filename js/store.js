@@ -158,7 +158,7 @@ const Store = {
     data.liberationEntries.forEach(e => {
       if (e.importance === undefined) e.importance = 0;
     });
-    // 工作轨补字段
+    // 工作补字段
     if (!data.workEvents) data.workEvents = {};
     if (!data.workTags) data.workTags = [];
     // 保存补字段后的数据回 IDB
@@ -577,7 +577,7 @@ const Store = {
     };
   },
 
-  // ==================== 工作轨 ====================
+  // ==================== 工作 ====================
   async addWorkEvent(dateStr, evt) {
     const data = await this.getAll();
     if (!data.workEvents) data.workEvents = {};
@@ -689,8 +689,8 @@ const Store = {
 
   buildWorkExportMd(data, startDate, endDate) {
     const dates = Object.keys(data.workEvents || {}).sort().filter(d => d >= startDate && d <= endDate);
-    if (!dates.length) return '# 工作轨导出报告\n\n暂无数据。';
-    let md = `# 🛠️ 再塑法典 · 工作轨导出报告 (${startDate} ~ ${endDate})\n\n---\n`;
+    if (!dates.length) return '# 工作导出报告\n\n暂无数据。';
+    let md = `# 🛠️ 再塑法典 · 工作导出报告 (${startDate} ~ ${endDate})\n\n---\n`;
     dates.forEach(date => {
       const evts = data.workEvents[date];
       if (!evts?.length) return;

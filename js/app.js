@@ -11,6 +11,7 @@ let _workView = 'overview'; // overview | focus
 let _workCalMonth = today(); // 'YYYY-MM-DD' 当天
 let _workWeekStart = null; // 视图B当前周的周一
 let _workFocusDate = null; // 视图B聚焦日期
+let _workTagFilter = null; // 工作模块标签筛选（点击精力分布标签后筛选对应记录）
 
 function nc() { return appData.nameConfig || Store.getDefaultNameConfig(); }
 
@@ -43,8 +44,8 @@ function handleAbilityFab() {
 
 function updateTitle() {
   const n=nc();
-  const t = { home:n.topLevel, ability:'💪 '+n.capability, action:'⚡ 行动',
-    thoughts:'💭 思绪', work:'🛤️ 工作轨', project:'📋 '+n.project+'详情' };
+  const t = { home:n.topLevel, ability:'💪 '+n.capability, action:'⚡ 执行',
+    thoughts:'💭 思绪', work:'🛤️ 工作', project:'📋 '+n.project+'详情' };
   document.getElementById('pageTitle').textContent = t[currentPage]||n.topLevel;
   document.getElementById('pageTitleA').textContent = '💪 '+n.capability;
 }
@@ -502,7 +503,7 @@ function toggleCapSection(header) {
   if(chevron) chevron.classList.toggle('expanded', !isExpanded);
 }
 
-// ==================== 行动（待办+习惯合并） ====================
+// ==================== 执行（待办+习惯合并） ====================
 
 function renderAction() {
   const tabs = [
@@ -592,7 +593,7 @@ function showActionFabMenu() {
   window.closeActionFab = ()=>{overlay.remove();delete window.closeActionFab;};
 }
 
-// ==================== 工作轨 ====================
+// ==================== 工作 ====================
 
 function renderWork() {
   if (_workView === 'overview') renderWorkOverview();
@@ -604,7 +605,7 @@ function renderWorkOverview() {
   const ov = document.getElementById('workOverview');
   const foc = document.getElementById('workFocus');
   ov.classList.add('active'); foc.classList.remove('active');
-  document.getElementById('workTitle').textContent = '🛤️ 工作轨';
+  document.getElementById('workTitle').textContent = '🛤️ 工作';
 
   const ym = _workCalMonth.slice(0, 7); // 'YYYY-MM'
   const [yr, mo] = ym.split('-').map(Number);
@@ -621,6 +622,9 @@ function renderWorkOverview() {
   // 下一步待办
   const pending = Store.getPendingNextSteps(appData);
   const pendingHtml = pending.length > 0 ? renderPendingNextSteps(pending) : '';
+
+  // 标签筛选结果列表（点击精力分布标签后显示）
+  const filterHtml = _workTagFilter ? renderWorkTagFilter(_workTagFilter, ym) : '';
 
   ov.innerHTML = calHtml +
     (donutHtml || (totalEvts === 0 ? `<div class="work-empty">
@@ -644,7 +648,40 @@ function renderWorkOverview() {
   <div>本月暂无工作记录</div>
   <div style="font-size:11px;color:var(--text-hint);margin-top:4px">点击日期开始记录</div>
 </div>` : '')) +
+    filterHtml +
     pendingHtml;
+}
+
+// 点击精力分布标签，筛选对应记录
+function filterWorkByTag(tag) {
+  // 再次点击同一标签则取消筛选
+  _workTagFilter = (_workTagFilter === tag) ? null : tag;
+  renderWorkOverview();
+}
+
+// 渲染标签筛选结果列表
+function renderWorkTagFilter(tag, ym) {
+  // 收集该月份内所有含此标签的工作事件
+  const matched = [];
+  Object.entries(appData.workEvents || {}).forEach(([date, evts]) => {
+    if (!date.startsWith(ym)) return;
+    evts.forEach(e => {
+      if ((e.tags || []).includes(tag)) matched.push({ evt: e, date });
+    });
+  });
+  // 按日期倒序
+  matched.sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!matched.length) return '';
+
+  const cardsHtml = matched.map(({ evt, date }) => renderWorkEventCard(evt, date)).join('');
+  return `<div class="work-tag-filter-section">
+    <div class="work-tag-filter-header">
+      <span class="work-tag-filter-title">🏷️ 「${esc(tag)}」的记录 (${matched.length})</span>
+      <span class="work-tag-filter-clear" onclick="filterWorkByTag('${esc(tag)}')">✕ 清除筛选</span>
+    </div>
+    <div class="work-event-list">${cardsHtml}</div>
+  </div>`;
 }
 
 // -- 视图B：聚焦 --
@@ -767,10 +804,11 @@ function workCalNav(delta) {
   if (newMo > 12) { newMo = 1; newYr++; }
   if (newMo < 1) { newMo = 12; newYr--; }
   _workCalMonth = `${newYr}-${String(newMo).padStart(2,'0')}-01`;
+  _workTagFilter = null; // 切换月份时清空标签筛选
   renderWorkOverview();
 }
 
-function workCalToday() { _workCalMonth = today(); renderWorkOverview(); }
+function workCalToday() { _workCalMonth = today(); _workTagFilter = null; renderWorkOverview(); }
 
 // -- 圆环图 --
 function renderDonutChart(stats, total) {
@@ -779,15 +817,16 @@ function renderDonutChart(stats, total) {
   let offset = 0;
   let circles = '';
   const legendItems = [];
+  const cssColors = ['#7B9E8C','#89B4C8','#A8C5A0','#C4A6B8','#B8A88C','#9B8EC4','#D4A8A0','#8CB5A0'];
 
   entries.forEach(([tag, count], i) => {
     const pct = count / total;
     const dash = pct * C;
-    const cssColors = ['#7B9E8C','#89B4C8','#A8C5A0','#C4A6B8','#B8A88C','#9B8EC4','#D4A8A0','#8CB5A0'];
     const color = cssColors[i % cssColors.length];
-    circles += `<circle cx="90" cy="90" r="${r}" class="donut-color-${i%8}" stroke-width="16" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 90 90)" />`;
+    const isActive = _workTagFilter === tag;
+    circles += `<circle cx="90" cy="90" r="${r}" class="donut-color-${i%8}" stroke-width="16" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 90 90)" style="opacity:${_workTagFilter && !isActive ? 0.3 : 1}" />`;
     offset += dash;
-    legendItems.push(`<div class="work-donut-legend-item"><span class="work-donut-legend-dot" style="background:${color}"></span>${esc(tag)} ${Math.round(pct*100)}%</div>`);
+    legendItems.push(`<div class="work-donut-legend-item${isActive?' active':''}" onclick="filterWorkByTag('${esc(tag)}')"><span class="work-donut-legend-dot" style="background:${color}"></span>${esc(tag)} ${Math.round(pct*100)}%<span style="color:var(--text-hint);margin-left:2px">(${count})</span></div>`);
   });
 
   return `<div class="work-donut-section"><h3>📊 本月精力分布</h3><div class="work-donut-wrap">
@@ -929,11 +968,18 @@ function showAddWorkEventModal(dateStr) {
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeWM(); });
 
-  // 标签输入回车处理（用 addEventListener 确保拦截）
+  // 标签输入回车处理（兼容手机端中文输入法：compositionend + keydown 双重保障）
   const wmTagInput = document.getElementById('wmTagInput');
   if (wmTagInput) {
+    let wmComposing = false;
+    wmTagInput.addEventListener('compositionstart', () => { wmComposing = true; });
+    wmTagInput.addEventListener('compositionend', () => { wmComposing = false; });
     wmTagInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkModalTag(); }
+      if (e.key === 'Enter' && !wmComposing) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkModalTag(); }
+    });
+    // 手机端部分输入法不触发 keydown Enter，增加 input 事件检测换行符
+    wmTagInput.addEventListener('input', function(e) {
+      if (this.value.includes('\n')) { this.value = this.value.replace(/\n/g, ''); addWorkModalTag(); }
     });
   }
   const accHtml =
@@ -990,11 +1036,19 @@ function showAddWorkEventModal(dateStr) {
   window.removeWMTag = function(t) {
     window._wmTags = window._wmTags.filter(x => x !== t);
     refreshWMTags();
+    refreshWMHints();
   };
+  // 初始化：立即渲染备选标签提示（修复手机端看不到备选标签的问题）
+  refreshWMTags();
+  refreshWMHints();
   window.addWMStep = function() {
     const c = document.getElementById('wmSteps');
     const idx = c.children.length;
-    c.innerHTML += `<div class="work-step-row" id="wm_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('wm_step_${idx}').remove()">×</button></div>`;
+    // 使用 insertAdjacentHTML 而非 innerHTML += ，避免重新解析DOM导致已填写的input值丢失
+    c.insertAdjacentHTML('beforeend', `<div class="work-step-row" id="wm_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('wm_step_${idx}').remove()">×</button></div>`);
+    // 自动聚焦新输入框
+    const newInput = c.lastElementChild?.querySelector('input');
+    if (newInput) newInput.focus();
   };
   window.closeWM = function() { overlay.remove(); delete window._wmTags; delete window.addWorkModalTag; delete window.removeWMTag; delete window.closeWM; delete window.confirmAddWM; delete window.addWMStep; delete window.pickWMHint; };
   window.confirmAddWM = async function() {
@@ -1089,11 +1143,17 @@ function showEditWorkEventModal(dateStr, eventId) {
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeWE(); });
 
-  // 标签输入回车处理（用 addEventListener 确保拦截）
+  // 标签输入回车处理（兼容手机端中文输入法：compositionend + keydown 双重保障）
   const weTagInput = document.getElementById('weTagInput');
   if (weTagInput) {
+    let weComposing = false;
+    weTagInput.addEventListener('compositionstart', () => { weComposing = true; });
+    weTagInput.addEventListener('compositionend', () => { weComposing = false; });
     weTagInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkEditTag(); }
+      if (e.key === 'Enter' && !weComposing) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); addWorkEditTag(); }
+    });
+    weTagInput.addEventListener('input', function(e) {
+      if (this.value.includes('\n')) { this.value = this.value.replace(/\n/g, ''); addWorkEditTag(); }
     });
   }
 
@@ -1160,7 +1220,11 @@ function showEditWorkEventModal(dateStr, eventId) {
   window.addWEStep = function() {
     const c = document.getElementById('weSteps');
     const idx = c.children.length;
-    c.innerHTML += `<div class="work-step-row" id="we_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('we_step_${idx}').remove()">×</button></div>`;
+    // 使用 insertAdjacentHTML 而非 innerHTML += ，避免重新解析DOM导致已填写的input值丢失
+    c.insertAdjacentHTML('beforeend', `<div class="work-step-row" id="we_step_${idx}"><input type="text" placeholder="下一步…" style="flex:1;border:1px solid var(--work-border);border-radius:var(--r-sm);padding:6px 8px;font-size:13px;box-sizing:border-box;background:var(--bg-inset);font-family:inherit;outline:none"><button class="work-step-del" onclick="document.getElementById('we_step_${idx}').remove()">×</button></div>`);
+    // 自动聚焦新输入框
+    const newInput = c.lastElementChild?.querySelector('input');
+    if (newInput) newInput.focus();
   };
   window.closeWE = function() { overlay.remove(); delete window._weTags; delete window.addWorkEditTag; delete window.removeWETag; delete window.closeWE; delete window.confirmEditWM; delete window.addWEStep; delete window.pickWEHint; };
   window.confirmEditWM = async function() {
@@ -1318,7 +1382,7 @@ function showWorkExportModal() {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `<div class="modal-box" style="max-width:320px">
-    <h3>📤 导出工作轨</h3>
+    <h3>📤 导出工作</h3>
     <div style="margin-top:12px">
       <div class="work-form-group">
         <span class="work-form-label">起始日期</span>
@@ -2767,7 +2831,7 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
   const hasImp=importance!==undefined&&importance!==null&&importance!==-1;
   let _imp=importance||0;
   const impHtml=hasImp?renderImpPicker(importance,imp=>{_imp=imp;if(onImportanceChange)onImportanceChange(imp);}):'';
-  // 构建行动选择树（可折叠）
+  // 构建行为选择树（可折叠）
   const treeData = appData.capabilities.map(c=>({
     id:c.id, name:c.name, type:'capability',
     children: c.projects.map(p=>({
@@ -2779,8 +2843,9 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
     }))
   }));
   const currentVal = existingSource ? existingSource.capId+'|'+existingSource.projId+'|'+existingSource.entryType+'|'+existingSource.entryId : null;
-  let collapsedCaps = new Set(appData.capabilities.map(c=>c.id));
-  let collapsedProjs = new Set(appData.capabilities.flatMap(c=>c.projects.map(p=>p.id)));
+  // 默认全部展开，让用户直接看到行为条目（修复：之前默认全折叠导致用户以为按钮失效）
+  let collapsedCaps = new Set();
+  let collapsedProjs = new Set();
 
   function renderLinkTree(){
     let html=`<label style="display:flex;align-items:center;gap:6px;padding:8px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid #e0d8d0;margin-bottom:4px;${!currentVal?'background:#f0f7f3':''}" onclick="selTodoLink(null)">
@@ -2791,16 +2856,16 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
       const capHasActions = cap.children.some(p=>p.children.length>0);
       html+=`<div style="display:flex;align-items:center;gap:4px;padding:6px 0;font-size:13px;cursor:pointer;user-select:none" onclick="toggleTodoCapCollapse('${cap.id}')">
         <span style="font-size:10px;color:#aaa;width:14px;text-align:center">${isCollapsed?'▶':'▼'}</span>
-        <label style="flex:1;display:flex;align-items:center;gap:6px;border-radius:6px;cursor:pointer;border:1px solid #e0d8d0;padding:6px 8px;margin-bottom:3px" onclick="event.stopPropagation();if(!${capHasActions})toggleTodoCapCollapse('${cap.id}')">
-          <span style="color:#888">💪 ${esc(cap.name)}</span>${!capHasActions?'<span style="font-size:10px;color:#ccc">（无行动）</span>':''}</label></div>`;
+        <label style="flex:1;display:flex;align-items:center;gap:6px;border-radius:6px;cursor:pointer;border:1px solid #e0d8d0;padding:6px 8px;margin-bottom:3px" onclick="event.stopPropagation();toggleTodoCapCollapse('${cap.id}')">
+          <span style="color:#888">💪 ${esc(cap.name)}</span>${!capHasActions?'<span style="font-size:10px;color:#ccc">（无行为）</span>':''}</label></div>`;
       if(!isCollapsed){
         cap.children.forEach(proj=>{
           const pjCollapsed = collapsedProjs.has(proj.id);
           const projHasActions = proj.children.length>0;
           html+=`<div style="padding-left:18px;display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;user-select:none" onclick="toggleTodoProjCollapse('${proj.id}')">
             <span style="font-size:10px;color:#aaa;width:12px;text-align:center">${pjCollapsed?'▶':'▼'}</span>
-            <label style="flex:1;display:flex;align-items:center;gap:6px;border-radius:6px;cursor:pointer;border:1px solid #e0d8d0;padding:5px 8px;margin-bottom:3px" onclick="event.stopPropagation();if(!${projHasActions})toggleTodoProjCollapse('${proj.id}')">
-              <span style="color:#888">📂 ${esc(proj.name)}</span>${!projHasActions?'<span style="font-size:10px;color:#ccc">（无行动）</span>':''}</label></div>`;
+            <label style="flex:1;display:flex;align-items:center;gap:6px;border-radius:6px;cursor:pointer;border:1px solid #e0d8d0;padding:5px 8px;margin-bottom:3px" onclick="event.stopPropagation();toggleTodoProjCollapse('${proj.id}')">
+              <span style="color:#888">📂 ${esc(proj.name)}</span>${!projHasActions?'<span style="font-size:10px;color:#ccc">（无行为）</span>':''}</label></div>`;
           if(!pjCollapsed && proj.children.length){
             html+=`<div style="padding-left:36px">`;
             proj.children.forEach(entry=>{
@@ -2816,12 +2881,12 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
       }
     });
     if(!appData.capabilities.some(c=>c.projects.some(p=>(p.entries.action||[]).length||(p.entries.learning||[]).length))){
-      html += '<div style="font-size:12px;color:#ccc;padding:8px;text-align:center">暂无行动可关联</div>';
+      html += '<div style="font-size:12px;color:#ccc;padding:8px;text-align:center">暂无行为可关联</div>';
     }
     return html;
   }
 
-  let linkHtml = '<div style="margin-bottom:10px"><label style="font-size:12px;color:#888;display:block;margin-bottom:6px">关联到行动（可选，点击 ▼ 展开专项）</label>';
+  let linkHtml = '<div style="margin-bottom:10px"><label style="font-size:12px;color:#888;display:block;margin-bottom:6px">关联到行为（可选，点击 ▼ 展开专项）</label>';
   linkHtml += `<div id="todoLinkTree" style="border:1px solid #e0d8d0;border-radius:8px;padding:4px">`;
   linkHtml += renderLinkTree();
   linkHtml += '</div></div>';
@@ -2836,6 +2901,7 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
     <div class="modal-actions" style="margin-top:10px"><button class="btn-cancel" onclick="closeTodoLinkM()">取消</button>
     <button class="btn-primary" onclick="confirmTodoLinkM()">保存</button></div></div>`;
   document.body.appendChild(overlay);overlay.querySelector('#modalText').focus();
+  // 先定义所有全局回调函数，再渲染树内容，确保 onclick 绑定时函数已存在
   window._todoLinkVal = currentVal;
   window.selTodoLink=val=>{window._todoLinkVal=val;
     overlay.querySelectorAll('#todoLinkTree label').forEach(l=>l.style.background='');
@@ -2855,6 +2921,8 @@ function showTodoModalWithLink(title,defaultValue,existingNote,existingSource,on
     onSave(txt,note,source);};
   window.closeTodoLinkM=()=>{overlay.remove();delete window.confirmTodoLinkM;delete window.closeTodoLinkM;delete window.selTodoLink;delete window._todoLinkVal;delete window.toggleTodoCapCollapse;delete window.toggleTodoProjCollapse;_impPickerCallback=null;};
   overlay.addEventListener('click',e=>{if(e.target===overlay)window.closeTodoLinkM();});
+  // 初始化：高亮当前选中项
+  if(window._todoLinkVal)window.selTodoLink(window._todoLinkVal);
 }
 
 async function completeTodo(id){
