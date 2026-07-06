@@ -1077,6 +1077,36 @@
             "review": []
           },
           "status": "active"
+        },
+        {
+          "id": "proj_1783087195494_v6m3",
+          "name": "工作汇报能力",
+          "importance": 3,
+          "createdAt": "2026-07-03T13:59:55.494Z",
+          "process": [],
+          "relations": [],
+          "entries": {
+            "action": [
+              {
+                "id": "entry_1783087223356_v5q5",
+                "text": "每次工作汇报表现复盘",
+                "createdAt": "2026-07-03T14:00:23.356Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-03T14:00:23.356Z"
+              }
+            ],
+            "problem": [],
+            "learning": [],
+            "review": []
+          },
+          "status": "active"
         }
       ],
       "status": "active"
@@ -2087,6 +2117,23 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1783087160343_75r0",
+      "text": "会听汇报录音",
+      "importance": 3,
+      "createdAt": "2026-07-03T13:59:20.343Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1783087195494_v6m3",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1783087223356_v5q5",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
@@ -2335,26 +2382,141 @@
           {
             "id": "ns_1782697029609_5n3a",
             "text": "与网格员核对气量变化原因",
-            "completed": false
+            "completed": true
           },
           {
             "id": "ns_1782697029609_zhki",
             "text": "制作气量课题ppt",
-            "completed": false
+            "completed": true
           },
           {
             "id": "ns_1782697029609_6mar",
             "text": "与1-4月气量情况进行对比",
-            "completed": false
+            "completed": true
           }
         ],
         "createdAt": "2026-06-29T01:23:13.514Z"
+      }
+    ],
+    "2026-06-30": [
+      {
+        "id": "evt_1782916130494_vslq",
+        "title": "好日子酒店，隐患再看，出方案？",
+        "tags": [
+          "重点会议保障"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-01T14:28:50.494Z"
+      },
+      {
+        "id": "evt_1782916260290_kjnq",
+        "title": "气量分析报告中再增加两部分",
+        "tags": [
+          "气量分析"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-01T14:31:00.290Z"
+      }
+    ],
+    "2026-07-01": [
+      {
+        "id": "evt_1782916286435_ixx6",
+        "title": "完成气量更改，对比1-4月",
+        "tags": [
+          "气量分析"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-01T14:31:26.435Z"
+      }
+    ],
+    "2026-07-02": [
+      {
+        "id": "evt_1783087059425_dvku",
+        "title": "制作工作课题汇报ppt",
+        "tags": [],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-03T13:57:39.425Z"
+      }
+    ],
+    "2026-07-03": [
+      {
+        "id": "evt_1783087080773_uviy",
+        "title": "进行工作课题汇报",
+        "tags": [],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-03T13:58:00.773Z"
       }
     ]
   },
   "workTags": [
     "气量分析",
     "安检分析",
-    "线下宣传"
+    "线下宣传",
+    "重点会议保障"
   ]
 }
