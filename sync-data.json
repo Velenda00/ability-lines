@@ -21,224 +21,13 @@
       "createdAt": "2026-05-06T10:25:21.284Z",
       "projects": [
         {
-          "id": "proj_1778063853254_0448",
-          "name": "结构化表达",
-          "importance": 0,
-          "createdAt": "2026-05-06T10:37:33.255Z",
-          "process": [
-            {
-              "id": "proc_1778467421738_krep",
-              "text": "思绪关联待办、能力、行为等",
-              "importance": 0,
-              "todoId": "todo_1778229339617_0lb3",
-              "completedAt": "2026-05-11T02:43:41.732Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778467765198_rt45",
-              "text": "命名没有全局，能力框架不对",
-              "importance": 0,
-              "todoId": "todo_1778062769365_xo39",
-              "completedAt": "2026-05-11T02:49:25.198Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778467768513_esu9",
-              "text": "数据导出内容查看",
-              "importance": 0,
-              "todoId": "todo_1778062732845_52dm",
-              "completedAt": "2026-05-11T02:49:28.513Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778468278586_r7h4",
-              "text": "手机无法部署",
-              "importance": 0,
-              "todoId": "todo_1778062788836_6q0l",
-              "completedAt": "2026-05-11T02:57:58.586Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778486829033_z8g7",
-              "text": "领取湖大token、wps",
-              "importance": 0,
-              "todoId": "todo_1778480849554_fhih",
-              "completedAt": "2026-05-11T08:07:09.033Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778503288540_x9ys",
-              "text": "记住领导讲的话（挑一些比较有道理的）",
-              "importance": 0,
-              "todoId": "todo_1778336155417_ivyr",
-              "completedAt": "2026-05-11T12:41:28.539Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778579157391_5x8k",
-              "text": "将目前信息全部整理录入",
-              "importance": 3,
-              "todoId": "todo_1778468547935_76jg",
-              "completedAt": "2026-05-12T09:45:57.386Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778665145489_9t3y",
-              "text": "学习、行为、问题及能力等，添加完成归档状态",
-              "importance": 2,
-              "todoId": "todo_1778079878130_2afy",
-              "completedAt": "2026-05-13T09:39:05.488Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778665156430_t5dj",
-              "text": "行为当中看不到创办的待办",
-              "importance": 2,
-              "todoId": "todo_1778063992642_afzg",
-              "completedAt": "2026-05-13T09:39:16.430Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778665205134_ddgk",
-              "text": "专项无法设置权重及排序，待办新创建是权重设置无效",
-              "importance": 1,
-              "todoId": "todo_1778063267970_7sz9",
-              "completedAt": "2026-05-13T09:40:05.134Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778666451464_wolc",
-              "text": "思绪的链接还是有点问题",
-              "importance": 0,
-              "todoId": "todo_1778483021061_ilq3",
-              "completedAt": "2026-05-13T10:00:51.464Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778666454646_a4e8",
-              "text": "卡片其实是标题与内容的形式，内容允许排版？",
-              "importance": 0,
-              "todoId": "todo_1778479743141_ni52",
-              "completedAt": "2026-05-13T10:00:54.646Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778666458897_pzop",
-              "text": "无关联待办完成了之后不用归档到某一个过程",
-              "importance": 0,
-              "todoId": "todo_1778481400167_oc8r",
-              "completedAt": "2026-05-13T10:00:58.897Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778672523155_e9hs",
-              "text": "线条为又行为牵头的一系列东西",
-              "importance": 0,
-              "todoId": "todo_1778598994825_a0te",
-              "completedAt": "2026-05-13T11:42:03.147Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778765410055_0m24",
-              "text": "收获可以存到思绪库并显示关联",
-              "importance": 3,
-              "todoId": "todo_1778685398295_gtto",
-              "completedAt": "2026-05-14T13:30:10.048Z",
-              "relatedEntryIds": []
-            },
-            {
-              "id": "proc_1778765412451_3je8",
-              "text": "从待办中也能关联行为",
-              "importance": 3,
-              "todoId": "todo_1778684143746_r7bq",
-              "completedAt": "2026-05-14T13:30:12.451Z",
-              "relatedEntryIds": []
-            }
-          ],
-          "entries": {
-            "action": [
-              {
-                "id": "entry_1778482303208_h9mk",
-                "text": "为知名产品模拟发布会并对照已有发布会",
-                "createdAt": "2026-05-11T06:51:43.208Z",
-                "importance": 0,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "软件发布、小米汽车发布等",
-                "status": "active",
-                "occurrenceCount": 1,
-                "updatedAt": "2026-05-11T06:51:43.208Z"
-              },
-              {
-                "id": "entry_1778482915078_kcs3",
-                "text": "课题研究与多场景汇报展示",
-                "createdAt": "2026-05-11T07:01:55.078Z",
-                "importance": 0,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "课题：公司信息战略的收集与研究，十五五，行业风口、如何打好辩论、APEC会议与作用；对象：领导、团队、对外等",
-                "status": "active",
-                "occurrenceCount": 1,
-                "updatedAt": "2026-05-11T07:01:55.078Z"
-              }
-            ],
-            "problem": [],
-            "learning": [
-              {
-                "id": "entry_1778482445733_4i1s",
-                "text": "学习在不同情况下，如何通过结构的改变，突出重点、吸引注意力",
-                "createdAt": "2026-05-11T06:54:05.733Z",
-                "importance": 0,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "不同场合、不同对象等",
-                "status": "active",
-                "occurrenceCount": 1,
-                "updatedAt": "2026-05-11T06:54:05.733Z"
-              }
-            ],
-            "review": []
-          },
-          "status": "active",
-          "relations": []
-        },
-        {
           "id": "proj_1778063866807_3anq",
-          "name": "即兴表达",
+          "name": "即兴表达（包括结构化体现）",
           "importance": 0,
           "createdAt": "2026-05-06T10:37:46.807Z",
           "process": [],
           "entries": {
             "action": [
-              {
-                "id": "entry_1778063908445_r21g",
-                "text": "介绍自制产品",
-                "createdAt": "2026-05-06T10:38:28.445Z",
-                "importance": 2,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "",
-                "status": "active",
-                "occurrenceCount": 1,
-                "updatedAt": "2026-05-06T10:38:28.445Z"
-              },
-              {
-                "id": "entry_1778063931149_z796",
-                "text": "介绍景点",
-                "createdAt": "2026-05-06T10:38:51.149Z",
-                "importance": 1,
-                "relatedTodoId": null,
-                "relatedProcessId": null,
-                "createdFromTodoId": null,
-                "note": "",
-                "status": "active",
-                "occurrenceCount": 1,
-                "updatedAt": "2026-05-06T10:38:51.149Z"
-              },
               {
                 "id": "entry_1778485661648_88qi",
                 "text": "影片片段快速分析复述",
@@ -374,6 +163,20 @@
                 "status": "active",
                 "occurrenceCount": 1,
                 "updatedAt": "2026-05-16T16:24:52.650Z"
+              },
+              {
+                "id": "entry_1783493400949_1fjh",
+                "text": "模拟知名品牌发布会并对比",
+                "createdAt": "2026-07-08T06:50:00.949Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T06:50:00.949Z"
               }
             ],
             "problem": [
@@ -486,8 +289,8 @@
       "projects": [
         {
           "id": "proj_1778063537717_jbmt",
-          "name": "P图",
-          "importance": 0,
+          "name": "尝试物料设计",
+          "importance": 2,
           "createdAt": "2026-05-06T10:32:17.717Z",
           "process": [],
           "entries": {
@@ -559,7 +362,7 @@
         {
           "id": "proj_1778678332046_9nyy",
           "name": "审美结构搭建",
-          "importance": 3,
+          "importance": 1,
           "createdAt": "2026-05-13T13:18:52.046Z",
           "process": [],
           "entries": {
@@ -685,7 +488,7 @@
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "该如何总结、总结频率、AI使用prompt。有时其实也是手写总结，是否涉及连接？",
+                "note": "该如何总结、总结频率、AI使用prompt。",
                 "status": "active",
                 "occurrenceCount": 1,
                 "updatedAt": "2026-05-11T06:11:44.731Z"
@@ -892,7 +695,7 @@
     {
       "id": "cap_1778503223681_32kq",
       "name": "职场能力",
-      "importance": 0,
+      "importance": 2,
       "createdAt": "2026-05-11T12:40:23.681Z",
       "projects": [
         {
@@ -977,7 +780,22 @@
             ],
             "problem": [],
             "learning": [],
-            "review": []
+            "review": [
+              {
+                "id": "entry_1783482070053_vmo7",
+                "text": "不要假性定性认知，更要多方面主动了解",
+                "createdAt": "2026-07-06T08:54:36.995Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "今天碰巧跟市场部的李经理进行了讨论。除了气量、保障、市场外，对于我思考以及执行也有涉及。结论是，真的要多向上沟通，他们的看法与眼界真的不一样。\n讨论的源头是集团对我们的期望是想让我们作为白纸去发现问题。而我自己的体会更多的是，就算发现了或大或小的问题，最后都归为是学生思维与工作思维的差别，在战略层面看似把路走顺了，然后“停止观察”。这在交流过程中给李经理的感觉是，我对于现状的无奈与妥协。\n但实际上，背后是有很多原因的，也许有我认为的先运行再完美、有时间限制、有本身能力问题、有战略考量等等。但我在没有了解全貌的时候，就将问题简单定性，并终止了思考与探索。\n这也确实有道理，就比如回应问题的时候，领导通常能分好几点回答，而我往往只能想到我最为掌握的某一个点，我想根源也在这里。",
+                "syncThoughtId": "th_1783328076995_3l2c",
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-06T08:54:36.995Z"
+              }
+            ]
           },
           "status": "active"
         },
@@ -1003,6 +821,20 @@
                 "status": "active",
                 "occurrenceCount": 1,
                 "updatedAt": "2026-05-15T07:35:43.808Z"
+              },
+              {
+                "id": "entry_1783481730713_36db",
+                "text": "注意每项工作、问题背后的原因与意义",
+                "createdAt": "2026-07-08T03:35:30.713Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T03:35:30.713Z"
               }
             ],
             "problem": [],
@@ -1060,13 +892,13 @@
             "problem": [
               {
                 "id": "entry_1781596233835_gvjc",
-                "text": "缺少意义感",
+                "text": "事项描述无精炼，且缺少意义感",
                 "createdAt": "2026-06-16T07:50:33.835Z",
-                "importance": 0,
+                "importance": 1,
                 "relatedTodoId": null,
                 "relatedProcessId": null,
                 "createdFromTodoId": null,
-                "note": "重流程叙事，总结提炼重点与意义较弱",
+                "note": "重流程大段分散叙事，需提升链条感、精练感，且对于背后的原因与意义要更加关注",
                 "syncThoughtId": null,
                 "status": "active",
                 "occurrenceCount": 1,
@@ -1084,7 +916,32 @@
           "importance": 3,
           "createdAt": "2026-07-03T13:59:55.494Z",
           "process": [],
-          "relations": [],
+          "relations": [
+            {
+              "id": "rel_1783491865231_qrhl",
+              "fromId": "entry_1783087223356_v5q5",
+              "toId": "entry_1783482153753_385w",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1783491865234_1n88",
+              "fromId": "entry_1783087223356_v5q5",
+              "toId": "entry_1783491746085_tn9y",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1783491865236_fwwt",
+              "fromId": "entry_1783087223356_v5q5",
+              "toId": "entry_1783491806014_54ls",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1783493534506_d126",
+              "fromId": "entry_1783087223356_v5q5",
+              "toId": "entry_1783493534503_u21j",
+              "type": "discover"
+            }
+          ],
           "entries": {
             "action": [
               {
@@ -1102,7 +959,64 @@
                 "updatedAt": "2026-07-03T14:00:23.356Z"
               }
             ],
-            "problem": [],
+            "problem": [
+              {
+                "id": "entry_1783482153753_385w",
+                "text": "断句、语调重点不对",
+                "createdAt": "2026-07-08T03:42:33.753Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "照着念的时候不够沉稳自信",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T03:42:33.753Z"
+              },
+              {
+                "id": "entry_1783491746085_tn9y",
+                "text": "语言组织过于口头化",
+                "createdAt": "2026-07-08T06:22:26.085Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "口头禅：额、这个、目前、呢、那、一个，过于口头话，尤其讲课题的时候节奏因为口头禅显得很慢，讲故事的时候口头禅多了显得很乱",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T06:22:26.085Z"
+              },
+              {
+                "id": "entry_1783491806014_54ls",
+                "text": "概念性、抽象定性结论、总结较少",
+                "createdAt": "2026-07-08T06:23:26.014Z",
+                "importance": 3,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T06:23:26.014Z"
+              },
+              {
+                "id": "entry_1783493534503_u21j",
+                "text": "答辩时前后没有总结，且回答没有价值深度",
+                "createdAt": "2026-07-08T06:52:14.503Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-08T06:52:14.503Z"
+              }
+            ],
             "learning": [],
             "review": []
           },
@@ -1165,11 +1079,14 @@
       ],
       "importance": 2,
       "note": "今天碰巧跟市场部的李经理进行了讨论。除了气量、保障、市场外，对于我思考以及执行也有涉及。结论是，真的要多向上沟通，他们的看法与眼界真的不一样。\n讨论的源头是集团对我们的期望是想让我们作为白纸去发现问题。而我自己的体会更多的是，就算发现了或大或小的问题，最后都归为是学生思维与工作思维的差别，在战略层面看似把路走顺了，然后“停止观察”。这在交流过程中给李经理的感觉是，我对于现状的无奈与妥协。\n但实际上，背后是有很多原因的，也许有我认为的先运行再完美、有时间限制、有本身能力问题、有战略考量等等。但我在没有了解全貌的时候，就将问题简单定性，并终止了思考与探索。\n这也确实有道理，就比如回应问题的时候，领导通常能分好几点回答，而我往往只能想到我最为掌握的某一个点，我想根源也在这里。",
-      "relatedCapId": null,
-      "relatedProjId": null,
-      "relatedEntryType": null,
-      "relatedEntryId": null,
-      "relatedLiberationId": null
+      "relatedCapId": "cap_1778503223681_32kq",
+      "relatedProjId": "proj_1778805708004_5q09",
+      "relatedEntryType": "action",
+      "relatedEntryId": "entry_1778805780706_meh4",
+      "relatedLiberationId": null,
+      "sourceReviewId": "entry_1783482070053_vmo7",
+      "sourceReviewCapId": "cap_1778503223681_32kq",
+      "sourceReviewProjId": "proj_1778805708004_5q09"
     },
     {
       "id": "th_1779890991572_ns9v",
@@ -1377,23 +1294,6 @@
   ],
   "todos": [
     {
-      "id": "todo_1778063960710_tbqz",
-      "text": "介绍再塑法典目前进展",
-      "importance": 1,
-      "createdAt": "2026-05-06T10:39:20.710Z",
-      "isToday": true,
-      "status": "active",
-      "completedAt": null,
-      "sourceCapId": "cap_1778063121284_l86i",
-      "sourceProjId": "proj_1778063866807_3anq",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778063908445_r21g",
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": [],
-      "note": "简单总结梳理，讲述时以即兴为主"
-    },
-    {
       "id": "todo_1778079070992_posw",
       "text": "观看辩论赛“要不要使用让别人爱你的超能力”并为双方结辩，然后由ai评价观点是否突出明确、条理清晰、有说服力",
       "importance": 0,
@@ -1402,9 +1302,9 @@
       "status": "active",
       "completedAt": null,
       "sourceCapId": "cap_1778063121284_l86i",
-      "sourceProjId": "proj_1778063853254_0448",
+      "sourceProjId": "proj_1778063866807_3anq",
       "sourceEntryType": "learning",
-      "sourceEntryId": "entry_1778482445733_4i1s",
+      "sourceEntryId": "entry_1778481580740_twyl",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": [],
@@ -1415,7 +1315,7 @@
       "text": "青岛照片人物p图（先选两张最喜欢的练习）",
       "importance": 0,
       "createdAt": "2026-05-06T15:02:20.341Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "sourceCapId": "cap_1778063127715_kxgz",
@@ -1457,8 +1357,8 @@
       "note": "有趣、吸引力、参考别人的引流视频",
       "sourceCapId": "cap_1778063121284_l86i",
       "sourceProjId": "proj_1778063866807_3anq",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778063931149_z796",
+      "sourceEntryType": "learning",
+      "sourceEntryId": "entry_1778481580740_twyl",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -1504,7 +1404,7 @@
       "text": "观看2019年主持人大赛，学习邹韵组织语言的逻辑",
       "importance": 0,
       "createdAt": "2026-05-11T06:40:53.444Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1589,28 +1489,11 @@
       ]
     },
     {
-      "id": "todo_1778645192583_xgut",
-      "text": "了解stitch",
-      "importance": 0,
-      "createdAt": "2026-05-13T04:06:32.584Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": "cap_1778063127715_kxgz",
-      "sourceProjId": "proj_1778678332046_9nyy",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778732858498_99dt",
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1778645517690_x7eu",
       "text": "以自己为原型，生成卡通形象，设计壁纸、头像、手机壳等",
       "importance": 1,
       "createdAt": "2026-05-13T04:11:57.690Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1651,9 +1534,9 @@
       "completedAt": null,
       "note": "",
       "sourceCapId": "cap_1778063121284_l86i",
-      "sourceProjId": "proj_1778063853254_0448",
+      "sourceProjId": "proj_1778063866807_3anq",
       "sourceEntryType": "learning",
-      "sourceEntryId": "entry_1778482445733_4i1s",
+      "sourceEntryId": "entry_1778481580740_twyl",
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -1663,7 +1546,7 @@
       "text": "了解播音腔",
       "importance": 1,
       "createdAt": "2026-05-15T00:50:26.595Z",
-      "isToday": false,
+      "isToday": true,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1778,23 +1661,6 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1778990547433_2sdb",
-      "text": "用已有产品反推并学习产品经理思维",
-      "importance": 1,
-      "createdAt": "2026-05-17T04:02:27.433Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": "cap_1778063134679_jxa3",
-      "sourceProjId": "proj_1778063428260_qe39",
-      "sourceEntryType": "action",
-      "sourceEntryId": "entry_1778479152563_zkfb",
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1779069767882_sj3x",
       "text": "观看对行业大拿的访谈，留意采访的问题",
       "importance": 2,
@@ -1833,7 +1699,7 @@
       "text": "是否制作播客，主要是转文字看看语言条理",
       "importance": 0,
       "createdAt": "2026-05-20T01:23:41.167Z",
-      "isToday": true,
+      "isToday": false,
       "status": "active",
       "completedAt": null,
       "note": "",
@@ -1875,23 +1741,6 @@
       "sourceProjId": "proj_1778063866807_3anq",
       "sourceEntryType": "learning",
       "sourceEntryId": "entry_1778481580740_twyl",
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
-      "id": "todo_1779292248112_s5v0",
-      "text": "小红书学习skill",
-      "importance": 0,
-      "createdAt": "2026-05-20T15:50:48.112Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -2140,9 +1989,26 @@
       "importance": 3,
       "createdAt": "2026-07-03T13:59:20.343Z",
       "isToday": true,
+      "status": "completed",
+      "completedAt": "2026-07-08T03:30:11.265Z",
+      "note": "",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1783087195494_v6m3",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1783087223356_v5q5",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1783492240484_vhzc",
+      "text": "再塑法典汇报练习",
+      "importance": 2,
+      "createdAt": "2026-07-08T06:30:40.484Z",
+      "isToday": false,
       "status": "active",
       "completedAt": null,
-      "note": "",
+      "note": "注意语言断句、重音，以及汇报内容的抽象总结（留下印象的关键）",
       "sourceCapId": "cap_1778503223681_32kq",
       "sourceProjId": "proj_1783087195494_v6m3",
       "sourceEntryType": "action",
@@ -2153,6 +2019,12 @@
     }
   ],
   "liberationEntries": [
+    {
+      "id": "lib_1783481851480_el0h",
+      "text": "多层面留意事件背后的原因与意义",
+      "createdAt": "2026-07-08T03:37:31.480Z",
+      "importance": 2
+    },
     {
       "id": "lib_1781753839546_i4np",
       "text": "注意记录工作流",
@@ -2533,7 +2405,7 @@
           {
             "id": "ns_1783394736311_74ir",
             "text": "回听录音，分析汇报时的问题与后续精进方向",
-            "completed": false
+            "completed": true
           }
         ],
         "createdAt": "2026-07-03T13:58:00.773Z"
