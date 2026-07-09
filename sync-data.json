@@ -231,6 +231,34 @@
                 "status": "active",
                 "occurrenceCount": 1,
                 "updatedAt": "2026-05-12T15:14:02.679Z"
+              },
+              {
+                "id": "entry_1783566704174_mlju",
+                "text": "抽象总结升华",
+                "createdAt": "2026-07-09T03:11:44.174Z",
+                "importance": 2,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-09T03:11:44.174Z"
+              },
+              {
+                "id": "entry_1783566716888_dtzu",
+                "text": "具体细节描述",
+                "createdAt": "2026-07-09T03:11:56.888Z",
+                "importance": 1,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "",
+                "syncThoughtId": null,
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-09T03:11:56.888Z"
               }
             ],
             "learning": [
@@ -248,7 +276,22 @@
                 "updatedAt": "2026-05-11T07:06:56.150Z"
               }
             ],
-            "review": []
+            "review": [
+              {
+                "id": "entry_1783562450071_p70v",
+                "text": "抽象总结与细腻的描述魅力--姜思达与刘恋小辩",
+                "createdAt": "2026-07-09T02:00:50.071Z",
+                "importance": 0,
+                "relatedTodoId": null,
+                "relatedProcessId": null,
+                "createdFromTodoId": null,
+                "note": "最开始吸引我并加入听单列表的是，姜一条条描述完具体事项后，以一句抽象的总结概括，留下印象令人发醒。如在列举将爱情体验视为必要后伴随的世俗、压力、禁锢庸的例子后，总结出庸俗才需要追求，神迹只需要等待降临就好。这句话瞬间就直击人心，或许就是金句的魅力。\n完整听下来后，又体会到，两个人都是情感细腻的人，但他们都很会表达并让人感受到他们浓郁的情感氛围。他们擅长用风、叶子、音乐，或者就是一件盯着熨斗发出的蒸汽，将人们带入到整个氛围当中。\n对比之下，我对于情绪敏感的同时，我表达不出来，也无法感染别人，甚至无法感染同类人。今后在表达的时候，我也会注意这两项，提升感染力。",
+                "syncThoughtId": "th_1783566604892_aqxl",
+                "status": "active",
+                "occurrenceCount": 1,
+                "updatedAt": "2026-07-09T02:00:50.071Z"
+              }
+            ]
           },
           "relations": [
             {
@@ -273,6 +316,24 @@
               "id": "rel_1778806262118_y82m",
               "fromId": "entry_1778483162950_hi0e",
               "toId": "entry_1778598842679_52mn",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1783566654296_cwss",
+              "fromId": "entry_1778948692650_gs7y",
+              "toId": "entry_1783562450071_p70v",
+              "type": "harvest"
+            },
+            {
+              "id": "rel_1783566704177_kj5p",
+              "fromId": "entry_1778948692650_gs7y",
+              "toId": "entry_1783566704174_mlju",
+              "type": "discover"
+            },
+            {
+              "id": "rel_1783566716891_coev",
+              "fromId": "entry_1778948692650_gs7y",
+              "toId": "entry_1783566716888_dtzu",
               "type": "discover"
             }
           ],
@@ -1070,6 +1131,19 @@
   ],
   "thoughts": [
     {
+      "id": "th_1783566604892_aqxl",
+      "text": "抽象总结与细腻的描述魅力--姜思达与刘恋小辩",
+      "createdAt": "2026-07-09T03:10:04.892Z",
+      "tags": [],
+      "importance": 0,
+      "note": "最开始吸引我并加入听单列表的是，姜一条条描述完具体事项后，以一句抽象的总结概括，留下印象令人发醒。如在列举将爱情体验视为必要后伴随的世俗、压力、禁锢庸的例子后，总结出庸俗才需要追求，神迹只需要等待降临就好。这句话瞬间就直击人心，或许就是金句的魅力。\n完整听下来后，又体会到，两个人都是情感细腻的人，但他们都很会表达并让人感受到他们浓郁的情感氛围。他们擅长用风、叶子、音乐，或者就是一件盯着熨斗发出的蒸汽，将人们带入到整个氛围当中。\n对比之下，我对于情绪敏感的同时，我表达不出来，也无法感染别人，甚至无法感染同类人。今后在表达的时候，我也会注意这两项，提升感染力。",
+      "relatedCapId": "cap_1778063121284_l86i",
+      "relatedProjId": "proj_1778483090549_505t",
+      "relatedEntryType": "review",
+      "relatedEntryId": "entry_1783562450071_p70v",
+      "relatedLiberationId": null
+    },
+    {
       "id": "th_1783328076995_3l2c",
       "text": "不要假性定性认知，更要多方面主动了解",
       "createdAt": "2026-07-06T08:54:36.995Z",
@@ -1649,8 +1723,8 @@
       "importance": 1,
       "createdAt": "2026-05-16T16:26:16.609Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-07-09T01:59:01.245Z",
       "note": "",
       "sourceCapId": "cap_1778063121284_l86i",
       "sourceProjId": "proj_1778483090549_505t",
@@ -2410,6 +2484,30 @@
         ],
         "createdAt": "2026-07-03T13:58:00.773Z"
       }
+    ],
+    "2026-07-09": [
+      {
+        "id": "evt_1783567321737_tnix",
+        "title": "东海朗廷安检跟班",
+        "tags": [
+          "跟班"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-09T03:22:01.737Z"
+      }
     ]
   },
   "workTags": [
@@ -2417,6 +2515,7 @@
     "安检分析",
     "线下宣传",
     "重点会议保障",
-    "总结汇报"
+    "总结汇报",
+    "跟班"
   ]
 }
