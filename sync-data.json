@@ -1131,6 +1131,21 @@
   ],
   "thoughts": [
     {
+      "id": "th_1785289391633_vtxm",
+      "text": "文档透视图",
+      "createdAt": "2026-07-29T01:43:11.633Z",
+      "tags": [
+        "有意思的词句"
+      ],
+      "importance": 1,
+      "note": "在幕布领航员招募的文章里面看到的这个词汇（https://mp.weixin.qq.com/s/KySvmrt8VciW7GHQmbivog），将我在读书、学习当中的一个很重要的需求明白讲出来了。文章当中的解释是，“换个视角，看清内容背后的关系”。而在我的理解当中，“透视表”这个次就已经很精准了，即，将庞大杂乱的信息量，重新组合、汇总，以多角度呈现清晰、有条理的内容，帮助读者全方位深度理解文档。\n说白了，在学校的时候，我们管这个叫知识点总结，而“文档透视图”这一个说法真的会感到精确且新奇。",
+      "relatedCapId": null,
+      "relatedProjId": null,
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null
+    },
+    {
       "id": "th_1783566604892_aqxl",
       "text": "抽象总结与细腻的描述魅力--姜思达与刘恋小辩",
       "createdAt": "2026-07-09T03:10:04.892Z",
@@ -1390,8 +1405,8 @@
       "importance": 0,
       "createdAt": "2026-05-06T15:02:20.341Z",
       "isToday": true,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-07-23T03:15:46.594Z",
       "sourceCapId": "cap_1778063127715_kxgz",
       "sourceProjId": "proj_1778063537717_jbmt",
       "sourceEntryType": "learning",
@@ -2508,6 +2523,102 @@
         "next_steps": [],
         "createdAt": "2026-07-09T03:22:01.737Z"
       }
+    ],
+    "2026-07-16": [
+      {
+        "id": "evt_1784171807642_4089",
+        "title": "市场部跟班",
+        "tags": [
+          "工作课题"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-16T03:16:47.642Z"
+      }
+    ],
+    "2026-07-21": [
+      {
+        "id": "evt_1784776445986_sns1",
+        "title": "初稿撰写",
+        "tags": [
+          "工作课题"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-23T03:14:05.986Z"
+      }
+    ],
+    "2026-07-23": [
+      {
+        "id": "evt_1784776506796_0pj8",
+        "title": "居民长期未抄表率统计",
+        "tags": [
+          "辅助居民"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-23T03:15:06.796Z"
+      }
+    ],
+    "2026-07-24": [
+      {
+        "id": "evt_1784873880412_wv6g",
+        "title": "非居异常数据处理",
+        "tags": [
+          "辅助非居"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-24T06:18:00.412Z"
+      }
     ]
   },
   "workTags": [
@@ -2516,6 +2627,9 @@
     "线下宣传",
     "重点会议保障",
     "总结汇报",
-    "跟班"
+    "跟班",
+    "工作课题",
+    "辅助居民",
+    "辅助非居"
   ]
 }
