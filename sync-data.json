@@ -1131,6 +1131,19 @@
   ],
   "thoughts": [
     {
+      "id": "th_1785721538598_8f1t",
+      "text": "城燃数字化",
+      "createdAt": "2026-08-03T01:45:38.598Z",
+      "tags": [],
+      "importance": 0,
+      "note": "看到一个公众号，讲深燃与华为联合打造燃气鸿蒙生态。其中一个比较有意思的是，说城燃行业数字化分为四个阶段，从ERP、GIS、CIS、SCADA系统的信息化，到巡检系统、工单系统、移动APP、线上营业厅、微信公众号的管理与一线、企业与用户的互联，再到NB表、压力监测、泄露报警器、视频监控的远传物联，最后就是现在正在开发的涉及行业企业及产业链的生态。\n而作为一名打工人，我会觉得这些说的还太超前，当然前三部分都有成果也有做的很好的地方，但是还有很多细节做的并不完备。就拿信息化系统来说，抛开数据的准确性与完备性，系统平台在数据的关联上就有所欠缺，更不提数据的看板、透视等。当然这些也是在实践需求中一步步优化。\n之前总是觉得为什么明明一个很简单的事情，开发系统的时候就是没想到呢。而自从我自己vibe了一个网页，自己测试自己维护的时候，我就知道了很多东西不是当时就能想到的，即使想到了也会由于内容太多，想着直接删繁就简弄一个出来用着先。\n所以最开始看到这篇文章时，我会觉得信息化这一步都没弄好，就想着搞生态了。但其实从战略层面来讲，前瞻性很重要，具体的执行优化是其他人的工作。那么问题就是，即使深圳市长出席见证，国际燃气联盟、中国城燃协会及30多家城燃企业与产业链伙伴参与此次会议，正在会加入这个生态的，又会有多少呢，又或者，凭借什么能让这么多企业，甚至包括这个领域发展更好的燃气五虎，加入到深燃这家市属国企开发的城燃生态呢。",
+      "relatedCapId": null,
+      "relatedProjId": null,
+      "relatedEntryType": null,
+      "relatedEntryId": null,
+      "relatedLiberationId": null
+    },
+    {
       "id": "th_1785289391633_vtxm",
       "text": "文档透视图",
       "createdAt": "2026-07-29T01:43:11.633Z",
@@ -1784,23 +1797,6 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1779240221167_fs9a",
-      "text": "是否制作播客，主要是转文字看看语言条理",
-      "importance": 0,
-      "createdAt": "2026-05-20T01:23:41.167Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1779256845659_dhgy",
       "text": "给《阿嫲的一封情书》电影观后感",
       "importance": 1,
@@ -1971,30 +1967,13 @@
       "processEntryIds": []
     },
     {
-      "id": "todo_1780500353734_x48k",
-      "text": "简介藏海传",
-      "importance": 2,
-      "createdAt": "2026-06-03T15:25:53.734Z",
-      "isToday": false,
-      "status": "active",
-      "completedAt": null,
-      "note": "",
-      "sourceCapId": null,
-      "sourceProjId": null,
-      "sourceEntryType": null,
-      "sourceEntryId": null,
-      "processCapId": null,
-      "processProjId": null,
-      "processEntryIds": []
-    },
-    {
       "id": "todo_1780500845240_mwy0",
       "text": "看懂基金",
       "importance": 3,
       "createdAt": "2026-06-03T15:34:05.240Z",
       "isToday": false,
-      "status": "active",
-      "completedAt": null,
+      "status": "completed",
+      "completedAt": "2026-08-03T00:50:34.503Z",
       "note": "",
       "sourceCapId": null,
       "sourceProjId": null,
@@ -2102,6 +2081,40 @@
       "sourceProjId": "proj_1783087195494_v6m3",
       "sourceEntryType": "action",
       "sourceEntryId": "entry_1783087223356_v5q5",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1785718210605_akif",
+      "text": "快速学习炒股，从买第一支股票开始",
+      "importance": 3,
+      "createdAt": "2026-08-03T00:50:10.605Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
+    },
+    {
+      "id": "todo_1785718222271_ox64",
+      "text": "简历更新",
+      "importance": 3,
+      "createdAt": "2026-08-03T00:50:22.271Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": null,
+      "sourceProjId": null,
+      "sourceEntryType": null,
+      "sourceEntryId": null,
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
@@ -2513,7 +2526,7 @@
           "result": "",
           "value": ""
         },
-        "growth": "",
+        "growth": "东海朗廷在2026上半年同比气量是上升的，过程中问工作人员也是说入住率也比较可观，且我们是非饭点去的，大堂中也有很多人谈事情、约会、布景直播拍摄，也会涉及到餐饮，其中烘焙及饮品比较多。那么在这一部分，占酒店业务比例如何，燃气使用的比例占多少，像轻餐饮这一类使用燃气的性价比如何，转化率又是如何，延申业务是否可以发展，都是值得关注 问题。",
         "problem": {
           "text": "",
           "reason": "",
@@ -2532,17 +2545,17 @@
           "工作课题"
         ],
         "work_content": {
-          "background": "",
-          "contribution": "",
+          "background": "课题调研需了解市场部开发客户的一些基本流程、内容及成本等，进行市场部跟班",
+          "contribution": "此次跟班是与用户沟通协调方案的过程，仅涉及课题所需内容的一部分，其他信息仅通过同事口述进行简要了解。且经过交流发现，与我理解的不同，市场部在城燃板块的增长点也是考用户主动电话咨询，缺少主动性，因大湾区燃气板块垄断，员工主动出击观念较低，难度较大",
           "result": "",
           "value": ""
         },
         "growth": "",
         "problem": {
-          "text": "",
-          "reason": "",
-          "suggestion": "",
-          "value": ""
+          "text": "用户美观要求与燃气安全标准有冲突，具体是燃气阀门所需预留空间的讨论，耗时很久。主要问题出现在员工不能说出预留具体的空间尺寸要求以及规范出处。同样的问题在跟班量管报警器到期同样遇到过，以及在客服例会上对于一个案例中的增加用气点是否需要出具设计图的讨论，都反应出了，员工对于要求的更改没太关注，以及对于规定的出处、解释无细致的了解以及话术包准备",
+          "reason": "管理层宣贯不到位、对于用户常见的疑问没有整理为话术包以及标准参照，对于用户安全宣传不到位",
+          "suggestion": "对于集团新要求、国家新规定要对一线员工重点宣贯；对于常见质疑要整理为解释包，包含标准出处、与解释话术；加强公众号、小程序、营业厅等线上线下的安全知识宣传",
+          "value": "节省与用户拉扯时间，提升员工工作效率与标准化；减少客诉，提升客户服务体验"
         },
         "next_steps": [],
         "createdAt": "2026-07-16T03:16:47.642Z"
@@ -2551,7 +2564,7 @@
     "2026-07-21": [
       {
         "id": "evt_1784776445986_sns1",
-        "title": "初稿撰写",
+        "title": "课题初稿撰写",
         "tags": [
           "工作课题"
         ],
@@ -2576,12 +2589,10 @@
       {
         "id": "evt_1784776506796_0pj8",
         "title": "居民长期未抄表率统计",
-        "tags": [
-          "辅助居民"
-        ],
+        "tags": [],
         "work_content": {
-          "background": "",
-          "contribution": "",
+          "background": "目前公司加强对欠费催缴的清理工作，长期未抄表部分，需每周跟踪各属地班组长期未抄表清理进度，并将统计结果通报，督促各班组加速清理",
+          "contribution": "目前系统中长期未抄表工单属于另一个工单池，由网格员自主认领，且无楼栋搜索与按楼栋派单功能，网格员在工作中不会来回翻看工单池，即长期未抄表工单无法并入网格员的任务工单中，无法实现楼栋一次清理。且欠费催缴工作，由于违约金更改为按天算，即为实时更新的，无法提前打印违约金告知书及任务派发。最后在会议上提出需要系统增加长期未抄表及催款工单，目前先以人工任务单安排并在对接客户时提前核对一下违约金的办法，先推进工作",
           "result": "",
           "value": ""
         },
@@ -2599,7 +2610,55 @@
     "2026-07-24": [
       {
         "id": "evt_1784873880412_wv6g",
-        "title": "非居异常数据处理",
+        "title": "非居异常数据处理了解",
+        "tags": [
+          "辅助非居"
+        ],
+        "work_content": {
+          "background": "因非居一个出账错误，想查明原因的同时，自查有没有其他同样的问题出现，于是去了解非居异常数据处理方式以及是否能导出清单。",
+          "contribution": "找非居文员叶姐了解错误情况后，接着了解异常数据的来源以及是否有清单，发现异常包括两部分，远传表部分是艳姐先进行系统核对，再将需要人工核对的部分列为清单发给叶姐进而派单；而人工抄表部分则是更多的依靠一线员工个人识别以及文员操作，过程无清单，系统无异常流转提示，依赖微信交流。即人工抄表、人工核实部分及情况无系统留痕，无法像居民类一样由异常清单反向核验。",
+          "result": "上报给领导，暂无后续",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-24T06:18:00.412Z"
+      }
+    ],
+    "2026-07-30": [
+      {
+        "id": "evt_1785378950886_lbbm",
+        "title": "非居安抄标准化课件整理",
+        "tags": [
+          "辅助非居"
+        ],
+        "work_content": {
+          "background": "集团安办通知要对班组标准化“一图九表”管理措施进行进一步优化，将福田安抄班组的培训挑选为优秀示范并计划形成线上课程供其他分公司班组学习，我的工作是帮班组长进行课件模板调整、教案编写、小测试题设置",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-07-30T02:35:50.886Z"
+      }
+    ],
+    "2026-07-29": [
+      {
+        "id": "evt_1785378986727_2kre",
+        "title": "非居督办进度梳理",
         "tags": [
           "辅助非居"
         ],
@@ -2617,7 +2676,7 @@
           "value": ""
         },
         "next_steps": [],
-        "createdAt": "2026-07-24T06:18:00.412Z"
+        "createdAt": "2026-07-30T02:36:26.727Z"
       }
     ]
   },
@@ -2629,7 +2688,7 @@
     "总结汇报",
     "跟班",
     "工作课题",
-    "辅助居民",
-    "辅助非居"
+    "辅助非居",
+    "辅助居民"
   ]
 }
