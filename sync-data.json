@@ -2231,7 +2231,8 @@
       "completedDates": [
         "2026-05-27",
         "2026-06-29",
-        "2026-07-07"
+        "2026-07-07",
+        "2026-08-04"
       ],
       "currentStreak": 1,
       "bestStreak": 1
@@ -2250,9 +2251,11 @@
       "note": "",
       "createdAt": "2026-06-01T04:26:22.166Z",
       "archivedAt": null,
-      "completedDates": [],
-      "currentStreak": 0,
-      "bestStreak": 0
+      "completedDates": [
+        "2026-08-04"
+      ],
+      "currentStreak": 1,
+      "bestStreak": 1
     }
   ],
   "workEvents": {
@@ -2569,14 +2572,14 @@
           "工作课题"
         ],
         "work_content": {
-          "background": "",
-          "contribution": "",
+          "background": "非居上半年气量下降，公司为达到目标售气量需寻找增量方法，本课题即为小表换大表以及新增用户两方案对比",
+          "contribution": "我对于业务即两方案本身都不太熟悉，通过询问同事、跟班、要报价资料等，大致摸清了",
           "result": "",
           "value": ""
         },
         "growth": "",
         "problem": {
-          "text": "",
+          "text": "由于公司在深圳的垄断性质，目前无论是市场还是客服的增量都偏向被动，目前最需要的是拓展的积极性要提高",
           "reason": "",
           "suggestion": "",
           "value": ""
