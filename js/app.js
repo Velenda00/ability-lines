@@ -605,7 +605,10 @@ function renderWorkOverview() {
   const ov = document.getElementById('workOverview');
   const foc = document.getElementById('workFocus');
   ov.classList.add('active'); foc.classList.remove('active');
-  document.getElementById('workTitle').textContent = '🛤️ 工作';
+  const wt = document.getElementById('workTitle');
+  wt.className = 'page-title-text';
+  wt.style.cssText = '';
+  wt.textContent = '🛤️ 工作';
 
   const ym = _workCalMonth.slice(0, 7); // 'YYYY-MM'
   const [yr, mo] = ym.split('-').map(Number);
@@ -674,7 +677,7 @@ function renderWorkTagFilter(tag, ym) {
 
   if (!matched.length) return '';
 
-  const cardsHtml = matched.map(({ evt, date }) => renderWorkEventCard(evt, date)).join('');
+  const cardsHtml = matched.map(({ evt, date }) => renderWorkEventCard(evt, date, true)).join('');
   return `<div class="work-tag-filter-section">
     <div class="work-tag-filter-header">
       <span class="work-tag-filter-title">🏷️ 「${esc(tag)}」的记录 (${matched.length})</span>
@@ -688,12 +691,24 @@ function renderWorkTagFilter(tag, ym) {
 function renderWorkFocus(dateStr) {
   if (dateStr) _workFocusDate = dateStr;
   if (!_workFocusDate) _workFocusDate = today();
-  if (!_workWeekStart) _workWeekStart = getMonday(new Date(_workFocusDate + 'T12:00:00'));
+  // 每次进入聚焦视图都重新计算当前日期所在周的周一（修复：之前只在 _workWeekStart 为空时计算，导致切换日期后周历条不更新）
+  _workWeekStart = getMonday(new Date(_workFocusDate + 'T12:00:00'));
 
   const ov = document.getElementById('workOverview');
   const foc = document.getElementById('workFocus');
   ov.classList.remove('active'); foc.classList.add('active');
-  document.getElementById('workTitle').innerHTML = '<button class="work-back-btn" onclick="switchWorkView(\'overview\')">← 返回</button> ' + _workFocusDate;
+  const isToday = _workFocusDate === today();
+  const wt = document.getElementById('workTitle');
+  wt.className = '';
+  wt.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex:1';
+  wt.innerHTML =
+    `<button class="work-back-btn" onclick="switchWorkView('overview')">← 返回</button>` +
+    `<div class="work-focus-nav">` +
+      `<button class="work-nav-btn" onclick="navWorkDate(-1)" title="上一周">‹</button>` +
+      `<span class="work-focus-date">${_workFocusDate}</span>` +
+      `<button class="work-nav-btn" onclick="navWorkDate(1)" title="下一周">›</button>` +
+    `</div>` +
+    `<button class="work-today-btn${isToday ? ' hidden' : ''}" onclick="goToToday()">今天</button>`;
 
   // 微型周历条
   const weekDates = getWeekDates(_workWeekStart);
@@ -724,6 +739,20 @@ function renderWorkFocus(dateStr) {
 
 function selectWorkDate(d) { _workFocusDate = d; renderWorkFocus(); }
 
+// 前/后一周导航（delta: -1 上一周, 1 下一周）
+function navWorkDate(delta) {
+  const d = new Date(_workFocusDate + 'T12:00:00');
+  d.setDate(d.getDate() + delta * 7);
+  _workFocusDate = d.toISOString().slice(0, 10);
+  renderWorkFocus();
+}
+
+// 回到今天
+function goToToday() {
+  _workFocusDate = today();
+  renderWorkFocus();
+}
+
 function switchWorkView(view, dateStr) {
   _workView = view;
   if (view === 'focus' && dateStr) _workFocusDate = dateStr;
@@ -743,10 +772,15 @@ function renderWorkCalendar(year, month, mode) {
 
   // 预计算每个日期的未完成下一步数
   const pendingCounts = {};
+  // 预计算每个日期是否有"只有标题无详情"的工作事件
+  const emptyTitleDates = new Set();
   Object.entries(appData.workEvents || {}).forEach(([date, evts]) => {
     if (!date.startsWith(ym)) return;
     let cnt = 0;
-    evts.forEach(e => (e.next_steps || []).forEach(s => { if (!s.completed) cnt++; }));
+    evts.forEach(e => {
+      (e.next_steps || []).forEach(s => { if (!s.completed) cnt++; });
+      if (!hasEventDetail(e)) emptyTitleDates.add(date);
+    });
     if (cnt > 0) pendingCounts[date] = cnt;
   });
 
@@ -782,7 +816,14 @@ function renderWorkCalendar(year, month, mode) {
       if (isToday) cls += ' today';
       let badges = '';
       if (cnt > 0) badges += `<span class="cell-count-top">${cnt}</span>`;
-      if (pending > 0) badges += `<span class="cell-pending-bottom">${pending}</span>`;
+      // 左下方：未完成下一步数 + 只有标题事件圆点
+      const hasEmpty = emptyTitleDates.has(dateStr);
+      if (pending > 0 || hasEmpty) {
+        let bottomLeft = '';
+        if (pending > 0) bottomLeft += `<span class="cell-pending-bottom">${pending}</span>`;
+        if (hasEmpty) bottomLeft += `<span class="cell-empty-dot" title="有仅记录标题的工作"></span>`;
+        badges += `<div class="cell-bottom-left">${bottomLeft}</div>`;
+      }
       html += `<div class="${cls}" data-level="${level}" onclick="switchWorkView('focus','${dateStr}')">${d}${badges}</div>`;
     }
 
@@ -855,8 +896,19 @@ function renderPendingNextSteps(pending) {
   return `<div class="work-pending-section"><h3>⚡ 聚焦 · 下一步待办</h3>${items}${pending.length > 10 ? '<div style="font-size:11px;color:var(--text-hint);text-align:center;margin-top:8px">仅显示前10条</div>' : ''}</div>`;
 }
 
+// 判断工作事件是否有详情（工作内容/问题/成长/下一步 任一不为空）
+function hasEventDetail(evt) {
+  const wc = evt.work_content || {};
+  const pb = evt.problem || {};
+  if (wc.background || wc.contribution || wc.result || wc.value) return true;
+  if (pb.text || pb.reason || pb.suggestion || pb.value) return true;
+  if (evt.growth) return true;
+  if ((evt.next_steps || []).length > 0) return true;
+  return false;
+}
+
 // -- 事件卡片（有机风格，无卡片边框） --
-function renderWorkEventCard(evt, dateStr) {
+function renderWorkEventCard(evt, dateStr, showDate) {
   const tagPills = (evt.tags || []).map(t =>
     `<span class="work-event-tag active" onclick="event.stopPropagation();removeWorkTag('${dateStr}','${evt.id}','${esc(t)}')">${esc(t)}</span>`
   ).join('') + `<span class="work-event-tag" onclick="event.stopPropagation();showWorkTagPicker('${dateStr}','${evt.id}')">+</span>`;
@@ -887,12 +939,15 @@ function renderWorkEventCard(evt, dateStr) {
     </div>`;
 
   const hasDetail = !!detailHtml;
+  // 只有标题、无任何详情（工作内容/问题/成长/下一步）时显示空心椭圆
+  const dotClass = hasDetail ? 'work-event-dot' : 'work-event-dot work-event-dot-empty';
 
   return `<div class="work-event-card collapsed" onclick="this.classList.toggle('collapsed')">
-    <div class="work-event-dot"></div>
+    <div class="${dotClass}"></div>
     <div class="work-event-body">
       <div class="work-event-header">
         <span class="work-event-title">${esc(evt.title || '未命名事件')}</span>
+        ${showDate ? `<span class="work-event-date-link" onclick="event.stopPropagation();switchWorkView('focus','${dateStr}')" title="跳转到该日期">📅 ${esc(dateStr)}</span>` : ''}
         ${tagPills}
         ${hasDetail ? `<span class="work-event-arrow">▼</span>` : ''}
         <div class="work-event-actions" onclick="event.stopPropagation()">
@@ -1008,7 +1063,7 @@ function showAddWorkEventModal(dateStr) {
   function refreshWMHints() {
     const hints = document.getElementById('wmTagHints');
     if (!hints) return;
-    const matched = allTags.filter(t => !window._wmTags.includes(t)).slice(0, 5);
+    const matched = allTags.filter(t => !window._wmTags.includes(t));
     hints.innerHTML = matched.length ? matched.map(t =>
       `<span class="work-tag-hint-pill" onclick="pickWMHint('${esc(t)}')">${esc(t)}</span>`
     ).join('') : '';
@@ -1193,7 +1248,7 @@ function showEditWorkEventModal(dateStr, eventId) {
   function refreshWEHints() {
     const hints = document.getElementById('weTagHints');
     if (!hints) return;
-    const matched = allTags.filter(t => !window._weTags.includes(t)).slice(0, 5);
+    const matched = allTags.filter(t => !window._weTags.includes(t));
     hints.innerHTML = matched.length ? matched.map(t =>
       `<span class="work-tag-hint-pill" onclick="pickWEHint('${esc(t)}')">${esc(t)}</span>`
     ).join('') : '';

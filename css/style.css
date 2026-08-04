@@ -1000,13 +1000,22 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   position: absolute; top: 1px; right: 2px;
   font-size: 10px; color: var(--text-hint); line-height: 1; font-weight: 500;
 }
-.work-cal-cell .cell-pending-bottom {
+.work-cal-cell .cell-bottom-left {
   position: absolute; bottom: 1px; left: 2px;
+  display: flex; gap: 3px; align-items: center;
+}
+.work-cal-cell .cell-empty-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  border: 1.5px solid var(--work-accent); background: #fff;
+  display: inline-block;
+}
+.work-cal-cell .cell-pending-bottom {
   font-size: 10px; color: var(--work-deep-red); line-height: 1; font-weight: 700;
   background: rgba(255,255,255,0.6); padding: 0 2px; border-radius: 2px;
 }
 .work-cal-cell[data-level="3"] .cell-count-top { color: rgba(255,255,255,0.7); }
-.work-cal-cell[data-level="3"] .cell-pending-bottom { color: #fff; background: rgba(255,255,255,0.2); }
+.work-cal-cell[data-level="3"] .cell-bottom-left { color: #fff; }
+.work-cal-cell[data-level="3"] .cell-empty-dot { background: rgba(255,255,255,0.2); }
 
 /* -- 微型周历条 -- */
 .work-week-strip {
@@ -1106,12 +1115,23 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   width: 3px; height: 16px; border-radius: 1.5px;
   background: var(--work-accent); flex-shrink: 0; margin-top: 4px;
 }
+/* 无标签时显示为空心椭圆，大小与实心短绿线视觉一致 */
+.work-event-dot-empty {
+  width: 8px; height: 16px; border-radius: 8px;
+  background: transparent; border: 1.5px solid var(--work-accent);
+}
 .work-event-body { flex: 1; min-width: 0; }
 .work-event-header {
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
   cursor: pointer; user-select: none;
 }
 .work-event-title { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1; min-width: 0; }
+.work-event-date-link {
+  font-size: 11px; color: var(--work-accent);
+  background: var(--work-tag-bg); padding: 2px 8px; border-radius: 8px;
+  cursor: pointer; flex-shrink: 0; user-select: none;
+}
+.work-event-date-link:active { opacity: 0.7; }
 .work-event-actions { display: flex; gap: 4px; flex-shrink: 0; }
 .work-event-actions button {
   background: none; border: none; font-size: 16px; cursor: pointer;
@@ -1213,6 +1233,32 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   margin-bottom: var(--sp-2);
 }
 .work-back-btn:active { opacity: 0.6; }
+
+/* -- 聚焦视图日期导航 -- */
+.work-focus-nav {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.work-nav-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg-inset); border: none;
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 18px; line-height: 1; color: var(--text-secondary);
+  cursor: pointer; margin: 0 4px;
+}
+.work-nav-btn:active { background: var(--work-accent); color: #fff; }
+.work-focus-date {
+  font-size: 15px; font-weight: 600; color: var(--text-primary);
+  margin: 0 6px;
+}
+.work-today-btn {
+  display: inline-flex; align-items: center;
+  background: var(--work-accent); color: #fff;
+  border: none; border-radius: 14px; padding: 4px 12px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  margin-left: 6px;
+}
+.work-today-btn:active { opacity: 0.8; }
+.work-today-btn.hidden { display: none; }
 
 /* -- 空状态 -- */
 .work-empty {

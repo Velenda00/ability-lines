@@ -88,6 +88,7 @@ const Store = {
         workTags: []
       };
       await this.set('allData', def);
+      this._allData = def;
       return def;
     }
     // 向前兼容
@@ -163,6 +164,7 @@ const Store = {
     if (!data.workTags) data.workTags = [];
     // 保存补字段后的数据回 IDB
     await this.set('allData', data);
+    this._allData = data;  // 初始化时同步设置缓存，确保 getAllTags 等方法在首次调用时可用
     return data;
   },
 
@@ -654,11 +656,14 @@ const Store = {
 
   _syncWorkTags(data) {
     if (!data.workEvents) return;
-    const tagSet = new Set(data.workTags || []);
+    // 先收集当前事件中实际使用的标签（这些排在前面，新增的标签能优先显示）
+    const usedTags = new Set();
     Object.values(data.workEvents).forEach(evts => {
-      evts.forEach(e => (e.tags || []).forEach(t => tagSet.add(t)));
+      evts.forEach(e => (e.tags || []).forEach(t => usedTags.add(t)));
     });
-    data.workTags = [...tagSet];
+    // 历史标签（不再被任何事件使用）排在后面
+    const historical = (data.workTags || []).filter(t => !usedTags.has(t));
+    data.workTags = [...usedTags, ...historical];
   },
 
   getAllWorkTags(data) { return data.workTags || []; },
