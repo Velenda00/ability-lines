@@ -670,14 +670,21 @@ const Store = {
 
   getWorkStats(data, yearMonth) {
     // yearMonth: 'YYYY-MM'
+    // 每个事件计入所有标签（一个事件跨多个精力维度时按维度分摊）
+    // 返回：stats 各标签下的事件数（不去重），total 去重事件总数，totalTagCount 标签出现总次数
     const stats = {};
+    let totalEvents = 0;
+    let totalTagCount = 0;
     Object.entries(data.workEvents || {}).forEach(([date, evts]) => {
       if (!date.startsWith(yearMonth)) return;
       evts.forEach(e => {
-        (e.tags || []).forEach(t => { stats[t] = (stats[t] || 0) + 1; });
+        totalEvents++;
+        const tags = e.tags || [];
+        totalTagCount += tags.length;
+        tags.forEach(t => { stats[t] = (stats[t] || 0) + 1; });
       });
     });
-    return stats;
+    return { stats, total: totalEvents, totalTagCount };
   },
 
   getPendingNextSteps(data) {

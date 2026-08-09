@@ -1125,7 +1125,7 @@ main { padding: var(--sp-3) var(--sp-4) var(--sp-5); }
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
   cursor: pointer; user-select: none;
 }
-.work-event-title { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1; min-width: 0; }
+.work-event-title { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1 1 100%; min-width: 0; word-break: break-word; }
 .work-event-date-link {
   font-size: 11px; color: var(--work-accent);
   background: var(--work-tag-bg); padding: 2px 8px; border-radius: 8px;

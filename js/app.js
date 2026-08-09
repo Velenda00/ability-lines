@@ -618,9 +618,8 @@ function renderWorkOverview() {
   const calHtml = renderWorkCalendar(yr, mo, 'full');
 
   // 圆环图
-  const stats = Store.getWorkStats(appData, ym);
-  const totalEvts = Object.values(stats).reduce((s,v)=>s+v, 0);
-  const donutHtml = totalEvts > 0 ? renderDonutChart(stats, totalEvts) : '';
+  const { stats, total: totalEvts, totalTagCount } = Store.getWorkStats(appData, ym);
+  const donutHtml = totalEvts > 0 ? renderDonutChart(stats, totalTagCount, totalEvts) : '';
 
   // 下一步待办
   const pending = Store.getPendingNextSteps(appData);
@@ -852,7 +851,8 @@ function workCalNav(delta) {
 function workCalToday() { _workCalMonth = today(); _workTagFilter = null; renderWorkOverview(); }
 
 // -- 圆环图 --
-function renderDonutChart(stats, total) {
+// stats: 各标签事件数；totalTagCount: 标签出现总次数（用于算百分比，总和=100%）；totalEvents: 去重事件总数（中心显示）
+function renderDonutChart(stats, totalTagCount, totalEvents) {
   const entries = Object.entries(stats).sort((a,b) => b[1] - a[1]);
   const r = 60, C = 2 * Math.PI * r; // ~377
   let offset = 0;
@@ -860,8 +860,11 @@ function renderDonutChart(stats, total) {
   const legendItems = [];
   const cssColors = ['#7B9E8C','#89B4C8','#A8C5A0','#C4A6B8','#B8A88C','#9B8EC4','#D4A8A0','#8CB5A0'];
 
+  // 用标签出现总次数算百分比，避免多标签事件重复计数（总和=100%）
+  const pctBase = totalTagCount > 0 ? totalTagCount : 1;
+
   entries.forEach(([tag, count], i) => {
-    const pct = count / total;
+    const pct = count / pctBase;
     const dash = pct * C;
     const color = cssColors[i % cssColors.length];
     const isActive = _workTagFilter === tag;
@@ -876,7 +879,7 @@ function renderDonutChart(stats, total) {
         <circle cx="90" cy="90" r="${r}" fill="none" stroke="var(--work-empty)" stroke-width="16"/>
         ${circles}
       </svg>
-      <div class="work-donut-center"><div class="donut-total">${total}</div><div class="donut-label">事件</div></div>
+      <div class="work-donut-center"><div class="donut-total">${totalEvents}</div><div class="donut-label">事件</div></div>
     </div>
     <div class="work-donut-legend">${legendItems.join('')}</div>
   </div></div>`;
