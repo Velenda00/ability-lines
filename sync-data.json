@@ -2118,6 +2118,23 @@
       "processCapId": null,
       "processProjId": null,
       "processEntryIds": []
+    },
+    {
+      "id": "todo_1785890202698_cazl",
+      "text": "认真准备汇报，包括限时ppt制作、录视频练习汇报",
+      "importance": 3,
+      "createdAt": "2026-08-05T00:36:42.698Z",
+      "isToday": true,
+      "status": "active",
+      "completedAt": null,
+      "note": "",
+      "sourceCapId": "cap_1778503223681_32kq",
+      "sourceProjId": "proj_1783087195494_v6m3",
+      "sourceEntryType": "action",
+      "sourceEntryId": "entry_1783087223356_v5q5",
+      "processCapId": null,
+      "processProjId": null,
+      "processEntryIds": []
     }
   ],
   "liberationEntries": [
@@ -2682,6 +2699,55 @@
         },
         "next_steps": [],
         "createdAt": "2026-07-30T02:36:26.727Z"
+      }
+    ],
+    "2026-08-05": [
+      {
+        "id": "evt_1785890094770_ogii",
+        "title": "更改课题，制作ppt",
+        "tags": [
+          "总结汇报",
+          "工作课题"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "",
+        "problem": {
+          "text": "改管方案理解错误，没有提前跟导师及班组拉通信息",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-08-05T00:34:54.770Z"
+      }
+    ],
+    "2026-08-07": [
+      {
+        "id": "evt_1786073890787_h6d1",
+        "title": "工作与课题月汇报",
+        "tags": [
+          "总结汇报"
+        ],
+        "work_content": {
+          "background": "",
+          "contribution": "",
+          "result": "",
+          "value": ""
+        },
+        "growth": "汇报时更加注意逻辑语句的连接。同时注意到，汇报时，听众更会抓取ppt中标注的重点内容，即最想突出的内容一定要在ppt中，展开的一般为案例故事。",
+        "problem": {
+          "text": "",
+          "reason": "",
+          "suggestion": "",
+          "value": ""
+        },
+        "next_steps": [],
+        "createdAt": "2026-08-07T03:38:10.787Z"
       }
     ]
   },
